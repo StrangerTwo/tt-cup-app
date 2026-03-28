@@ -29,6 +29,7 @@ paths:
           content:
             '*/*':
               schema: {type: object}
+      operationId: capturePage
   /openapi.yaml:
     get:
       description: ''
@@ -46,6 +47,38 @@ paths:
               examples:
                 Example#1: {value: ''}
       operationId: getOpenapi
+  /players:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Player'}
+      operationId: getPlayers
+  /players/new:
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/NewPlayer'}
+        required: true
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Status'}
+      operationId: newPlayer
   /user:
     get:
       description: ''
@@ -87,6 +120,23 @@ components:
         url: {type: string}
         html: {type: string}
       required: [url, html]
+    Player:
+      type: object
+      properties:
+        uid: {type: string}
+        name: {type: string, nullable: true}
+        elo: {type: integer, format: int32, nullable: true}
+      required: [uid]
+    NewPlayer:
+      type: object
+      properties:
+        uid: {type: string}
+      required: [uid]
+    Status:
+      type: object
+      properties:
+        status: {type: boolean}
+      required: [status]
     User:
       type: object
       properties:

@@ -6,4 +6,4 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PostCapture200 = { [key: string]: unknown };
+export type CapturePage200 = { [key: string]: unknown };

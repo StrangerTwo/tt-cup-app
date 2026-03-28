@@ -23,7 +23,7 @@ const Sidebar: FC<Props> = ({ className, sidebarOpen, children, absolute, navbar
                 "border-r border-slate-200 dark:border-slate-600 xl:border-l",
                 "translate-x-0",
                 !absolute && "md:static md:-translate-x-full",
-                sidebarOpen && "translate-x-full border-t",
+                sidebarOpen && "translate-x-full",
                 !absolute && sidebarOpen && " md:translate-x-0",
                 sidebarExpanded ? "w-64" : "w-20",
                 className,

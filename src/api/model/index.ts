@@ -7,5 +7,8 @@
  */
 
 export * from "./captureDto";
-export * from "./postCapture200";
+export * from "./capturePage200";
+export * from "./newPlayer";
+export * from "./player";
+export * from "./status";
 export * from "./user";

@@ -2,7 +2,7 @@ import { FC, MouseEventHandler, ReactNode, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import UnAuthTemplate from "../auth/UnAuthTemplate";
-import { TableIcon } from "../components/icons";
+import { TableIcon, UsersIcon } from "../components/icons";
 import Sidebar from "../components/ui/layout/Sidebar";
 import { AuthProvider } from "../firebase/AuthProvider";
 import { auth } from "../firebase/firebase";
@@ -68,6 +68,9 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                             <div className={"flex flex-col space-y-2"}>
                                 <SidebarItem route="/" closeSidebar={closeSidebar} text="Tipy na sázení">
                                     <TableIcon hoverEffects />
+                                </SidebarItem>
+                                <SidebarItem route="/players" closeSidebar={closeSidebar} text="Hráči">
+                                    <UsersIcon hoverEffects />
                                 </SidebarItem>
                             </div>
                         </Sidebar>
