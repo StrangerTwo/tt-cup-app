@@ -1,0 +1,94 @@
+openapi: 3.1.0
+info: {title: tt_cup_api API, description: tt_cup_api API, version: 1.0.0}
+servers:
+- {url: 'https://api.ttcup.dev.mhdonline.cz'}
+paths:
+  /:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
+      operationId: getHello
+  /capture:
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CaptureDto'}
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {type: object}
+  /openapi.yaml:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema: {type: string}
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
+      operationId: getOpenapi
+  /user:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/User'}
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
+      operationId: getUser
+  /{...}:
+    get:
+      description: ''
+      parameters:
+      - name: '...'
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
+components:
+  schemas:
+    CaptureDto:
+      type: object
+      properties:
+        url: {type: string}
+        html: {type: string}
+      required: [url, html]
+    User:
+      type: object
+      properties:
+        uid: {type: string}
+      required: [uid]

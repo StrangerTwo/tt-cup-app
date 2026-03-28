@@ -1,0 +1,18 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { FC } from "react";
+
+const Index: FC = ({ }) => {
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+                <h1 className="text-xl">Tipy na sázení</h1>
+            </div>
+        </div>
+    );
+};
+
+export const Route = createFileRoute("/")({
+    component: Index,
+});
+
+export default Index;
