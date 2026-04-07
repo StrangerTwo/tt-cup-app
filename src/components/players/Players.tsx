@@ -16,7 +16,7 @@ export const Players = () => {
                             <h3>
                                 {player.name} ({player.uid})
                             </h3>
-                            <p className="text-xs italic">{player.elo}</p>
+                            <p className="text-xs italic">elo: {player.elo}</p>
                         </Card>
                     ))}
                 </>
