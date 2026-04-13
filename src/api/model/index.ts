@@ -8,7 +8,15 @@
 
 export * from "./captureDto";
 export * from "./capturePage200";
+export * from "./crawlPage";
+export * from "./getPagesToCrawlRequest";
+export * from "./match";
 export * from "./newPlayer";
+export * from "./objectId";
+export * from "./pageInfo";
+export * from "./pageInfoRequest";
+export * from "./paginatedQueryResult";
+export * from "./paginatedQueryResultCrawlPage";
 export * from "./player";
 export * from "./status";
 export * from "./user";

@@ -1,9 +1,12 @@
+import { useNavigate } from "@tanstack/react-router";
+
 import { useGetPlayers } from "../../api/api";
 import { Skeleton } from "../lib/Skeleton";
 import { Card } from "../ui/Card";
 import { NewPlayer } from "./NewPlayer";
 
 export const Players = () => {
+    const navigate = useNavigate();
     const { data } = useGetPlayers();
 
     return (
@@ -12,7 +15,9 @@ export const Players = () => {
             {data ? (
                 <>
                     {data.map((player) => (
-                        <Card>
+                        <Card
+                            onClick={() => navigate({ to: "/player/$playerUid", params: { playerUid: player.uid } })}
+                            hoverEffects>
                             <h3>
                                 {player.name} ({player.uid})
                             </h3>

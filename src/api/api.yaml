@@ -30,6 +30,29 @@ paths:
             '*/*':
               schema: {type: object}
       operationId: capturePage
+  /crawl:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_CrawlPage'}
+      operationId: getPagesToCrawl
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/GetPagesToCrawlRequest'}
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_CrawlPage'}
   /openapi.yaml:
     get:
       description: ''
@@ -59,6 +82,62 @@ paths:
                 type: array
                 items: {$ref: '#/components/schemas/Player'}
       operationId: getPlayers
+  /players/{playerUid}:
+    get:
+      description: ''
+      parameters:
+      - name: playerUid
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Player'}
+      operationId: getPlayer
+  /players/{playerUid}/matches:
+    get:
+      description: ''
+      parameters:
+      - name: playerUid
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Match'}
+      operationId: getPlayerMatches
   /players/new:
     post:
       description: ''
@@ -120,13 +199,78 @@ components:
         url: {type: string}
         html: {type: string}
       required: [url, html]
+    CrawlPage:
+      type: object
+      properties:
+        url: {type: string}
+      required: [url]
+    PageInfo:
+      type: object
+      properties:
+        page: {type: integer, format: int32}
+        size: {type: integer, format: int32, default: '20'}
+        totalElements: {type: integer, format: int64}
+        totalPages: {type: integer, format: int32}
+        sort:
+          type: array
+          nullable: true
+          items: {type: string}
+      required: [page, size, totalElements, totalPages]
+    PaginatedQueryResult:
+      type: object
+      properties:
+        results: {type: array}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+      required: [results, pageInfo]
+    PaginatedQueryResult_CrawlPage:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/CrawlPage'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+    PageInfoRequest:
+      type: object
+      properties:
+        page: {type: integer, format: int32}
+        size: {type: integer, format: int32, default: '20'}
+        sort:
+          type: array
+          nullable: true
+          items: {type: string}
+      required: [page, size]
+    GetPagesToCrawlRequest:
+      type: object
+      properties:
+        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
+      required: [pageInfo]
     Player:
       type: object
       properties:
         uid: {type: string}
         name: {type: string, nullable: true}
         elo: {type: integer, format: int32, nullable: true}
+        recrawl: {type: boolean, nullable: true}
       required: [uid]
+    ObjectId: {type: string}
+    Match:
+      type: object
+      properties:
+        time: {type: string, format: date-time}
+        playerUids:
+          type: array
+          items: {type: string}
+        sets:
+          type: array
+          nullable: true
+          items: {type: integer, format: int32}
+        points:
+          type: array
+          nullable: true
+          items: {type: string}
+        tournamentId: {nullable: true, $ref: '#/components/schemas/ObjectId'}
+        objectId: {nullable: true, $ref: '#/components/schemas/ObjectId'}
+      required: [time, playerUids]
     NewPlayer:
       type: object
       properties:

@@ -12,4 +12,6 @@ export interface Player {
     name?: string | null;
     /** @nullable */
     elo?: number | null;
+    /** @nullable */
+    recrawl?: boolean | null;
 }
