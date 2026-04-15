@@ -9,6 +9,6 @@ import type { CrawlPage } from "./crawlPage";
 import type { PageInfo } from "./pageInfo";
 
 export interface PaginatedQueryResultCrawlPage {
-    results?: Array<CrawlPage>;
-    pageInfo?: PageInfo;
+    results: Array<CrawlPage>;
+    pageInfo: PageInfo;
 }

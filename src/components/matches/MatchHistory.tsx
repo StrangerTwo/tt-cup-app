@@ -1,30 +1,61 @@
-import { useGetPlayerMatches } from "../../api/api";
-import { Skeleton } from "../lib/Skeleton";
+import { useState } from "react";
+
+import { useGetMatches } from "../../api/api";
+import { EQueryKey } from "../../api/EQueryKey";
+import { Match } from "../../api/model";
+import { sortingForRequest } from "../../lib/sortingForRequest";
+import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
+import { SortMode } from "../icons/SortIcon";
+import Table, { Sort } from "../lib/Table";
 import { Card } from "../ui/Card";
+import { MatchRow } from "./MatchRow";
 
 interface Props {
     playerUid: string;
 }
 
 export const MatchHistory = ({ playerUid }: Props) => {
-    const { data } = useGetPlayerMatches(playerUid);
+    const [sort, setSort] = useState<Sort<Match> | undefined>({
+        key: "time",
+        mode: SortMode.DESC,
+    });
+
+    const { mutateAsync } = useGetMatches();
+    const { data, isFetching, fetchNextPage } = usePaginatedQuery({
+        mutateAsync,
+        paramFn: (pageInfo) => ({
+            data: {
+                playerUid,
+                pageInfo: {
+                    ...pageInfo,
+                    sort: sort ? sortingForRequest([sort]) : undefined,
+                },
+            },
+        }),
+        dataFn: (x) => x.results,
+        totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
+        queryKey: [EQueryKey.getMatches, playerUid, sort],
+    });
 
     return (
-        <>
-            <h2 className="mb-4">Historie zápasů</h2>
-            <div>
-                {data ? (
-                    data.map((match) => (
-                        <Card key={match.objectId} className="grid grid-cols-3 text-center">
-                            <span>{match.playerUids.at(0)}</span>
-                            <span>{match.sets?.join(":")}</span>
-                            <span>{match.playerUids.at(1)}</span>
-                        </Card>
-                    ))
-                ) : (
-                    <Skeleton.Card />
-                )}
-            </div>
-        </>
+        <Card className="w-0 min-w-full overflow-x-auto p-0">
+            <Table
+                caption={
+                    <>
+                        <h2 className="text-xl">Historie zápasů</h2>
+                    </>
+                }
+                heading={MatchRow.Heading}
+                data={data ?? []}
+                keyFn={(p) => p.objectId}
+                sort={sort}
+                onSort={{
+                    time: (mode) => setSort(mode ? { key: "time", mode } : undefined),
+                }}
+                onLoadMore={fetchNextPage}
+                isPending={isFetching}
+                RowFc={MatchRow.RowFc}
+            />
+        </Card>
     );
 };

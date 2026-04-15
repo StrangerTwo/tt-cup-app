@@ -1,11 +1,16 @@
-import { Fragment, MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, Fragment, MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useColorLayer } from "../ui/layout/ColorLayer";
 import { SortIcon, SortMode } from "../icons/SortIcon";
+import { useColorLayer } from "../ui/layout/ColorLayer";
 import { Skeleton } from "./Skeleton";
 
-interface Props<T> {
+export interface TableRowProps<T> {
+    item: T;
+    i: number;
+}
+
+export type TableProps<T> = {
     className?: string;
     caption?: ReactNode;
     heading?: Array<{
@@ -25,11 +30,19 @@ interface Props<T> {
     isPending?: boolean;
     onLoadMore?: () => unknown;
     filter?: (x: T) => boolean;
-    keyFn?: (x: T) => React.Key;
-    children: (x: T, i: number) => ReactNode;
+    keyFn?: (x: T) => React.Key | undefined;
     expandRowFn?: (x: T) => ReactNode;
     onRowClick?: (x: T) => void;
-}
+} & (
+    | {
+          children: (x: T, i: number) => ReactNode;
+          RowFc?: never;
+      }
+    | {
+          children?: never;
+          RowFc: FC<TableRowProps<T>>;
+      }
+);
 
 export type Sort<T> = {
     key: keyof T;
@@ -50,11 +63,12 @@ export const Table = <T,>({
     filter,
     keyFn,
     children,
+    RowFc,
     expandRowFn,
     onRowClick,
     isPending,
     onLoadMore,
-}: Props<T>) => {
+}: TableProps<T>) => {
     const { bgColor, borderColor, textColor } = useColorLayer(layerStep);
     const { bgColor: highlightBgColor, hoverBgColor, textColor: highlightTextColor } = useColorLayer(layerStep + 1);
     const [sort, setSort] = useState<Sort<T> | undefined>(_sort);
@@ -64,7 +78,7 @@ export const Table = <T,>({
 
     useEffect(() => setSort(sort), [sort]);
 
-    const getKey = (x: T, i: number) => (keyFn ? keyFn(x) : i);
+    const getKey = (x: T, i: number) => keyFn?.(x) ?? i;
 
     const rowClick = (x: T, i: number) => () => {
         onRowClick && onRowClick(x);
@@ -167,7 +181,13 @@ export const Table = <T,>({
                                     expandRowFn && selected === getKey(x, i) && "border-b-0 " + highlightBgColor,
                                 )}
                                 onClick={rowClick(x, i)}>
-                                {children(x, i)}
+                                {children ? (
+                                    children(x, i)
+                                ) : (
+                                    <>
+                                        <RowFc item={x} i={i} />
+                                    </>
+                                )}
                             </tr>
                             {expandRowFn && selected === getKey(x, i) && (
                                 <tr className={twMerge(highlightBgColor, borderColor, "border-b last:border-b-0")}>

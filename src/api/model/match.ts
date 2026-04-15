@@ -9,9 +9,9 @@ import type { ObjectId } from "./objectId";
 
 export interface Match {
     time: string;
-    playerUids: Array<string>;
+    playerUids: [string, string, ...Array<string>];
     /** @nullable */
-    sets?: Array<number> | null;
+    sets?: [number, number, ...Array<number>] | null;
     /** @nullable */
     points?: Array<string> | null;
     /** @nullable */

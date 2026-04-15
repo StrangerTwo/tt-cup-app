@@ -26,10 +26,13 @@ import { customInstance } from "./api-instance";
 import type {
     CaptureDto,
     CapturePage200,
+    GetMatchesRequest,
     GetPagesToCrawlRequest,
-    Match,
+    GetPlayersRequest,
     NewPlayer,
     PaginatedQueryResultCrawlPage,
+    PaginatedQueryResultMatch,
+    PaginatedQueryResultPlayer,
     Player,
     Status,
     User,
@@ -325,6 +328,71 @@ export const usePostCrawl = <TError = ErrorType<unknown>, TContext = unknown>(
     return useMutation(mutationOptions, queryClient);
 };
 
+export const getMatches = (
+    getMatchesRequest: GetMatchesRequest,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<PaginatedQueryResultMatch>(
+        {
+            url: `/match`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: getMatchesRequest,
+            signal,
+        },
+        options,
+    );
+};
+
+export const getGetMatchesMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof getMatches>>,
+        TError,
+        { data: GetMatchesRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof getMatches>>, TError, { data: GetMatchesRequest }, TContext> => {
+    const mutationKey = ["getMatches"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof getMatches>>, { data: GetMatchesRequest }> = (
+        props,
+    ) => {
+        const { data } = props ?? {};
+
+        return getMatches(data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type GetMatchesMutationResult = NonNullable<Awaited<ReturnType<typeof getMatches>>>;
+export type GetMatchesMutationBody = GetMatchesRequest;
+export type GetMatchesMutationError = ErrorType<unknown>;
+
+export const useGetMatches = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof getMatches>>,
+            TError,
+            { data: GetMatchesRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getMatches>>, TError, { data: GetMatchesRequest }, TContext> => {
+    const mutationOptions = getGetMatchesMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
 export const getOpenapi = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
     return customInstance<string>({ url: `/openapi.yaml`, method: "GET", signal }, options);
 };
@@ -413,93 +481,70 @@ export function useGetOpenapi<TData = Awaited<ReturnType<typeof getOpenapi>>, TE
     return query;
 }
 
-export const getPlayers = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
-    return customInstance<Array<Player>>({ url: `/players`, method: "GET", signal }, options);
+export const getPlayers = (
+    getPlayersRequest: GetPlayersRequest,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<PaginatedQueryResultPlayer>(
+        {
+            url: `/player`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: getPlayersRequest,
+            signal,
+        },
+        options,
+    );
 };
 
-export const getGetPlayersQueryKey = () => {
-    return [`/players`] as const;
-};
-
-export const getGetPlayersQueryOptions = <
-    TData = Awaited<ReturnType<typeof getPlayers>>,
-    TError = ErrorType<unknown>,
->(options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayers>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
-}) => {
-    const { query: queryOptions, request: requestOptions } = options ?? {};
-
-    const queryKey = queryOptions?.queryKey ?? getGetPlayersQueryKey();
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayers>>> = ({ signal }) =>
-        getPlayers(requestOptions, signal);
-
-    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+export const getGetPlayersMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
         Awaited<ReturnType<typeof getPlayers>>,
         TError,
-        TData
-    > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+        { data: GetPlayersRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof getPlayers>>, TError, { data: GetPlayersRequest }, TContext> => {
+    const mutationKey = ["getPlayers"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
 
-export type GetPlayersQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayers>>>;
-export type GetPlayersQueryError = ErrorType<unknown>;
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof getPlayers>>, { data: GetPlayersRequest }> = (
+        props,
+    ) => {
+        const { data } = props ?? {};
 
-export function useGetPlayers<TData = Awaited<ReturnType<typeof getPlayers>>, TError = ErrorType<unknown>>(
-    options: {
-        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayers>>, TError, TData>> &
-            Pick<
-                DefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayers>>,
-                    TError,
-                    Awaited<ReturnType<typeof getPlayers>>
-                >,
-                "initialData"
-            >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayers<TData = Awaited<ReturnType<typeof getPlayers>>, TError = ErrorType<unknown>>(
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayers>>, TError, TData>> &
-            Pick<
-                UndefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayers>>,
-                    TError,
-                    Awaited<ReturnType<typeof getPlayers>>
-                >,
-                "initialData"
-            >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayers<TData = Awaited<ReturnType<typeof getPlayers>>, TError = ErrorType<unknown>>(
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayers>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-export function useGetPlayers<TData = Awaited<ReturnType<typeof getPlayers>>, TError = ErrorType<unknown>>(
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayers>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetPlayersQueryOptions(options);
-
-    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-        queryKey: DataTag<QueryKey, TData, TError>;
+        return getPlayers(data, requestOptions);
     };
 
-    query.queryKey = queryOptions.queryKey;
+    return { mutationFn, ...mutationOptions };
+};
 
-    return query;
-}
+export type GetPlayersMutationResult = NonNullable<Awaited<ReturnType<typeof getPlayers>>>;
+export type GetPlayersMutationBody = GetPlayersRequest;
+export type GetPlayersMutationError = ErrorType<unknown>;
+
+export const useGetPlayers = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof getPlayers>>,
+            TError,
+            { data: GetPlayersRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getPlayers>>, TError, { data: GetPlayersRequest }, TContext> => {
+    const mutationOptions = getGetPlayersMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
 
 export const getPlayer = (
     playerUid: string,
@@ -507,13 +552,13 @@ export const getPlayer = (
     signal?: AbortSignal,
 ) => {
     return customInstance<Player>(
-        { url: `/players/${encodeURIComponent(String(playerUid))}`, method: "GET", signal },
+        { url: `/player/${encodeURIComponent(String(playerUid))}`, method: "GET", signal },
         options,
     );
 };
 
 export const getGetPlayerQueryKey = (playerUid?: string) => {
-    return [`/players/${playerUid}`] as const;
+    return [`/player/${playerUid}`] as const;
 };
 
 export const getGetPlayerQueryOptions = <TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string>>(
@@ -600,108 +645,6 @@ export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TErr
     return query;
 }
 
-export const getPlayerMatches = (
-    playerUid: string,
-    options?: SecondParameter<typeof customInstance>,
-    signal?: AbortSignal,
-) => {
-    return customInstance<Array<Match>>(
-        { url: `/players/${encodeURIComponent(String(playerUid))}/matches`, method: "GET", signal },
-        options,
-    );
-};
-
-export const getGetPlayerMatchesQueryKey = (playerUid?: string) => {
-    return [`/players/${playerUid}/matches`] as const;
-};
-
-export const getGetPlayerMatchesQueryOptions = <
-    TData = Awaited<ReturnType<typeof getPlayerMatches>>,
-    TError = ErrorType<string>,
->(
-    playerUid: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatches>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-) => {
-    const { query: queryOptions, request: requestOptions } = options ?? {};
-
-    const queryKey = queryOptions?.queryKey ?? getGetPlayerMatchesQueryKey(playerUid);
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayerMatches>>> = ({ signal }) =>
-        getPlayerMatches(playerUid, requestOptions, signal);
-
-    return { queryKey, queryFn, enabled: !!playerUid, ...queryOptions } as UseQueryOptions<
-        Awaited<ReturnType<typeof getPlayerMatches>>,
-        TError,
-        TData
-    > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type GetPlayerMatchesQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayerMatches>>>;
-export type GetPlayerMatchesQueryError = ErrorType<string>;
-
-export function useGetPlayerMatches<TData = Awaited<ReturnType<typeof getPlayerMatches>>, TError = ErrorType<string>>(
-    playerUid: string,
-    options: {
-        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatches>>, TError, TData>> &
-            Pick<
-                DefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayerMatches>>,
-                    TError,
-                    Awaited<ReturnType<typeof getPlayerMatches>>
-                >,
-                "initialData"
-            >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayerMatches<TData = Awaited<ReturnType<typeof getPlayerMatches>>, TError = ErrorType<string>>(
-    playerUid: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatches>>, TError, TData>> &
-            Pick<
-                UndefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayerMatches>>,
-                    TError,
-                    Awaited<ReturnType<typeof getPlayerMatches>>
-                >,
-                "initialData"
-            >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayerMatches<TData = Awaited<ReturnType<typeof getPlayerMatches>>, TError = ErrorType<string>>(
-    playerUid: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatches>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-export function useGetPlayerMatches<TData = Awaited<ReturnType<typeof getPlayerMatches>>, TError = ErrorType<string>>(
-    playerUid: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatches>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetPlayerMatchesQueryOptions(playerUid, options);
-
-    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-        queryKey: DataTag<QueryKey, TData, TError>;
-    };
-
-    query.queryKey = queryOptions.queryKey;
-
-    return query;
-}
-
 export const newPlayer = (
     newPlayer: NewPlayer,
     options?: SecondParameter<typeof customInstance>,
@@ -709,7 +652,7 @@ export const newPlayer = (
 ) => {
     return customInstance<Status>(
         {
-            url: `/players/new`,
+            url: `/player/new`,
             method: "POST",
             headers: { "Content-Type": "application/json" },
             data: newPlayer,
