@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 
-import { getGetPlayersQueryKey, useNewPlayer } from "../../api/api";
+import { useNewPlayer } from "../../api/api";
+import { EQueryKey } from "../../api/EQueryKey";
 import { resolveErrorMessage } from "../../lib/toastError";
 import { Input } from "../form/Input";
 import { SubmitButton } from "../lib/SubmitButton";
@@ -35,7 +36,7 @@ export const NewPlayer = () => {
     const onSubmit = (data: NewPlayerFormType) => {
         toast.promise(
             mutateAsync({ data }).then(() => {
-                client.invalidateQueries({ queryKey: getGetPlayersQueryKey() });
+                client.invalidateQueries({ queryKey: [EQueryKey.getPlayers] });
                 navigate({ to: "/players" });
             }),
             {
