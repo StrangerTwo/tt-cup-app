@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useGetPlayers } from "../../api/api";
 import { EQueryKey } from "../../api/EQueryKey";
 import { Player } from "../../api/model";
+import { trimToUndefined } from "../../lib/empty";
 import { sortingForRequest } from "../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
 import { PlusIcon } from "../icons";
@@ -16,7 +17,7 @@ import { IconButton } from "../ui/IconButton";
 export const Players = () => {
     const navigate = useNavigate();
 
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState<string>();
     const [sort, setSort] = useState<Sort<Player> | undefined>({
         key: "elo",
         mode: SortMode.DESC,
@@ -27,7 +28,7 @@ export const Players = () => {
         mutateAsync,
         paramFn: (pageInfo) => ({
             data: {
-                search,
+                search: trimToUndefined(search),
                 pageInfo: {
                     ...pageInfo,
                     sort: sort ? sortingForRequest([sort]) : undefined,

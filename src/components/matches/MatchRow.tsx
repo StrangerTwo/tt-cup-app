@@ -11,10 +11,10 @@ export const MatchRow: {
     RowFc: Required<TableProps<Match>>["RowFc"];
 } = {
     Heading: [
-        { label: "Čas", key: "time" },
         { label: "A" },
         { label: "Sety", key: "sets" },
         { label: "B" },
+        { label: "Čas", key: "time" },
         { label: "Body", key: "points" },
     ],
     RowFc: ({ item: match, i }) => {
@@ -27,9 +27,6 @@ export const MatchRow: {
 
         return (
             <>
-                <td className={twMerge("whitespace-nowrap px-6 py-4", textHighlightColor)}>
-                    {renderFullDateWithHoursShort(match.time)}
-                </td>
                 <td className="whitespace-nowrap px-6 py-4">{playerA?.name ?? match.playerUids[0]}</td>
                 <td className={twMerge("whitespace-nowrap px-6 py-4", textHighlightColor)}>
                     <div
@@ -51,6 +48,9 @@ export const MatchRow: {
                     </div>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">{playerB?.name ?? match.playerUids[1]}</td>
+                <td className={twMerge("whitespace-nowrap px-6 py-4", textHighlightColor)}>
+                    {renderFullDateWithHoursShort(match.time)}
+                </td>
                 <td className="whitespace-nowrap px-6 py-4">{match.points?.join("; ")}</td>
             </>
         );

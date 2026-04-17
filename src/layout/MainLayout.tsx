@@ -23,8 +23,10 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
 
     const onMainClick: MouseEventHandler<HTMLElement> = (e) => {
         if (window.innerWidth > 768) return;
-        setSidebarOpen(false);
-        e.preventDefault();
+        if (sidebarOpen) {
+            setSidebarOpen(false);
+            e.preventDefault();
+        }
     };
 
     useEffect(() => {
