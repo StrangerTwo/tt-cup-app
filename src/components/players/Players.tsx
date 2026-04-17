@@ -56,9 +56,11 @@ export const Players = () => {
                     </>
                 }
                 heading={[
-                    { label: "Jméno", key: "name" },
+                    { label: "#" },
+                    { label: "Jméno hráče", key: "name" },
+                    { label: "Ranking", key: "elo" },
+                    { label: "Elo" },
                     { label: "uid", key: "uid" },
-                    { label: "Elo", key: "elo" },
                 ]}
                 data={data ?? []}
                 keyFn={(p) => p.uid}
@@ -72,11 +74,13 @@ export const Players = () => {
                 onRowClick={(p) => navigate({ to: "/player/$playerUid", params: { playerUid: p.uid } })}
                 onLoadMore={fetchNextPage}
                 isPending={isFetching}>
-                {(p) => (
+                {(p, i) => (
                     <>
+                        <TableCell>{i + 1}.</TableCell>
                         <TableCell className="font-medium text-gray-900 dark:text-white">{p.name}</TableCell>
-                        <TableCell>{p.uid}</TableCell>
                         <TableCell>{p.elo}</TableCell>
+                        <TableCell>-</TableCell>
+                        <TableCell>{p.uid}</TableCell>
                     </>
                 )}
             </Table>
