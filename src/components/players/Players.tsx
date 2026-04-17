@@ -11,6 +11,7 @@ import { PlusIcon } from "../icons";
 import { SortMode } from "../icons/SortIcon";
 import SearchInput from "../lib/SearchInput";
 import Table, { Sort } from "../lib/Table";
+import { TableCell } from "../lib/TableCell";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
 
@@ -45,7 +46,7 @@ export const Players = () => {
             <Table
                 caption={
                     <>
-                        <div className="mb-4 flex items-center justify-between">
+                        <div className="mb-1 flex items-center gap-4 md:mb-4">
                             <h1 className="text-xl">Hráči</h1>
                             <IconButton onClick={() => navigate({ to: "/players/new" })}>
                                 <PlusIcon />
@@ -73,11 +74,9 @@ export const Players = () => {
                 isPending={isFetching}>
                 {(p) => (
                     <>
-                        <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
-                            {p.name}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">{p.uid}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{p.elo}</td>
+                        <TableCell className="font-medium text-gray-900 dark:text-white">{p.name}</TableCell>
+                        <TableCell>{p.uid}</TableCell>
+                        <TableCell>{p.elo}</TableCell>
                     </>
                 )}
             </Table>

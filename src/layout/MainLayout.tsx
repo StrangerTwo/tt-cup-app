@@ -79,7 +79,7 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                     )}
                     <main
                         className={twMerge(
-                            "h-full grow border-slate-200  p-4 text-gray-700 dark:text-gray-400",
+                            "h-full grow border-slate-200 p-1.5 text-gray-700 dark:text-gray-400 md:p-4",
                             hasSidebar && "ms-0 transition-[margin] duration-300",
                             hasSidebar && (sidebarExpanded ? "md:-ms-64" : "md:-ms-20"),
                             hasSidebar && sidebarOpen && "md:ms-0 md:after:hidden",

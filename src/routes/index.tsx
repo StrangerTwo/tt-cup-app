@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { FC } from "react";
 
-const Index: FC = ({ }) => {
+const Index: FC = ({}) => {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
@@ -12,7 +12,11 @@ const Index: FC = ({ }) => {
 };
 
 export const Route = createFileRoute("/")({
-    component: Index,
+    loader: () =>
+        redirect({
+            to: "/players",
+            replace: true,
+        }),
 });
 
 export default Index;

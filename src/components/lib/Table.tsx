@@ -1,23 +1,27 @@
-import { FC, Fragment, MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { SortIcon, SortMode } from "../icons/SortIcon";
+import { SortMode } from "../icons/SortIcon";
 import { useColorLayer } from "../ui/layout/ColorLayer";
 import { Skeleton } from "./Skeleton";
+import { TableCell } from "./TableCell";
+import { TableHeadingCell } from "./TableHeadingCell";
 
 export interface TableRowProps<T> {
     item: T;
     i: number;
 }
 
+export interface TableHeading<T> {
+    label: string;
+    key?: Extract<keyof T, string>;
+    className?: string;
+}
+
 export type TableProps<T> = {
     className?: string;
     caption?: ReactNode;
-    heading?: Array<{
-        label: string;
-        key?: Extract<keyof T, string>;
-        className?: string;
-    }>;
+    heading?: Array<TableHeading<T>>;
     sorting?: {
         [key in keyof T]?: (a: T, B: T) => number;
     };
@@ -33,16 +37,8 @@ export type TableProps<T> = {
     keyFn?: (x: T) => React.Key | undefined;
     expandRowFn?: (x: T) => ReactNode;
     onRowClick?: (x: T) => void;
-} & (
-    | {
-          children: (x: T, i: number) => ReactNode;
-          RowFc?: never;
-      }
-    | {
-          children?: never;
-          RowFc: FC<TableRowProps<T>>;
-      }
-);
+    children: (x: T, i: number) => ReactNode;
+};
 
 export type Sort<T> = {
     key: keyof T;
@@ -63,7 +59,6 @@ export const Table = <T,>({
     filter,
     keyFn,
     children,
-    RowFc,
     expandRowFn,
     onRowClick,
     isPending,
@@ -132,29 +127,18 @@ export const Table = <T,>({
 
     return (
         <table className={twMerge("w-full text-left text-sm rtl:text-right", className)}>
-            {caption && <caption className="p-5 pt-4 text-left rtl:text-right">{caption}</caption>}
+            {caption && <caption className="p-2 pt-1 text-left md:p-5 md:pt-4 rtl:text-right">{caption}</caption>}
             {heading && (
                 <thead className={twMerge("text-xs uppercase", highlightBgColor, highlightTextColor)}>
                     <tr>
                         {heading.map((h, i) => (
-                            <th scope="col" className="px-6 py-3" key={h.key ?? i}>
-                                <div
-                                    className={twMerge(
-                                        "inline-flex items-center justify-center gap-1.5",
-                                        h.key && onHeadingClick[h.key] && "cursor-pointer",
-                                        sort?.key === h.key && "text-gray-900 dark:text-gray-50",
-                                        h.className,
-                                    )}
-                                    onClick={onHeadingClick[h.key]}>
-                                    {h.label}
-                                    {h.key && onHeadingClick[h.key] && (
-                                        <SortIcon
-                                            className="min-w-max"
-                                            mode={sort?.key === h.key ? sort.mode : undefined}
-                                        />
-                                    )}
-                                </div>
-                            </th>
+                            <TableHeadingCell<T>
+                                key={h.key ?? i}
+                                heading={h}
+                                onClick={onHeadingClick[h.key]}
+                                setSort={setSort}
+                                sort={sort}
+                            />
                         ))}
                     </tr>
                 </thead>
@@ -181,19 +165,11 @@ export const Table = <T,>({
                                     expandRowFn && selected === getKey(x, i) && "border-b-0 " + highlightBgColor,
                                 )}
                                 onClick={rowClick(x, i)}>
-                                {children ? (
-                                    children(x, i)
-                                ) : (
-                                    <>
-                                        <RowFc item={x} i={i} />
-                                    </>
-                                )}
+                                {children(x, i)}
                             </tr>
                             {expandRowFn && selected === getKey(x, i) && (
                                 <tr className={twMerge(highlightBgColor, borderColor, "border-b last:border-b-0")}>
-                                    <td colSpan={heading?.length || 42} className="px-6 py-4">
-                                        {expandRowFn(x)}
-                                    </td>
+                                    <TableCell colSpan={heading?.length || 42}>{expandRowFn(x)}</TableCell>
                                 </tr>
                             )}
                         </Fragment>
@@ -203,9 +179,9 @@ export const Table = <T,>({
                         ref={sentinelRef}
                         className={twMerge(bgColor, textColor, borderColor, "border-t", heading && "first:border-t-0")}>
                         {isPending && (
-                            <td colSpan={heading?.length || 42}>
+                            <TableCell colSpan={heading?.length || 42}>
                                 <Skeleton.Text className="m-4" />
-                            </td>
+                            </TableCell>
                         )}
                     </tr>
                 )}

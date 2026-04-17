@@ -29,7 +29,7 @@ const Sidebar: FC<Props> = ({ className, sidebarOpen, children, absolute, navbar
                 className,
             )}>
             <nav
-                className="sticky flex grow flex-col overflow-y-auto px-3 py-4"
+                className="sticky flex grow flex-col overflow-y-auto px-1.5 py-2 md:px-3 md:py-4"
                 style={{
                     top: navbarHeight,
                     maxHeight: `calc(100vh - ${navbarHeight}px)`,

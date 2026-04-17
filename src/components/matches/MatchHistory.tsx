@@ -53,9 +53,9 @@ export const MatchHistory = ({ playerUid }: Props) => {
                     time: (mode) => setSort(mode ? { key: "time", mode } : undefined),
                 }}
                 onLoadMore={fetchNextPage}
-                isPending={isFetching}
-                RowFc={MatchRow.RowFc}
-            />
+                isPending={isFetching}>
+                {(match, i) => <MatchRow.FC match={match} playerUid={playerUid} />}
+            </Table>
         </Card>
     );
 };

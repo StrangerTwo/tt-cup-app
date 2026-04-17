@@ -27,7 +27,7 @@ export const Navbar: FC<Props> = ({ onHeightChange, startChildren, children, end
         <nav
             ref={navRef}
             className="fixed start-0 top-0 z-50 w-full border-b border-slate-200 bg-white dark:border-slate-600 dark:bg-slate-800">
-            <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4 2xl:max-w-screen-2xl">
+            <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-1.5 md:p-4 2xl:max-w-screen-2xl">
                 <div className="flex w-32 justify-start gap-2 md:w-48">{startChildren}</div>
                 {children}
                 <div className="flex w-32 justify-end gap-2 md:order-2 md:w-48">{endChildren}</div>
