@@ -10,10 +10,11 @@ interface TableCellProps<T> {
     sort: Sort<T> | undefined;
     onClick?: MouseEventHandler<HTMLDivElement>;
 }
+export const cellClass = "px-1 py-1.5 first:pl-2 last:pr-2 md:px-6 md:py-3 md:first:pl-6 md:first:pr-6";
 
 export const TableHeadingCell = <T,>({ heading, setSort, sort, onClick }: TableCellProps<T>) => {
     return (
-        <th scope="col" className="px-1 py-1.5 first:pl-2 last:pr-2 md:px-6 md:py-3">
+        <th scope="col" className={cellClass}>
             <div
                 className={twMerge(
                     "inline-flex items-center justify-center gap-1.5",
