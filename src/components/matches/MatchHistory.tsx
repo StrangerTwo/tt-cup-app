@@ -38,7 +38,7 @@ export const MatchHistory = ({ playerUid }: Props) => {
     });
 
     return (
-        <Card className="w-0 min-w-full overflow-x-auto p-0">
+        <Card className="w-0 min-w-full overflow-x-auto p-0 md:p-0">
             <Table
                 caption={
                     <>

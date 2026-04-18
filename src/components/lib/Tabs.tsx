@@ -18,13 +18,13 @@ export const Tabs: FC<Props> = ({ value, tabs, onSelect }) => {
 
     return (
         <>
-            <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="mb-2 border-b border-gray-200 dark:border-gray-700 md:mb-4">
                 <ul className="-mb-px flex flex-wrap justify-evenly text-center text-sm font-medium" role="tablist">
                     {tabs.map((tab, i) => (
                         <li key={i} className="me-2" role="presentation">
                             <button
                                 className={twMerge(
-                                    "group inline-flex items-center justify-center gap-2 rounded-t-lg border-b-2 border-transparent p-4",
+                                    "group inline-flex items-center justify-center gap-2 rounded-t-lg border-b-2 border-transparent p-2 md:p-4",
                                     tab === selectedTab
                                         ? "border-blue-600 dark:border-blue-500 dark:text-blue-500"
                                         : "hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300",

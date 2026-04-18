@@ -23,7 +23,7 @@ export const Players = () => {
     const { data, fetchNextPage, isFetching } = usePlayersList(search, sort);
 
     return (
-        <Card className="w-0 min-w-full overflow-x-auto p-0">
+        <Card className="w-0 min-w-full overflow-x-auto p-0 md:p-0">
             <Table
                 caption={
                     <>
@@ -41,14 +41,14 @@ export const Players = () => {
                     { label: "Jméno hráče", key: "name" },
                     { label: "Ranking", key: "elo" },
                     { label: "Elo" },
-                    { label: "Oblíbené" },
+                    { label: "Oblíbené", key: "favourite" },
                     { label: "uid", key: "uid" },
                 ]}
                 data={data ?? []}
                 keyFn={(p) => p.uid}
                 sort={sort}
                 onSort={Object.fromEntries(
-                    (["uid", "name", "elo"] as Array<keyof Player>).map((x) => [
+                    (["uid", "name", "elo", "favourite"] as Array<keyof Player>).map((x) => [
                         x,
                         (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
                     ]),

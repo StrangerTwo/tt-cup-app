@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { twMerge } from "tailwind-merge";
 
 import { Match } from "../../api/model";
 import { renderFullDateShortWithHoursShort } from "../../lib/date";
+import { Score } from "../lib/Score";
 import { TableProps } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
 import { useColorLayer } from "../ui/layout";
@@ -32,23 +32,7 @@ export const MatchRow: {
             <>
                 <TableCell className={textHighlightColor}>{renderFullDateShortWithHoursShort(match.time)}</TableCell>
                 <TableCell className={textHighlightColor}>
-                    <div
-                        className={twMerge(
-                            "inline-flex aspect-square min-w-[1em] items-center justify-center",
-                            isWinForA && "bg-green-500 text-white dark:bg-green-800",
-                            isWinForB && "bg-red-500 text-white dark:bg-red-800",
-                        )}>
-                        {sets?.[0]}
-                    </div>
-                    <span className="mx-2">:</span>
-                    <div
-                        className={twMerge(
-                            "inline-flex aspect-square min-w-[1em] items-center justify-center",
-                            isWinForB && "bg-green-500 text-white dark:bg-green-800",
-                            isWinForA && "bg-red-500 text-white dark:bg-red-800",
-                        )}>
-                        {sets?.[1]}
-                    </div>
+                    <Score scoreA={sets?.[0]} scoreB={sets?.[1]} isWinForA={isWinForA} isWinForB={isWinForB} />
                 </TableCell>
                 <TableCell>{playerA?.name ?? playerUids[0]}</TableCell>
                 <TableCell>{playerB?.name ?? playerUids[1]}</TableCell>

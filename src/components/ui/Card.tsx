@@ -21,7 +21,7 @@ export const Card: FC<Props> = ({ className, style, children, hoverEffects, onCl
                     bgColor,
                     borderColor,
                     textColor,
-                    "rounded-lg border p-4 shadow-sm",
+                    "rounded-lg border p-2 shadow-sm md:p-4",
                     hoverEffects && hoverBgColor,
                     onClick && "cursor-pointer",
                     className,
