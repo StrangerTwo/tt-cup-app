@@ -11,6 +11,7 @@ interface Props<TData, TResponse, TError, TVariables> {
     queryKey: QueryKey;
     enabled?: boolean;
     refetchInterval?: number;
+    onfulfilled?: (response: TResponse) => unknown;
 }
 
 const defaultPagination = { page: 0, size: 20 };
@@ -24,11 +25,16 @@ export const usePaginatedQuery = <TData, TResponse, TError, TVariables>({
     initialPagination = defaultPagination,
     enabled = true,
     refetchInterval,
+    onfulfilled,
 }: Props<TData, TResponse, TError, TVariables>) => {
     const result = useInfiniteQuery({
         queryKey,
         initialPageParam: 0,
-        queryFn: ({ pageParam = 0 }) => mutateAsync(paramFn({ ...initialPagination, page: pageParam })),
+        queryFn: ({ pageParam = 0 }) =>
+            mutateAsync(paramFn({ ...initialPagination, page: pageParam })).then((res) => {
+                onfulfilled?.(res);
+                return res;
+            }),
         getNextPageParam: (lastPage, allPages) => {
             const totalPages = totalPagesFn(lastPage) ?? 0;
             return allPages.length < totalPages ? allPages.length : undefined;

@@ -114,19 +114,47 @@ paths:
           content:
             '*/*':
               schema: {type: string}
-        '500':
-          description: Internal Server Error
+        '404':
+          description: Not Found
           content:
-            text/plain:
-              schema: {type: string}
-              examples:
-                Example#1: {value: ''}
+            '*/*':
+              schema: {type: object}
         '200':
           description: OK
           content:
             '*/*':
               schema: {$ref: '#/components/schemas/Player'}
       operationId: getPlayer
+  /player/{playerUid}/favourite:
+    patch:
+      description: ''
+      parameters:
+      - name: playerUid
+        in: path
+        required: true
+        schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Status'}
+        required: true
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Status'}
+      operationId: setPlayerFavourite
   /player/new:
     post:
       description: ''
@@ -286,6 +314,7 @@ components:
         name: {type: string, nullable: true}
         elo: {type: integer, format: int32, nullable: true}
         recrawl: {type: boolean, nullable: true}
+        favourite: {type: boolean, nullable: true}
       required: [uid]
     PaginatedQueryResult_Player:
       type: object
@@ -295,16 +324,16 @@ components:
           items: {$ref: '#/components/schemas/Player'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
-    NewPlayer:
-      type: object
-      properties:
-        uid: {type: string}
-      required: [uid]
     Status:
       type: object
       properties:
         status: {type: boolean}
       required: [status]
+    NewPlayer:
+      type: object
+      properties:
+        uid: {type: string}
+      required: [uid]
     User:
       type: object
       properties:

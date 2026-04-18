@@ -1,12 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { useGetPlayers } from "../../api/api";
-import { EQueryKey } from "../../api/EQueryKey";
 import { Player } from "../../api/model";
-import { trimToUndefined } from "../../lib/empty";
-import { sortingForRequest } from "../../lib/sortingForRequest";
-import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
 import { PlusIcon } from "../icons";
 import { SortMode } from "../icons/SortIcon";
 import SearchInput from "../lib/SearchInput";
@@ -14,6 +9,8 @@ import Table, { Sort } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
+import { FavouritePlayerButton } from "./FavouritePlayerButton";
+import { usePlayersList } from "./usePlayersList";
 
 export const Players = () => {
     const navigate = useNavigate();
@@ -23,23 +20,7 @@ export const Players = () => {
         key: "elo",
         mode: SortMode.DESC,
     });
-
-    const { mutateAsync } = useGetPlayers();
-    const { data, isFetching, fetchNextPage } = usePaginatedQuery({
-        mutateAsync,
-        paramFn: (pageInfo) => ({
-            data: {
-                search: trimToUndefined(search),
-                pageInfo: {
-                    ...pageInfo,
-                    sort: sort ? sortingForRequest([sort]) : undefined,
-                },
-            },
-        }),
-        dataFn: (x) => x.results,
-        totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
-        queryKey: [EQueryKey.getPlayers, search, sort],
-    });
+    const { data, fetchNextPage, isFetching } = usePlayersList(search, sort);
 
     return (
         <Card className="w-0 min-w-full overflow-x-auto p-0">
@@ -60,6 +41,7 @@ export const Players = () => {
                     { label: "Jméno hráče", key: "name" },
                     { label: "Ranking", key: "elo" },
                     { label: "Elo" },
+                    { label: "Oblíbené" },
                     { label: "uid", key: "uid" },
                 ]}
                 data={data ?? []}
@@ -80,6 +62,9 @@ export const Players = () => {
                         <TableCell className="font-medium text-gray-900 dark:text-white">{p.name}</TableCell>
                         <TableCell>{p.elo}</TableCell>
                         <TableCell>-</TableCell>
+                        <TableCell>
+                            <FavouritePlayerButton playerUid={p.uid} />
+                        </TableCell>
                         <TableCell>{p.uid}</TableCell>
                     </>
                 )}

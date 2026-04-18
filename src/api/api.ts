@@ -28,12 +28,14 @@ import type {
     CapturePage200,
     GetMatchesRequest,
     GetPagesToCrawlRequest,
+    GetPlayer404,
     GetPlayersRequest,
     NewPlayer,
     PaginatedQueryResultCrawlPage,
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlayer,
     Player,
+    SetPlayerFavourite404,
     Status,
     User,
 } from "./model";
@@ -561,7 +563,10 @@ export const getGetPlayerQueryKey = (playerUid?: string) => {
     return [`/player/${playerUid}`] as const;
 };
 
-export const getGetPlayerQueryOptions = <TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string>>(
+export const getGetPlayerQueryOptions = <
+    TData = Awaited<ReturnType<typeof getPlayer>>,
+    TError = ErrorType<string | GetPlayer404>,
+>(
     playerUid: string,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayer>>, TError, TData>>;
@@ -583,9 +588,9 @@ export const getGetPlayerQueryOptions = <TData = Awaited<ReturnType<typeof getPl
 };
 
 export type GetPlayerQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayer>>>;
-export type GetPlayerQueryError = ErrorType<string>;
+export type GetPlayerQueryError = ErrorType<string | GetPlayer404>;
 
-export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string>>(
+export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string | GetPlayer404>>(
     playerUid: string,
     options: {
         query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayer>>, TError, TData>> &
@@ -601,7 +606,7 @@ export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TErr
     },
     queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string>>(
+export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string | GetPlayer404>>(
     playerUid: string,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayer>>, TError, TData>> &
@@ -617,7 +622,7 @@ export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TErr
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string>>(
+export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string | GetPlayer404>>(
     playerUid: string,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayer>>, TError, TData>>;
@@ -626,7 +631,7 @@ export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TErr
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string>>(
+export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TError = ErrorType<string | GetPlayer404>>(
     playerUid: string,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayer>>, TError, TData>>;
@@ -644,6 +649,84 @@ export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TErr
 
     return query;
 }
+
+export const setPlayerFavourite = (
+    playerUid: string,
+    status: Status,
+    options?: SecondParameter<typeof customInstance>,
+) => {
+    return customInstance<Status>(
+        {
+            url: `/player/${encodeURIComponent(String(playerUid))}/favourite`,
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            data: status,
+        },
+        options,
+    );
+};
+
+export const getSetPlayerFavouriteMutationOptions = <
+    TError = ErrorType<string | SetPlayerFavourite404>,
+    TContext = unknown,
+>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof setPlayerFavourite>>,
+        TError,
+        { playerUid: string; data: Status },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof setPlayerFavourite>>,
+    TError,
+    { playerUid: string; data: Status },
+    TContext
+> => {
+    const mutationKey = ["setPlayerFavourite"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof setPlayerFavourite>>,
+        { playerUid: string; data: Status }
+    > = (props) => {
+        const { playerUid, data } = props ?? {};
+
+        return setPlayerFavourite(playerUid, data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type SetPlayerFavouriteMutationResult = NonNullable<Awaited<ReturnType<typeof setPlayerFavourite>>>;
+export type SetPlayerFavouriteMutationBody = Status;
+export type SetPlayerFavouriteMutationError = ErrorType<string | SetPlayerFavourite404>;
+
+export const useSetPlayerFavourite = <TError = ErrorType<string | SetPlayerFavourite404>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof setPlayerFavourite>>,
+            TError,
+            { playerUid: string; data: Status },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof setPlayerFavourite>>,
+    TError,
+    { playerUid: string; data: Status },
+    TContext
+> => {
+    const mutationOptions = getSetPlayerFavouriteMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
 
 export const newPlayer = (
     newPlayer: NewPlayer,

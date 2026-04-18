@@ -14,4 +14,6 @@ export interface Player {
     elo?: number | null;
     /** @nullable */
     recrawl?: boolean | null;
+    /** @nullable */
+    favourite?: boolean | null;
 }
