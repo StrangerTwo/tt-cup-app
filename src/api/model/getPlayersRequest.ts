@@ -5,10 +5,12 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
+import type { Location } from "./location";
 import type { PageInfoRequest } from "./pageInfoRequest";
 
 export interface GetPlayersRequest {
     /** @nullable */
     search?: string | null;
+    location?: Location;
     pageInfo: PageInfoRequest;
 }

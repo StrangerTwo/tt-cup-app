@@ -5,7 +5,9 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
+import type { Location } from "./location";
 
 export interface NewPlayer {
     uid: string;
+    location?: Location;
 }

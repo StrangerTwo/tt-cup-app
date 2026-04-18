@@ -84,6 +84,7 @@ paths:
               schema: {type: string}
               examples:
                 Example#1: {value: ''}
+                Example#2: {value: ''}
       operationId: getOpenapi
   /player:
     post:
@@ -357,6 +358,7 @@ components:
       type: object
       properties:
         search: {type: string, nullable: true}
+        location: {$ref: '#/components/schemas/Location'}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
     Player:
@@ -367,6 +369,7 @@ components:
         elo: {type: integer, format: int32, nullable: true}
         recrawl: {type: boolean, nullable: true}
         favourite: {type: boolean, nullable: true}
+        location: {$ref: '#/components/schemas/Location'}
       required: [uid]
     PaginatedQueryResult_Player:
       type: object
@@ -408,9 +411,14 @@ components:
       type: object
       properties:
         uid: {type: string}
+        location: {$ref: '#/components/schemas/Location'}
       required: [uid]
     User:
       type: object
       properties:
         uid: {type: string}
       required: [uid]
+    Location:
+      type: string
+      enum: [B, P, H]
+      x-enumNames: [HAVLICKUV_BROD, PRAHA, HAVIROV]

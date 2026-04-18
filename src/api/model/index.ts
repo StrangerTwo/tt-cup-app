@@ -15,6 +15,7 @@ export * from "./getPlayer404";
 export * from "./getPlayerMatchesSummary404";
 export * from "./getPlayerRivals404";
 export * from "./getPlayersRequest";
+export * from "./location";
 export * from "./match";
 export * from "./matchesSummary";
 export * from "./newPlayer";

@@ -7,7 +7,9 @@ import toast from "react-hot-toast";
 
 import { useNewPlayer } from "../../api/api";
 import { EQueryKey } from "../../api/EQueryKey";
+import { Location } from "../../api/model";
 import { resolveErrorMessage } from "../../lib/toastError";
+import { BoxSelect } from "../form/BoxSelect";
 import { Input } from "../form/Input";
 import { SubmitButton } from "../lib/SubmitButton";
 import { Card } from "../ui/Card";
@@ -52,6 +54,12 @@ export const NewPlayer = () => {
             <h2 className="mb-4">Nový hráč</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                 <Input form={form} label="UID hráče" name="uid" />
+                <BoxSelect
+                    form={form}
+                    label="Lokace"
+                    name="location"
+                    options={Object.entries(Location).map(([label, value]) => ({ label, value }))}
+                />
                 <SubmitButton>Uložit</SubmitButton>
             </form>
         </Card>

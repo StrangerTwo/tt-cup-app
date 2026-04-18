@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { twMerge } from "tailwind-merge";
 
 import { getGetPlayerQueryKey, useGetPlayer, useSetPlayerFavourite } from "../../api/api";
 import { Player } from "../../api/model";
@@ -9,9 +10,10 @@ import { IconButton } from "../ui/IconButton";
 
 interface Props {
     playerUid: Player["uid"];
+    className?: string;
 }
 
-export const FavouritePlayerButton = ({ playerUid }: Props) => {
+export const FavouritePlayerButton = ({ playerUid, className }: Props) => {
     const client = useQueryClient();
     const { data } = useGetPlayer(playerUid);
     const { mutateAsync } = useSetPlayerFavourite();
@@ -35,7 +37,7 @@ export const FavouritePlayerButton = ({ playerUid }: Props) => {
 
     return (
         <IconButton
-            className="group"
+            className={twMerge("group", className)}
             onClick={(e) => {
                 e.stopPropagation();
                 favouritePlayer();

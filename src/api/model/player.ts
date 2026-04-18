@@ -5,6 +5,7 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
+import type { Location } from "./location";
 
 export interface Player {
     uid: string;
@@ -16,4 +17,5 @@ export interface Player {
     recrawl?: boolean | null;
     /** @nullable */
     favourite?: boolean | null;
+    location?: Location;
 }

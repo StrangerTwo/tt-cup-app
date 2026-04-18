@@ -9,6 +9,7 @@ export interface InputProps<T extends FieldValues> {
     id?: string;
     name: Path<T>;
     value?: string | number | ReadonlyArray<string>;
+    placeholder?: string;
     className?: false | string;
     disabled?: boolean;
     readOnly?: boolean;
@@ -31,6 +32,7 @@ export const Input = <T extends FieldValues>({
     id,
     name,
     value,
+    placeholder,
     className,
     disabled,
     readOnly,
@@ -69,6 +71,7 @@ export const Input = <T extends FieldValues>({
                         className,
                     )}
                     value={value}
+                    placeholder={placeholder}
                     readOnly={readOnly}
                     disabled={disabled}
                     required={required}
