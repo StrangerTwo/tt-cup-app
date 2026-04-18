@@ -1,13 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { useGetPlayer } from "../../api/api";
-import { Skeleton } from "../../components/lib/Skeleton";
-import { Tabs } from "../../components/lib/Tabs";
-import { MatchHistory } from "../../components/matches/MatchHistory";
-import { PlayerMatchesSummary } from "../../components/players/PlayerMatchesSummary";
-import { PlayerRivals } from "../../components/players/PlayerRivals";
+import { useGetPlayer } from "../../../api/api";
+import { Skeleton } from "../../../components/lib/Skeleton";
+import { Tabs } from "../../../components/lib/Tabs";
+import { MatchHistory } from "../../../components/matches/MatchHistory";
+import { PlayerMatchesSummary } from "../../../components/players/PlayerMatchesSummary";
+import { PlayerRivals } from "../../../components/players/PlayerRivals";
 
-export const Route = createFileRoute("/player/$playerUid")({
+export const Route = createFileRoute("/player/$playerUid/")({
     component: RouteComponent,
     validateSearch: (search) => {
         return {

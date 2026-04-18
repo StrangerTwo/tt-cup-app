@@ -47,8 +47,12 @@ export const BoxSelect = <T, F extends FieldValues>({
 
     const select = (o: BoxSelectProps<T, F>["options"][number]): MouseEventHandler<HTMLDivElement> => {
         return (e) => {
-            onChange?.(o.value);
-            setValue(name, o.value);
+            if (value === o.value) {
+                setValue(name, undefined);
+            } else {
+                onChange?.(o.value);
+                setValue(name, o.value);
+            }
         };
     };
 
@@ -59,7 +63,7 @@ export const BoxSelect = <T, F extends FieldValues>({
                     {label}
                 </label>
             )}
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-2 md:gap-4">
                 <input type="hidden" {...form.register(name)} />
                 {options.map((o, i) => (
                     <Card

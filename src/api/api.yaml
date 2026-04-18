@@ -318,7 +318,10 @@ components:
     GetMatchesRequest:
       type: object
       properties:
-        playerUid: {type: string, nullable: true}
+        playerUids:
+          type: array
+          nullable: true
+          items: {type: string}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
     ObjectId: {type: string}

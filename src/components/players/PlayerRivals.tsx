@@ -1,3 +1,5 @@
+import { useNavigate } from "@tanstack/react-router";
+
 import { useGetPlayerRivals } from "../../api/api";
 import { Player } from "../../api/model";
 import Table from "../lib/Table";
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export const PlayerRivals = ({ playerUid }: Props) => {
+    const navigate = useNavigate();
     const { data, isFetching } = useGetPlayerRivals(playerUid, {
         query: {
             select: (x) => {
@@ -29,6 +32,9 @@ export const PlayerRivals = ({ playerUid }: Props) => {
                     heading={RivalRow.Heading}
                     data={data ?? []}
                     keyFn={(r) => r.rivalUid}
+                    onRowClick={(r) =>
+                        navigate({ to: "/player/$playerUid/vs/$rivalUid", params: { playerUid, rivalUid: r.rivalUid } })
+                    }
                     isPending={isFetching}>
                     {(rivalMS, i) => <RivalRow.FC rivalMS={rivalMS} playerUid={playerUid} />}
                 </Table>

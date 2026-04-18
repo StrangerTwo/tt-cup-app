@@ -1,43 +1,26 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 
-import { EQueryKey } from "../../api/EQueryKey";
-import { Location, Player } from "../../api/model";
-import { BoxSelect } from "../form/BoxSelect";
-import { Input } from "../form/Input";
-import { PlusIcon, SearchIcon } from "../icons";
+import { Player } from "../../api/model";
+import { PlusIcon } from "../icons";
 import { SortMode } from "../icons/SortIcon";
 import Table, { Sort } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
 import { FavouritePlayerButton } from "./FavouritePlayerButton";
-import { PlayersFilterFormType, playersFilterSchema } from "./playersFilterSchema";
+import { PlayersFilter } from "./PlayersFilter";
+import { PlayersFilterFormType } from "./playersFilterSchema";
 import { usePlayersList } from "./usePlayersList";
 
 export const Players = () => {
-    const client = useQueryClient();
     const navigate = useNavigate();
     const [playersFilter, setPlayersFilter] = useState<PlayersFilterFormType>();
-    const form = useForm({
-        resolver: yupResolver(playersFilterSchema),
-    });
     const [sort, setSort] = useState<Sort<Player> | undefined>({
         key: "elo",
         mode: SortMode.DESC,
     });
     const { data, fetchNextPage, isFetching } = usePlayersList(playersFilter, sort);
-
-    const onSubmit = (filter: PlayersFilterFormType) => {
-        setPlayersFilter(filter);
-        if (!form.formState.isDirty) {
-            client.invalidateQueries({ queryKey: [EQueryKey.getPlayers] });
-            form.reset(form.getValues());
-        }
-    };
 
     return (
         <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">
@@ -50,21 +33,7 @@ export const Players = () => {
                                 <PlusIcon />
                             </IconButton>
                         </div>
-                        <form className="grid max-w-sm grid-cols-[1fr_auto]" onSubmit={form.handleSubmit(onSubmit)}>
-                            <Input form={form} name="search" placeholder="Jméno" />
-                            <button
-                                type="submit"
-                                className="ms-2 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                <SearchIcon />
-                                <span className="sr-only">Search</span>
-                            </button>
-                            <BoxSelect
-                                form={form}
-                                name="location"
-                                className="col-span-full mt-2"
-                                options={Object.entries(Location).map(([label, value]) => ({ label, value }))}
-                            />
-                        </form>
+                        <PlayersFilter setPlayersFilter={setPlayersFilter} />
                     </>
                 }
                 heading={[

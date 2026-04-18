@@ -12,7 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayersIndexRouteImport } from './routes/players/index'
 import { Route as PlayersNewRouteImport } from './routes/players/new'
-import { Route as PlayerPlayerUidRouteImport } from './routes/player/$playerUid'
+import { Route as PlayerPlayerUidIndexRouteImport } from './routes/player/$playerUid/index'
+import { Route as PlayerPlayerUidVsRivalUidRouteImport } from './routes/player/$playerUid/vs/$rivalUid'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -29,44 +30,70 @@ const PlayersNewRoute = PlayersNewRouteImport.update({
   path: '/players/new',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlayerPlayerUidRoute = PlayerPlayerUidRouteImport.update({
-  id: '/player/$playerUid',
-  path: '/player/$playerUid',
+const PlayerPlayerUidIndexRoute = PlayerPlayerUidIndexRouteImport.update({
+  id: '/player/$playerUid/',
+  path: '/player/$playerUid/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlayerPlayerUidVsRivalUidRoute =
+  PlayerPlayerUidVsRivalUidRouteImport.update({
+    id: '/player/$playerUid/vs/$rivalUid',
+    path: '/player/$playerUid/vs/$rivalUid',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/player/$playerUid': typeof PlayerPlayerUidRoute
   '/players/new': typeof PlayersNewRoute
   '/players': typeof PlayersIndexRoute
+  '/player/$playerUid': typeof PlayerPlayerUidIndexRoute
+  '/player/$playerUid/vs/$rivalUid': typeof PlayerPlayerUidVsRivalUidRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/player/$playerUid': typeof PlayerPlayerUidRoute
   '/players/new': typeof PlayersNewRoute
   '/players': typeof PlayersIndexRoute
+  '/player/$playerUid': typeof PlayerPlayerUidIndexRoute
+  '/player/$playerUid/vs/$rivalUid': typeof PlayerPlayerUidVsRivalUidRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/player/$playerUid': typeof PlayerPlayerUidRoute
   '/players/new': typeof PlayersNewRoute
   '/players/': typeof PlayersIndexRoute
+  '/player/$playerUid/': typeof PlayerPlayerUidIndexRoute
+  '/player/$playerUid/vs/$rivalUid': typeof PlayerPlayerUidVsRivalUidRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/player/$playerUid' | '/players/new' | '/players'
+  fullPaths:
+    | '/'
+    | '/players/new'
+    | '/players'
+    | '/player/$playerUid'
+    | '/player/$playerUid/vs/$rivalUid'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/player/$playerUid' | '/players/new' | '/players'
-  id: '__root__' | '/' | '/player/$playerUid' | '/players/new' | '/players/'
+  to:
+    | '/'
+    | '/players/new'
+    | '/players'
+    | '/player/$playerUid'
+    | '/player/$playerUid/vs/$rivalUid'
+  id:
+    | '__root__'
+    | '/'
+    | '/players/new'
+    | '/players/'
+    | '/player/$playerUid/'
+    | '/player/$playerUid/vs/$rivalUid'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PlayerPlayerUidRoute: typeof PlayerPlayerUidRoute
   PlayersNewRoute: typeof PlayersNewRoute
   PlayersIndexRoute: typeof PlayersIndexRoute
+  PlayerPlayerUidIndexRoute: typeof PlayerPlayerUidIndexRoute
+  PlayerPlayerUidVsRivalUidRoute: typeof PlayerPlayerUidVsRivalUidRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,11 +119,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayersNewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/player/$playerUid': {
-      id: '/player/$playerUid'
+    '/player/$playerUid/': {
+      id: '/player/$playerUid/'
       path: '/player/$playerUid'
       fullPath: '/player/$playerUid'
-      preLoaderRoute: typeof PlayerPlayerUidRouteImport
+      preLoaderRoute: typeof PlayerPlayerUidIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/player/$playerUid/vs/$rivalUid': {
+      id: '/player/$playerUid/vs/$rivalUid'
+      path: '/player/$playerUid/vs/$rivalUid'
+      fullPath: '/player/$playerUid/vs/$rivalUid'
+      preLoaderRoute: typeof PlayerPlayerUidVsRivalUidRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -104,9 +138,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PlayerPlayerUidRoute: PlayerPlayerUidRoute,
   PlayersNewRoute: PlayersNewRoute,
   PlayersIndexRoute: PlayersIndexRoute,
+  PlayerPlayerUidIndexRoute: PlayerPlayerUidIndexRoute,
+  PlayerPlayerUidVsRivalUidRoute: PlayerPlayerUidVsRivalUidRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

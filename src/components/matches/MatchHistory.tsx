@@ -12,9 +12,10 @@ import { MatchRow } from "./MatchRow";
 
 interface Props {
     playerUid: string;
+    rivalUid?: string;
 }
 
-export const MatchHistory = ({ playerUid }: Props) => {
+export const MatchHistory = ({ playerUid, rivalUid }: Props) => {
     const [sort, setSort] = useState<Sort<Match> | undefined>({
         key: "time",
         mode: SortMode.DESC,
@@ -25,7 +26,7 @@ export const MatchHistory = ({ playerUid }: Props) => {
         mutateAsync,
         paramFn: (pageInfo) => ({
             data: {
-                playerUid,
+                playerUids: [playerUid, rivalUid].filter(Boolean) as Array<string>,
                 pageInfo: {
                     ...pageInfo,
                     sort: sort ? sortingForRequest([sort]) : undefined,
@@ -34,7 +35,7 @@ export const MatchHistory = ({ playerUid }: Props) => {
         }),
         dataFn: (x) => x.results,
         totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
-        queryKey: [EQueryKey.getMatches, playerUid, sort],
+        queryKey: [EQueryKey.getMatches, playerUid, rivalUid, sort],
     });
 
     return (

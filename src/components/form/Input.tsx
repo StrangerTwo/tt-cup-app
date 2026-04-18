@@ -19,6 +19,7 @@ export interface InputProps<T extends FieldValues> {
     leadingIcon?: ReactNode;
     trailingIcon?: ReactNode;
     onContainerClick?: React.MouseEventHandler<HTMLDivElement>;
+    onChange?: (event: any) => void;
     form: {
         formState: UseFormReturn<T>["formState"];
         register: UseFormReturn<T>["register"];
@@ -40,6 +41,7 @@ export const Input = <T extends FieldValues>({
     leadingIcon,
     trailingIcon,
     onContainerClick,
+    onChange,
     form,
 }: InputProps<T>) => {
     const error = form.formState.errors[name];
@@ -75,7 +77,7 @@ export const Input = <T extends FieldValues>({
                     readOnly={readOnly}
                     disabled={disabled}
                     required={required}
-                    {...form.register(name)}
+                    {...form.register(name, { onChange })}
                 />
                 {trailingIcon && (
                     <span
