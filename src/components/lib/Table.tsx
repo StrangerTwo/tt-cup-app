@@ -123,7 +123,7 @@ export const Table = <T,>({
 
         observer.observe(sentinelRef.current);
         return () => observer.disconnect();
-    }, [data.length, isPending, onLoadMore]);
+    }, [data, isPending, onLoadMore]);
 
     return (
         <table className={twMerge("w-full text-left text-sm rtl:text-right", className)}>

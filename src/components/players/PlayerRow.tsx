@@ -1,13 +1,15 @@
 import { FC } from "react";
 
+import { useGetPlayer } from "../../api/api";
 import { Player } from "../../api/model";
+import { Skeleton } from "../lib/Skeleton";
 import { TableProps } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
 import { Card } from "../ui/Card";
 import { FavouritePlayerButton } from "./FavouritePlayerButton";
 
 interface PlayerRowProps {
-    player: Player;
+    playerUid: Player["uid"];
     i: number;
 }
 
@@ -23,7 +25,16 @@ export const PlayerRow: {
         { label: "Oblíbené", key: "favourite" },
         { label: "uid", key: "uid" },
     ],
-    FC: ({ player, i }) => {
+    FC: ({ playerUid, i }) => {
+        const { data: player } = useGetPlayer(playerUid);
+
+        if (!player)
+            return (
+                <TableCell colSpan={PlayerRow.Heading?.length || 42}>
+                    <Skeleton.Text className="m-4" />
+                </TableCell>
+            );
+
         return (
             <>
                 <TableCell>{i + 1}.</TableCell>

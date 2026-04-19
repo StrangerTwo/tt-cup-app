@@ -49,7 +49,7 @@ export const Players = () => {
                 onRowClick={(p) => navigate({ to: "/player/$playerUid", params: { playerUid: p.uid } })}
                 onLoadMore={fetchNextPage}
                 isPending={isFetching}>
-                {(p, i) => <PlayerRow.FC player={p} i={i} />}
+                {(p, i) => <PlayerRow.FC playerUid={p.uid} i={i} />}
             </Table>
         </Card>
     );
