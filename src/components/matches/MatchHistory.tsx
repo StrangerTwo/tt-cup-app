@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { useGetMatches } from "../../api/api";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export const MatchHistory = ({ playerUid, rivalUid }: Props) => {
+    const navigate = useNavigate();
     const [sort, setSort] = useState<Sort<Match> | undefined>({
         key: "time",
         mode: SortMode.DESC,
@@ -48,10 +50,14 @@ export const MatchHistory = ({ playerUid, rivalUid }: Props) => {
                 }
                 heading={MatchRow.Heading}
                 data={data ?? []}
-                keyFn={(p) => p.objectId}
+                keyFn={(p) => p._id}
                 sort={sort}
                 onSort={{
                     time: (mode) => setSort(mode ? { key: "time", mode } : undefined),
+                }}
+                onRowClick={(match) => {
+                    if (match.tournamentId)
+                        navigate({ to: "/tournament/$tournamentId", params: { tournamentId: match.tournamentId } });
                 }}
                 onLoadMore={fetchNextPage}
                 isPending={isFetching}>

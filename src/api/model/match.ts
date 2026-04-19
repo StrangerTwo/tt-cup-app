@@ -17,5 +17,5 @@ export interface Match {
     /** @nullable */
     tournamentId?: ObjectId;
     /** @nullable */
-    objectId?: ObjectId;
+    _id?: ObjectId;
 }

@@ -39,7 +39,7 @@ export const NewPlayer = () => {
         toast.promise(
             mutateAsync({ data }).then(() => {
                 client.invalidateQueries({ queryKey: [EQueryKey.getPlayers] });
-                navigate({ to: "/players" });
+                navigate({ to: "/player" });
             }),
             {
                 loading: "Ukládám...",

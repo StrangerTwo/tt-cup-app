@@ -71,7 +71,7 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                                 <SidebarItem route="/" closeSidebar={closeSidebar} text="Tipy na sázení">
                                     <TableIcon hoverEffects />
                                 </SidebarItem>
-                                <SidebarItem route="/players" closeSidebar={closeSidebar} text="Hráči">
+                                <SidebarItem route="/player" closeSidebar={closeSidebar} text="Hráči">
                                     <UsersIcon hoverEffects />
                                 </SidebarItem>
                             </div>

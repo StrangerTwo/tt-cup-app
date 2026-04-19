@@ -30,7 +30,9 @@ export const MatchRow: {
 
         return (
             <>
-                <TableCell className={textHighlightColor}>{renderFullDateShortWithHoursShort(match.time)}</TableCell>
+                <TableCell className={textHighlightColor}>
+                    <span className="me-2 align-middle">{renderFullDateShortWithHoursShort(match.time)}</span>
+                </TableCell>
                 <TableCell className={textHighlightColor}>
                     <Score scoreA={sets?.[0]} scoreB={sets?.[1]} isWinForA={isWinForA} isWinForB={isWinForB} />
                 </TableCell>

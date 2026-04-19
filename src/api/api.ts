@@ -32,15 +32,21 @@ import type {
     GetPlayerMatchesSummary404,
     GetPlayerRivals404,
     GetPlayersRequest,
+    GetTournament404,
+    GetTournamentFull404,
+    GetTournamentsRequest,
     MatchesSummary,
     NewPlayer,
     PaginatedQueryResultCrawlPage,
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlayer,
+    PaginatedQueryResultTournament,
     Player,
     RivalMatchesSummary,
     SetPlayerFavourite404,
     Status,
+    Tournament,
+    TournamentFull,
     User,
 } from "./model";
 
@@ -1012,6 +1018,304 @@ export const useNewPlayer = <TError = ErrorType<string>, TContext = unknown>(
 
     return useMutation(mutationOptions, queryClient);
 };
+
+export const getTournaments = (
+    getTournamentsRequest: GetTournamentsRequest,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<PaginatedQueryResultTournament>(
+        {
+            url: `/tournament`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: getTournamentsRequest,
+            signal,
+        },
+        options,
+    );
+};
+
+export const getGetTournamentsMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof getTournaments>>,
+        TError,
+        { data: GetTournamentsRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof getTournaments>>,
+    TError,
+    { data: GetTournamentsRequest },
+    TContext
+> => {
+    const mutationKey = ["getTournaments"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof getTournaments>>, { data: GetTournamentsRequest }> = (
+        props,
+    ) => {
+        const { data } = props ?? {};
+
+        return getTournaments(data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type GetTournamentsMutationResult = NonNullable<Awaited<ReturnType<typeof getTournaments>>>;
+export type GetTournamentsMutationBody = GetTournamentsRequest;
+export type GetTournamentsMutationError = ErrorType<unknown>;
+
+export const useGetTournaments = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof getTournaments>>,
+            TError,
+            { data: GetTournamentsRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getTournaments>>, TError, { data: GetTournamentsRequest }, TContext> => {
+    const mutationOptions = getGetTournamentsMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getTournament = (
+    tournamentId: string,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<Tournament>(
+        { url: `/tournament/${encodeURIComponent(String(tournamentId))}`, method: "GET", signal },
+        options,
+    );
+};
+
+export const getGetTournamentQueryKey = (tournamentId?: string) => {
+    return [`/tournament/${tournamentId}`] as const;
+};
+
+export const getGetTournamentQueryOptions = <
+    TData = Awaited<ReturnType<typeof getTournament>>,
+    TError = ErrorType<string | GetTournament404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetTournamentQueryKey(tournamentId);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTournament>>> = ({ signal }) =>
+        getTournament(tournamentId, requestOptions, signal);
+
+    return { queryKey, queryFn, enabled: !!tournamentId, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getTournament>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetTournamentQueryResult = NonNullable<Awaited<ReturnType<typeof getTournament>>>;
+export type GetTournamentQueryError = ErrorType<string | GetTournament404>;
+
+export function useGetTournament<
+    TData = Awaited<ReturnType<typeof getTournament>>,
+    TError = ErrorType<string | GetTournament404>,
+>(
+    tournamentId: string,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTournament>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTournament>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTournament<
+    TData = Awaited<ReturnType<typeof getTournament>>,
+    TError = ErrorType<string | GetTournament404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTournament>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTournament>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTournament<
+    TData = Awaited<ReturnType<typeof getTournament>>,
+    TError = ErrorType<string | GetTournament404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetTournament<
+    TData = Awaited<ReturnType<typeof getTournament>>,
+    TError = ErrorType<string | GetTournament404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetTournamentQueryOptions(tournamentId, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
+export const getTournamentFull = (
+    tournamentId: string,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<TournamentFull>(
+        { url: `/tournament/${encodeURIComponent(String(tournamentId))}/full`, method: "GET", signal },
+        options,
+    );
+};
+
+export const getGetTournamentFullQueryKey = (tournamentId?: string) => {
+    return [`/tournament/${tournamentId}/full`] as const;
+};
+
+export const getGetTournamentFullQueryOptions = <
+    TData = Awaited<ReturnType<typeof getTournamentFull>>,
+    TError = ErrorType<string | GetTournamentFull404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetTournamentFullQueryKey(tournamentId);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTournamentFull>>> = ({ signal }) =>
+        getTournamentFull(tournamentId, requestOptions, signal);
+
+    return { queryKey, queryFn, enabled: !!tournamentId, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getTournamentFull>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetTournamentFullQueryResult = NonNullable<Awaited<ReturnType<typeof getTournamentFull>>>;
+export type GetTournamentFullQueryError = ErrorType<string | GetTournamentFull404>;
+
+export function useGetTournamentFull<
+    TData = Awaited<ReturnType<typeof getTournamentFull>>,
+    TError = ErrorType<string | GetTournamentFull404>,
+>(
+    tournamentId: string,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTournamentFull>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTournamentFull>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTournamentFull<
+    TData = Awaited<ReturnType<typeof getTournamentFull>>,
+    TError = ErrorType<string | GetTournamentFull404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTournamentFull>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTournamentFull>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTournamentFull<
+    TData = Awaited<ReturnType<typeof getTournamentFull>>,
+    TError = ErrorType<string | GetTournamentFull404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetTournamentFull<
+    TData = Awaited<ReturnType<typeof getTournamentFull>>,
+    TError = ErrorType<string | GetTournamentFull404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetTournamentFullQueryOptions(tournamentId, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
 
 export const getUser = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
     return customInstance<User>({ url: `/user`, method: "GET", signal }, options);

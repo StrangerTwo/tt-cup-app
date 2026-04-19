@@ -14,7 +14,7 @@ const Index: FC = ({}) => {
 export const Route = createFileRoute("/")({
     loader: () =>
         redirect({
-            to: "/players",
+            to: "/player",
             replace: true,
         }),
 });

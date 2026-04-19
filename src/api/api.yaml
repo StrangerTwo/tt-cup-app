@@ -228,6 +228,71 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/Status'}
       operationId: newPlayer
+  /tournament:
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/GetTournamentsRequest'}
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Tournament'}
+      operationId: getTournaments
+  /tournament/{tournamentId}:
+    get:
+      description: ''
+      parameters:
+      - name: tournamentId
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Tournament'}
+      operationId: getTournament
+  /tournament/{tournamentId}/full:
+    get:
+      description: ''
+      parameters:
+      - name: tournamentId
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/TournamentFull'}
+      operationId: getTournamentFull
   /user:
     get:
       description: ''
@@ -347,7 +412,7 @@ components:
           nullable: true
           items: {type: string}
         tournamentId: {nullable: true, $ref: '#/components/schemas/ObjectId'}
-        objectId: {nullable: true, $ref: '#/components/schemas/ObjectId'}
+        _id: {nullable: true, $ref: '#/components/schemas/ObjectId'}
       required: [time, playerUids]
     PaginatedQueryResult_Match:
       type: object
@@ -416,6 +481,36 @@ components:
         uid: {type: string}
         location: {$ref: '#/components/schemas/Location'}
       required: [uid]
+    GetTournamentsRequest:
+      type: object
+      properties:
+        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
+      required: [pageInfo]
+    Tournament:
+      type: object
+      properties:
+        date: {type: string, format: date}
+        place: {type: string}
+        _id: {nullable: true, $ref: '#/components/schemas/ObjectId'}
+      required: [date, place]
+    PaginatedQueryResult_Tournament:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/Tournament'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+      required: [results, pageInfo]
+    TournamentFull:
+      type: object
+      properties:
+        date: {type: string, format: date}
+        place: {type: string}
+        matches:
+          type: array
+          items: {$ref: '#/components/schemas/Match'}
+        _id: {$ref: '#/components/schemas/ObjectId'}
+      required: [date, place, matches, _id]
     User:
       type: object
       properties:

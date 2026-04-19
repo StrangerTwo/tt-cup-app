@@ -1,9 +1,20 @@
 import { FC } from "react";
+import { twMerge } from "tailwind-merge";
 
-export const LinkIcon: FC = () => {
+interface Props {
+    className?: string;
+    hoverEffects?: boolean;
+}
+
+export const LinkIcon: FC<Props> = ({ className, hoverEffects }) => {
     return (
         <svg
-            className="size-6 text-gray-800 dark:text-white"
+            className={twMerge(
+                "size-5",
+                hoverEffects &&
+                    "text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white",
+                className,
+            )}
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
             viewBox="0 0 18 18">
