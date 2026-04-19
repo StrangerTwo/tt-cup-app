@@ -112,9 +112,7 @@ export const Table = <T,>({
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting && !isPending) {
-                    if (data.length != sentinelIdRef.current) {
-                        onLoadMore();
-                    }
+                    onLoadMore();
                     sentinelIdRef.current = data.length;
                 }
             },
