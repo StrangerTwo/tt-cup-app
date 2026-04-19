@@ -35,7 +35,7 @@ export const EditPlayerForm = ({ player, className }: Props) => {
 
     useEffect(() => {
         if (stisId?.includes("stis.ping-pong.cz/")) {
-            var newId = stisId.slice(stisId.indexOf("stis.ping-pong.cz/") + "stis.ping-pong.cz/".length);
+            var newId = stisId.slice(stisId.indexOf("stis.ping-pong.cz/hrac-") + "stis.ping-pong.cz/hrac-".length);
             newId = newId.slice(0, newId.indexOf("/"));
 
             setValue("stisId", newId);
