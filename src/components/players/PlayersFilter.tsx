@@ -11,19 +11,24 @@ import { SearchIcon } from "../icons";
 import { PlayersFilterFormType, playersFilterSchema } from "./playersFilterSchema";
 
 interface Props {
-    setPlayersFilter: (filter: PlayersFilterFormType) => void;
+    filters: PlayersFilterFormType;
+    setFilters: (filter: PlayersFilterFormType) => void;
 }
 
-export const PlayersFilter = ({ setPlayersFilter }: Props) => {
+export const PlayersFilter = ({ filters, setFilters }: Props) => {
     const client = useQueryClient();
 
     const form = useForm({
+        defaultValues: {
+            search: filters.search,
+            location: filters.location,
+        },
         resolver: yupResolver(playersFilterSchema),
     });
     const { control, handleSubmit } = form;
 
     const onSubmit = (filter: PlayersFilterFormType) => {
-        setPlayersFilter(filter);
+        setFilters(filter);
     };
 
     const [location, search] = useWatch({ name: ["location", "search"], control });

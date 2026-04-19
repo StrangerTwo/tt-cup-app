@@ -13,6 +13,7 @@ import { routeTree } from "./routeTree.gen";
 const router = createRouter({
     routeTree,
     trailingSlash: "never",
+    scrollRestoration: true,
 });
 
 // Register the router instance for type safety

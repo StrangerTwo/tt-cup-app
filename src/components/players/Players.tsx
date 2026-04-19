@@ -33,7 +33,7 @@ export const Players = () => {
                                 <PlusIcon />
                             </IconButton>
                         </div>
-                        <PlayersFilter setPlayersFilter={setFilters} />
+                        <PlayersFilter filters={filters} setFilters={setFilters} />
                     </>
                 }
                 heading={PlayerRow.Heading}
