@@ -5,7 +5,7 @@ import { EditIcon } from "../icons";
 import { RenderItem } from "../lib/RenderItem";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
-import { PlayerDataForm } from "./PlayerDataForm";
+import { EditPlayerForm } from "./EditPlayerForm";
 
 interface Props {
     player: Player;
@@ -17,7 +17,7 @@ export const PlayerDataCard = ({ player }: Props) => {
     return (
         <Card className="mt-2 flex max-w-lg justify-between gap-2 md:mt-4 md:gap-4">
             {isEdit ? (
-                <PlayerDataForm player={player} className="grow" />
+                <EditPlayerForm player={player} className="grow" />
             ) : (
                 <dl className="grid grow grid-cols-[max-content_auto] gap-2 md:gap-4">
                     <RenderItem title={"Ranking:"}>{player.ranking}</RenderItem>
@@ -26,11 +26,11 @@ export const PlayerDataCard = ({ player }: Props) => {
                             {player.location ?? ""}
                         </Card>
                     </RenderItem>
+                    <RenderItem title={"Elo:"}>{player.elo}</RenderItem>
+                    <RenderItem title={"Stis id:"}>{player.stisId}</RenderItem>
                     <RenderItem title={"Poznámka:"} className="col-span-full">
                         {player.note}
                     </RenderItem>
-                    <RenderItem title={"Elo:"}>{player.elo}</RenderItem>
-                    <RenderItem title={"Stis url:"}>{player.stisUrl?.slice(-20)}</RenderItem>
                 </dl>
             )}
             <IconButton onClick={() => setIsEdit((x) => !x)}>

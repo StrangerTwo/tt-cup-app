@@ -29,8 +29,8 @@ export const NewPlayer = () => {
 
     useEffect(() => {
         if (uidValue?.includes("/")) {
-            var newUid = uidValue.at(-1) === "/" ? uidValue.slice(0, -1) : uidValue,
-                newUid = newUid.slice(newUid.lastIndexOf("/") + 1);
+            var newUid = uidValue.at(-1) === "/" ? uidValue.slice(0, -1) : uidValue;
+            newUid = newUid.slice(newUid.lastIndexOf("/") + 1);
             setValue("uid", newUid);
         }
     }, [setValue, uidValue]);

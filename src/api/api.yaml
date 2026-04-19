@@ -463,7 +463,7 @@ components:
         favourite: {type: boolean}
         location: {$ref: '#/components/schemas/Location'}
         note: {type: string}
-        stisUrl: {type: string}
+        stisId: {type: string}
         recrawl: {type: boolean}
       required: [uid]
     PaginatedQueryResult_Player:
@@ -479,7 +479,7 @@ components:
       properties:
         location: {$ref: '#/components/schemas/Location'}
         note: {type: string}
-        stisUrl: {type: string}
+        stisId: {type: string}
     Status:
       type: object
       properties:

@@ -10,5 +10,5 @@ import type { Location } from "./location";
 export interface EditPlayer {
     location?: Location;
     note?: string;
-    stisUrl?: string;
+    stisId?: string;
 }

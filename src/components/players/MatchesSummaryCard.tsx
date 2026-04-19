@@ -30,8 +30,6 @@ export const MatchesSummaryCard = ({ playerUid, summary: _summary, className }: 
 
     return (
         <Card className={twMerge("max-w-md", className)}>
-            <h2 className="mb-2 text-xl md:mb-4">Shrnutí zápasů</h2>
-
             <dl className="flex flex-col gap-2 md:gap-4">
                 <RenderItem title="Celkové zápasy:">
                     <Score scoreA={summary.matchesWon} scoreB={summary.matchesLost} isWinForA />

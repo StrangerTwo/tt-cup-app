@@ -4,6 +4,7 @@ import { useGetPlayer, useGetPlayerRivals } from "../../../../api/api";
 import { Skeleton } from "../../../../components/lib/Skeleton";
 import { MatchHistory } from "../../../../components/matches/MatchHistory";
 import { MatchesSummaryCard } from "../../../../components/players/MatchesSummaryCard";
+import { RivalInfoCard } from "../../../../components/players/RivalInfoCard";
 
 export const Route = createFileRoute("/player/$playerUid/vs/$rivalUid")({
     component: RouteComponent,
@@ -27,6 +28,11 @@ function RouteComponent() {
             <p className="mb-2 text-sm italic md:mb-4">
                 ({player.uid}) vs ({rival.uid})
             </p>
+
+            <div className="mb-2 flex flex-col gap-2 md:mb-4 md:flex-row md:gap-4">
+                <RivalInfoCard player={player} />
+                <RivalInfoCard player={rival} />
+            </div>
 
             <MatchesSummaryCard summary={summary} className="mb-2 md:mb-4" />
 

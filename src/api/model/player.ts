@@ -15,6 +15,6 @@ export interface Player {
     favourite?: boolean;
     location?: Location;
     note?: string;
-    stisUrl?: string;
+    stisId?: string;
     recrawl?: boolean;
 }

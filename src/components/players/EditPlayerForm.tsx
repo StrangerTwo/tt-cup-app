@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
@@ -17,7 +18,7 @@ interface Props {
     className?: string;
 }
 
-export const PlayerDataForm = ({ player, className }: Props) => {
+export const EditPlayerForm = ({ player, className }: Props) => {
     const client = useQueryClient();
     const { mutateAsync } = useEditPlayer();
     const form = useForm({
@@ -25,10 +26,21 @@ export const PlayerDataForm = ({ player, className }: Props) => {
         defaultValues: {
             location: player.location,
             note: player.note,
-            stisUrl: player.stisUrl,
+            stisId: player.stisId,
         },
     });
-    const { handleSubmit } = form;
+    const { handleSubmit, control, setValue } = form;
+
+    const stisId = useWatch({ control, name: "stisId" });
+
+    useEffect(() => {
+        if (stisId?.includes("stis.ping-pong.cz/")) {
+            var newId = stisId.slice(stisId.indexOf("stis.ping-pong.cz/") + "stis.ping-pong.cz/".length);
+            newId = newId.slice(0, newId.indexOf("/"));
+
+            setValue("stisId", newId);
+        }
+    }, [setValue, stisId]);
 
     const onSubmit = (data: EditPlayerFormType) => {
         toast.promise(
@@ -50,8 +62,6 @@ export const PlayerDataForm = ({ player, className }: Props) => {
     };
     return (
         <form className={twMerge("flex flex-col gap-2 md:gap-4", className)} onSubmit={handleSubmit(onSubmit)}>
-            <Input form={form} name="note" label="Poznámka" />
-
             <BoxSelect
                 form={form}
                 label="Lokace"
@@ -59,7 +69,9 @@ export const PlayerDataForm = ({ player, className }: Props) => {
                 options={Object.entries(Location).map(([label, value]) => ({ label, value }))}
             />
 
-            <Input form={form} name="stisUrl" label="Stis url" />
+            <Input form={form} name="stisId" label="Stis url" />
+
+            <Input form={form} name="note" label="Poznámka" />
 
             <SubmitButton>Uložit</SubmitButton>
         </form>
