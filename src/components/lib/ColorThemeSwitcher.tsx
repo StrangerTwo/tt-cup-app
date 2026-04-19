@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 
-import { IconButton } from "../ui/IconButton";
 import { MoonIcon } from "../icons/MoonIcon";
 import { SunIcon } from "../icons/SunIcon";
+import { IconButton } from "../ui/IconButton";
 
 export const ColorThemeSwitcher: FC = () => {
     const [theme, setTheme] = useState("light");

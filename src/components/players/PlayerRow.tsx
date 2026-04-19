@@ -45,7 +45,7 @@ export const PlayerRow: {
                 <TableCell>{player.ranking}</TableCell>
                 <TableCell>{player.elo ?? "-"}</TableCell>
                 <TableCell>
-                    <FavouritePlayerButton playerUid={player.uid} className={"size-5 align-middle"} />
+                    <FavouritePlayerButton playerUid={player.uid} className={"size-5 align-middle"} layerStep={1} />
                 </TableCell>
                 <TableCell>{player.uid}</TableCell>
             </>

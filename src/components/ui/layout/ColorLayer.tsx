@@ -41,5 +41,6 @@ export const useColorLayer = (layerStep = 1) => {
         borderColor: borderColors[index],
         textColor: textColors[index],
         textHighlightColor: "text-slate-800 dark:text-slate-50",
+        hoverTextHighlightColor: "hover:text-slate-800 hover:dark:text-slate-50",
     };
 };

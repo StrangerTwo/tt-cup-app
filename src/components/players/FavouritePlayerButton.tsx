@@ -11,9 +11,10 @@ import { IconButton } from "../ui/IconButton";
 interface Props {
     playerUid: Player["uid"];
     className?: string;
+    layerStep?: number;
 }
 
-export const FavouritePlayerButton = ({ playerUid, className }: Props) => {
+export const FavouritePlayerButton = ({ playerUid, className, layerStep }: Props) => {
     const client = useQueryClient();
     const { data } = useGetPlayer(playerUid);
     const { mutateAsync } = useSetPlayerFavourite();
@@ -38,6 +39,7 @@ export const FavouritePlayerButton = ({ playerUid, className }: Props) => {
     return (
         <IconButton
             className={twMerge("group", className)}
+            layerStep={layerStep}
             onClick={(e) => {
                 e.stopPropagation();
                 favouritePlayer();

@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { Players } from "../../components/players/Players";
 
@@ -7,11 +7,5 @@ export const Route = createFileRoute("/player/")({
 });
 
 function RouteComponent() {
-    const navigate = useNavigate();
-
-    return (
-        <>
-            <Players />
-        </>
-    );
+    return <Players />;
 }

@@ -8,10 +8,11 @@ interface Props {
     onClick?: MouseEventHandler<HTMLButtonElement>;
     children: ReactNode;
     noEffects?: boolean;
+    layerStep?: number;
 }
 
-export const IconButton: FC<Props> = ({ className, onClick, children, noEffects }) => {
-    const { hoverBgColor } = useColorLayer();
+export const IconButton: FC<Props> = ({ className, onClick, children, noEffects, layerStep = 0 }) => {
+    const { hoverBgColor } = useColorLayer(layerStep);
     return (
         <button
             type="button"
