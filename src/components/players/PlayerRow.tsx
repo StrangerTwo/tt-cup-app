@@ -5,8 +5,8 @@ import { Player } from "../../api/model";
 import { Skeleton } from "../lib/Skeleton";
 import { TableProps } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
-import { Card } from "../ui/Card";
 import { FavouritePlayerButton } from "./FavouritePlayerButton";
+import { PlayerLocation } from "./PlayerLocation";
 
 interface PlayerRowProps {
     playerUid: Player["uid"];
@@ -38,9 +38,7 @@ export const PlayerRow: {
         return (
             <>
                 <TableCell>
-                    <Card className="inline-flex size-[1.5em] items-center justify-center p-0 align-middle md:p-0">
-                        {player.location ?? ""}
-                    </Card>
+                    <PlayerLocation location={player.location} />
                     <span className="ms-1 align-middle">{i + 1}.</span>
                 </TableCell>
                 <TableCell className="font-medium text-gray-900 dark:text-white">{player.name}</TableCell>

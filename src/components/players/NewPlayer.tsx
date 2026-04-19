@@ -14,6 +14,7 @@ import { Input } from "../form/Input";
 import { SubmitButton } from "../lib/SubmitButton";
 import { Card } from "../ui/Card";
 import { newPlayerFormSchema, NewPlayerFormType } from "./newPlayerSchema";
+import { locationLabels } from "./PlayerLocation";
 
 export const NewPlayer = () => {
     const navigate = useNavigate();
@@ -58,7 +59,7 @@ export const NewPlayer = () => {
                     form={form}
                     label="Lokace"
                     name="location"
-                    options={Object.entries(Location).map(([label, value]) => ({ label, value }))}
+                    options={Object.values(Location).map((value) => ({ label: locationLabels[value], value }))}
                 />
                 <SubmitButton>Uložit</SubmitButton>
             </form>

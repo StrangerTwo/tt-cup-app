@@ -8,6 +8,7 @@ import { Location } from "../../api/model";
 import { BoxSelect } from "../form/BoxSelect";
 import { Input } from "../form/Input";
 import { SearchIcon } from "../icons";
+import { locationLabels } from "./PlayerLocation";
 import { PlayersFilterFormType, playersFilterSchema } from "./playersFilterSchema";
 
 interface Props {
@@ -55,7 +56,7 @@ export const PlayersFilter = ({ filters, setFilters }: Props) => {
                 form={form}
                 name="location"
                 className="col-span-full mt-2"
-                options={Object.entries(Location).map(([label, value]) => ({ label, value }))}
+                options={Object.values(Location).map((value) => ({ label: locationLabels[value], value }))}
             />
         </form>
     );

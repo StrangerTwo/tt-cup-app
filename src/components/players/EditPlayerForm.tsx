@@ -12,6 +12,7 @@ import { BoxSelect } from "../form/BoxSelect";
 import { Input } from "../form/Input";
 import { SubmitButton } from "../lib/SubmitButton";
 import { EditPlayerFormType, editPlayerSchema } from "./editPlayerSchema";
+import { locationLabels } from "./PlayerLocation";
 
 interface Props {
     player: Player;
@@ -68,7 +69,7 @@ export const EditPlayerForm = ({ player, className, onSubmit: _onSubmit }: Props
                 form={form}
                 label="Lokace"
                 name="location"
-                options={Object.entries(Location).map(([label, value]) => ({ label, value }))}
+                options={Object.values(Location).map((value) => ({ label: locationLabels[value], value }))}
             />
 
             <Input form={form} name="stisId" label="Stis ID" />
