@@ -69,7 +69,7 @@ export const EditPlayerForm = ({ player, className }: Props) => {
                 options={Object.entries(Location).map(([label, value]) => ({ label, value }))}
             />
 
-            <Input form={form} name="stisId" label="Stis url" />
+            <Input form={form} name="stisId" label="Stis ID" />
 
             <Input form={form} name="note" label="Poznámka" />
 
