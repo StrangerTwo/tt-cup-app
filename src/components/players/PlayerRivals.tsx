@@ -20,7 +20,7 @@ export const PlayerRivals = ({ playerUid }: Props) => {
                 <Table
                     caption={
                         <>
-                            <h2 className="text-xl">Historie zápasů</h2>
+                            <h2 className="text-xl">Soupeři</h2>
                         </>
                     }
                     heading={RivalRow.Heading}

@@ -1,25 +1,26 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 
 import { Player } from "../../api/model";
 import { PlusIcon } from "../icons";
 import { SortMode } from "../icons/SortIcon";
 import Table, { Sort } from "../lib/Table";
+import { useUrlSyncedTableState } from "../lib/useUrlSyncedTableState";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
 import { PlayerRow } from "./PlayerRow";
 import { PlayersFilter } from "./PlayersFilter";
-import { PlayersFilterFormType } from "./playersFilterSchema";
 import { usePlayersList } from "./usePlayersList";
 
 export const Players = () => {
     const navigate = useNavigate();
-    const [playersFilter, setPlayersFilter] = useState<PlayersFilterFormType>();
-    const [sort, setSort] = useState<Sort<Player> | undefined>({
-        key: "ranking",
-        mode: SortMode.DESC,
+    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
+        tableId: "players",
+        defaultSorting: {
+            key: "ranking",
+            mode: SortMode.DESC,
+        } as Sort<Player>,
     });
-    const { data, fetchNextPage, isFetching } = usePlayersList(playersFilter, sort);
+    const { data, fetchNextPage, isFetching } = usePlayersList(filters, sort);
 
     return (
         <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">
@@ -32,7 +33,7 @@ export const Players = () => {
                                 <PlusIcon />
                             </IconButton>
                         </div>
-                        <PlayersFilter setPlayersFilter={setPlayersFilter} />
+                        <PlayersFilter setPlayersFilter={setFilters} />
                     </>
                 }
                 heading={PlayerRow.Heading}

@@ -1,12 +1,7 @@
-import { SortMode } from "../components/icons/SortIcon";
+import { Sort } from "../components/lib/Table";
 
-export const sortingForRequest = (
-    sorting: Array<{
-        key: string;
-        mode: SortMode;
-    }>,
-) => {
+export const sortingForRequest = (sorting: Array<Sort<any>>) => {
     return sorting.map((item) => {
-        return `${item.key}:${item.mode === SortMode.DESC ? "desc" : "asc"}`;
+        return `${item.key.toString()}:${item.mode}`;
     });
 };

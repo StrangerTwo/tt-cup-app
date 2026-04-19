@@ -2,8 +2,8 @@ import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 
 export enum SortMode {
-    ASC = -1,
-    DESC = 1,
+    ASC = "asc",
+    DESC = "desc",
 }
 
 interface Props {

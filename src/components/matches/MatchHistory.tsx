@@ -1,5 +1,4 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 
 import { useGetMatches } from "../../api/api";
 import { EQueryKey } from "../../api/EQueryKey";
@@ -8,6 +7,7 @@ import { sortingForRequest } from "../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
 import { SortMode } from "../icons/SortIcon";
 import Table, { Sort } from "../lib/Table";
+import { useUrlSyncedTableState } from "../lib/useUrlSyncedTableState";
 import { Card } from "../ui/Card";
 import { MatchRow } from "./MatchRow";
 
@@ -18,9 +18,13 @@ interface Props {
 
 export const MatchHistory = ({ playerUid, rivalUid }: Props) => {
     const navigate = useNavigate();
-    const [sort, setSort] = useState<Sort<Match> | undefined>({
-        key: "time",
-        mode: SortMode.DESC,
+
+    const { sort, setSort } = useUrlSyncedTableState({
+        tableId: "matches",
+        defaultSorting: {
+            key: "time",
+            mode: SortMode.DESC,
+        } as Sort<Match>,
     });
 
     const { mutateAsync } = useGetMatches();

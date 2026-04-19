@@ -18,25 +18,23 @@ function RouteComponent() {
         query: { select: (res) => res.find((summary) => summary.rivalUid === rivalUid) },
     });
 
-    if (!player || !rival || !summary) return <Skeleton.Card />;
-
     return (
         <>
             <h1 className="text-xl">
-                {player.name} vs {rival.name}
+                {player?.name} vs {rival?.name}
             </h1>
             <p className="mb-2 text-sm italic md:mb-4">
-                ({player.uid}) vs ({rival.uid})
+                ({playerUid}) vs ({rivalUid})
             </p>
 
             <div className="mb-2 flex flex-col gap-2 md:mb-4 md:flex-row md:gap-4">
-                <RivalInfoCard player={player} />
-                <RivalInfoCard player={rival} />
+                {player ? <RivalInfoCard player={player} /> : <Skeleton.Card />}
+                {rival ? <RivalInfoCard player={rival} /> : <Skeleton.Card />}
             </div>
 
-            <MatchesSummaryCard summary={summary} className="mb-2 md:mb-4" />
+            {summary ? <MatchesSummaryCard summary={summary} className="mb-2 md:mb-4" /> : <Skeleton.Card />}
 
-            <MatchHistory playerUid={player.uid} rivalUid={rival.uid} />
+            <MatchHistory playerUid={(player?.uid ?? rival?.uid) as string} rivalUid={rival?.uid} />
         </>
     );
 }
