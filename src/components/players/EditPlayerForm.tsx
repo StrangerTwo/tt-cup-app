@@ -16,9 +16,10 @@ import { EditPlayerFormType, editPlayerSchema } from "./editPlayerSchema";
 interface Props {
     player: Player;
     className?: string;
+    onSubmit: () => unknown;
 }
 
-export const EditPlayerForm = ({ player, className }: Props) => {
+export const EditPlayerForm = ({ player, className, onSubmit: _onSubmit }: Props) => {
     const client = useQueryClient();
     const { mutateAsync } = useEditPlayer();
     const form = useForm({
@@ -52,6 +53,7 @@ export const EditPlayerForm = ({ player, className }: Props) => {
                     getGetPlayerQueryKey(player.uid),
                     (p: Player | undefined): Player => ({ ...p, uid: player.uid, ...data }),
                 );
+                _onSubmit();
             }),
             {
                 loading: "Ukládám...",

@@ -17,9 +17,9 @@ export const PlayerDataCard = ({ player }: Props) => {
     return (
         <Card className="mt-2 flex max-w-lg justify-between gap-2 md:mt-4 md:gap-4">
             {isEdit ? (
-                <EditPlayerForm player={player} className="grow" />
+                <EditPlayerForm player={player} className="grow" onSubmit={() => setIsEdit(false)} />
             ) : (
-                <dl className="grid grow grid-cols-[max-content_auto] gap-2 md:gap-4">
+                <dl className="grid grow grid-cols-2 gap-2 md:gap-4">
                     <RenderItem title={"Ranking:"}>{player.ranking}</RenderItem>
                     <RenderItem title="Lokace:">
                         <Card className="inline-flex size-[1.5em] items-center justify-center p-0 align-middle md:p-0">

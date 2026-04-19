@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { twMerge } from "tailwind-merge";
 
 import { Player } from "../../api/model";
@@ -12,9 +13,11 @@ interface Props {
 export const RivalInfoCard = ({ player, className }: Props) => {
     return (
         <Card className={twMerge("max-w-md", className)}>
-            <dl className="grid grow grid-cols-[max-content_auto] gap-2 md:gap-4">
+            <dl className="grid grow grid-cols-2 gap-2 md:gap-4">
                 <RenderItem title={"Jméno:"} className="col-span-full">
-                    {player.name}
+                    <Link to="/player/$playerUid" params={{ playerUid: player.uid }} className="underline">
+                        {player.name}
+                    </Link>
                 </RenderItem>
 
                 <RenderItem title={"Ranking:"} className="col-start-1">
