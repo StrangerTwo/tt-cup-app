@@ -9,13 +9,12 @@ import type { Location } from "./location";
 
 export interface Player {
     uid: string;
-    /** @nullable */
-    name?: string | null;
-    /** @nullable */
-    elo?: number | null;
-    /** @nullable */
-    recrawl?: boolean | null;
-    /** @nullable */
-    favourite?: boolean | null;
+    name?: string;
+    ranking?: number;
+    elo?: number;
+    favourite?: boolean;
     location?: Location;
+    note?: string;
+    stisUrl?: string;
+    recrawl?: boolean;
 }

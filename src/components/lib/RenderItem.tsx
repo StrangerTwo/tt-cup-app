@@ -14,8 +14,8 @@ export const RenderItem = ({ className, title, children }: Props) => {
 
     return (
         <div className={twMerge("flex items-center gap-2 md:gap-4", className)}>
-            <dt className={twMerge("font-semibold leading-none", textHighlightColor)}>{title}</dt>
-            <dd>{children}</dd>
+            <dt className={twMerge("whitespace-nowrap font-semibold leading-none", textHighlightColor)}>{title}</dt>
+            <dd className="text-sm">{children}</dd>
         </div>
     );
 };

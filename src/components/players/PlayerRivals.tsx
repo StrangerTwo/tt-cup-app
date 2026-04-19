@@ -12,13 +12,7 @@ interface Props {
 
 export const PlayerRivals = ({ playerUid }: Props) => {
     const navigate = useNavigate();
-    const { data, isFetching } = useGetPlayerRivals(playerUid, {
-        query: {
-            select: (x) => {
-                return x.sort((a, b) => 0);
-            },
-        },
-    });
+    const { data, isFetching } = useGetPlayerRivals(playerUid);
 
     return (
         <>

@@ -10,6 +10,5 @@ import type { ObjectId } from "./objectId";
 export interface Tournament {
     date: string;
     place: string;
-    /** @nullable */
     _id?: ObjectId;
 }

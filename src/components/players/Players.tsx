@@ -16,7 +16,7 @@ export const Players = () => {
     const navigate = useNavigate();
     const [playersFilter, setPlayersFilter] = useState<PlayersFilterFormType>();
     const [sort, setSort] = useState<Sort<Player> | undefined>({
-        key: "elo",
+        key: "ranking",
         mode: SortMode.DESC,
     });
     const { data, fetchNextPage, isFetching } = usePlayersList(playersFilter, sort);
@@ -40,7 +40,7 @@ export const Players = () => {
                 keyFn={(p) => p.uid}
                 sort={sort}
                 onSort={Object.fromEntries(
-                    (["uid", "name", "elo", "favourite"] as Array<keyof Player>).map((x) => [
+                    (["uid", "name", "elo", "ranking", "favourite"] as Array<keyof Player>).map((x) => [
                         x,
                         (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
                     ]),

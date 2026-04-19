@@ -10,12 +10,8 @@ import type { ObjectId } from "./objectId";
 export interface Match {
     time: string;
     playerUids: [string, string, ...Array<string>];
-    /** @nullable */
-    sets?: [number, number, ...Array<number>] | null;
-    /** @nullable */
-    points?: Array<string> | null;
-    /** @nullable */
+    sets?: [number, number, ...Array<number>];
+    points?: Array<string>;
     tournamentId?: ObjectId;
-    /** @nullable */
     _id?: ObjectId;
 }

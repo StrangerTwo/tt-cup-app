@@ -26,6 +26,8 @@ import { customInstance } from "./api-instance";
 import type {
     CaptureDto,
     CapturePage200,
+    EditPlayer,
+    EditPlayer404,
     GetMatchesRequest,
     GetPagesToCrawlRequest,
     GetPlayer404,
@@ -659,6 +661,81 @@ export function useGetPlayer<TData = Awaited<ReturnType<typeof getPlayer>>, TErr
 
     return query;
 }
+
+export const editPlayer = (
+    playerUid: string,
+    editPlayer: EditPlayer,
+    options?: SecondParameter<typeof customInstance>,
+) => {
+    return customInstance<Status>(
+        {
+            url: `/player/${encodeURIComponent(String(playerUid))}`,
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            data: editPlayer,
+        },
+        options,
+    );
+};
+
+export const getEditPlayerMutationOptions = <TError = ErrorType<string | EditPlayer404>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof editPlayer>>,
+        TError,
+        { playerUid: string; data: EditPlayer },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof editPlayer>>,
+    TError,
+    { playerUid: string; data: EditPlayer },
+    TContext
+> => {
+    const mutationKey = ["editPlayer"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof editPlayer>>,
+        { playerUid: string; data: EditPlayer }
+    > = (props) => {
+        const { playerUid, data } = props ?? {};
+
+        return editPlayer(playerUid, data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type EditPlayerMutationResult = NonNullable<Awaited<ReturnType<typeof editPlayer>>>;
+export type EditPlayerMutationBody = EditPlayer;
+export type EditPlayerMutationError = ErrorType<string | EditPlayer404>;
+
+export const useEditPlayer = <TError = ErrorType<string | EditPlayer404>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof editPlayer>>,
+            TError,
+            { playerUid: string; data: EditPlayer },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof editPlayer>>,
+    TError,
+    { playerUid: string; data: EditPlayer },
+    TContext
+> => {
+    const mutationOptions = getEditPlayerMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
 
 export const setPlayerFavourite = (
     playerUid: string,

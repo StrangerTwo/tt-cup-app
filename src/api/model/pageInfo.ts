@@ -11,6 +11,5 @@ export interface PageInfo {
     size: number;
     totalElements: number;
     totalPages: number;
-    /** @nullable */
-    sort?: Array<string> | null;
+    sort?: Array<string>;
 }

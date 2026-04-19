@@ -9,8 +9,7 @@ import type { Location } from "./location";
 import type { PageInfoRequest } from "./pageInfoRequest";
 
 export interface GetPlayersRequest {
-    /** @nullable */
-    search?: string | null;
+    search?: string;
     location?: Location;
     pageInfo: PageInfoRequest;
 }

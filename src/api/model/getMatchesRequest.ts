@@ -8,7 +8,6 @@
 import type { PageInfoRequest } from "./pageInfoRequest";
 
 export interface GetMatchesRequest {
-    /** @nullable */
-    playerUids?: Array<string> | null;
+    playerUids?: Array<string>;
     pageInfo: PageInfoRequest;
 }

@@ -18,8 +18,8 @@ export const PlayerRow: {
     Heading: [
         { label: "#" },
         { label: "Jméno hráče", key: "name" },
-        { label: "Ranking", key: "elo" },
-        { label: "Elo" },
+        { label: "Ranking", key: "ranking" },
+        { label: "Elo", key: "elo" },
         { label: "Oblíbené", key: "favourite" },
         { label: "uid", key: "uid" },
     ],
@@ -29,12 +29,12 @@ export const PlayerRow: {
                 <TableCell>{i + 1}.</TableCell>
                 <TableCell className="font-medium text-gray-900 dark:text-white">{player.name}</TableCell>
                 <TableCell>
-                    <span className="me-1 align-middle">{player.elo}</span>
+                    <span className="me-1 align-middle">{player.ranking}</span>
                     <Card className="inline-flex size-[1.5em] items-center justify-center p-0 align-middle md:p-0">
                         {player.location ?? ""}
                     </Card>
                 </TableCell>
-                <TableCell>-</TableCell>
+                <TableCell>{player.elo ?? "-"}</TableCell>
                 <TableCell>
                     <FavouritePlayerButton playerUid={player.uid} className={"size-5 align-middle"} />
                 </TableCell>

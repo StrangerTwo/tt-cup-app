@@ -126,6 +126,35 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/Player'}
       operationId: getPlayer
+    patch:
+      description: ''
+      parameters:
+      - name: playerUid
+        in: path
+        required: true
+        schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/EditPlayer'}
+        required: true
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Status'}
+      operationId: editPlayer
   /player/{playerUid}/favourite:
     patch:
       description: ''
@@ -348,7 +377,6 @@ components:
         totalPages: {type: integer, format: int32}
         sort:
           type: array
-          nullable: true
           items: {type: string}
       required: [page, size, totalElements, totalPages]
     PaginatedQueryResult:
@@ -372,7 +400,6 @@ components:
         size: {type: integer, format: int32, default: '20'}
         sort:
           type: array
-          nullable: true
           items: {type: string}
       required: [page, size]
     GetPagesToCrawlRequest:
@@ -385,7 +412,6 @@ components:
       properties:
         playerUids:
           type: array
-          nullable: true
           items: {type: string}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
@@ -402,17 +428,15 @@ components:
           - {type: string}
         sets:
           type: array
-          nullable: true
           items: {type: integer, format: int32}
           prefixItems:
           - {type: integer, format: int32}
           - {type: integer, format: int32}
         points:
           type: array
-          nullable: true
           items: {type: string}
-        tournamentId: {nullable: true, $ref: '#/components/schemas/ObjectId'}
-        _id: {nullable: true, $ref: '#/components/schemas/ObjectId'}
+        tournamentId: {$ref: '#/components/schemas/ObjectId'}
+        _id: {$ref: '#/components/schemas/ObjectId'}
       required: [time, playerUids]
     PaginatedQueryResult_Match:
       type: object
@@ -425,7 +449,7 @@ components:
     GetPlayersRequest:
       type: object
       properties:
-        search: {type: string, nullable: true}
+        search: {type: string}
         location: {$ref: '#/components/schemas/Location'}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
@@ -433,11 +457,14 @@ components:
       type: object
       properties:
         uid: {type: string}
-        name: {type: string, nullable: true}
-        elo: {type: integer, format: int32, nullable: true}
-        recrawl: {type: boolean, nullable: true}
-        favourite: {type: boolean, nullable: true}
+        name: {type: string}
+        ranking: {type: integer, format: int32}
+        elo: {type: integer, format: int32}
+        favourite: {type: boolean}
         location: {$ref: '#/components/schemas/Location'}
+        note: {type: string}
+        stisUrl: {type: string}
+        recrawl: {type: boolean}
       required: [uid]
     PaginatedQueryResult_Player:
       type: object
@@ -447,6 +474,12 @@ components:
           items: {$ref: '#/components/schemas/Player'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
+    EditPlayer:
+      type: object
+      properties:
+        location: {$ref: '#/components/schemas/Location'}
+        note: {type: string}
+        stisUrl: {type: string}
     Status:
       type: object
       properties:
@@ -491,7 +524,7 @@ components:
       properties:
         date: {type: string, format: date}
         place: {type: string}
-        _id: {nullable: true, $ref: '#/components/schemas/ObjectId'}
+        _id: {$ref: '#/components/schemas/ObjectId'}
       required: [date, place]
     PaginatedQueryResult_Tournament:
       type: object

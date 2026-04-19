@@ -9,6 +9,5 @@
 export interface PageInfoRequest {
     page: number;
     size: number;
-    /** @nullable */
-    sort?: Array<string> | null;
+    sort?: Array<string>;
 }

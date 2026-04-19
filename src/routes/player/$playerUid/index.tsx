@@ -4,7 +4,8 @@ import { useGetPlayer } from "../../../api/api";
 import { Skeleton } from "../../../components/lib/Skeleton";
 import { Tabs } from "../../../components/lib/Tabs";
 import { MatchHistory } from "../../../components/matches/MatchHistory";
-import { PlayerMatchesSummary } from "../../../components/players/PlayerMatchesSummary";
+import { MatchesSummaryCard } from "../../../components/players/MatchesSummaryCard";
+import { PlayerDataCard } from "../../../components/players/PlayerDataCard";
 import { PlayerRivals } from "../../../components/players/PlayerRivals";
 
 export const Route = createFileRoute("/player/$playerUid/")({
@@ -37,7 +38,9 @@ function RouteComponent() {
             <h1 className="text-xl">
                 {player.name} ({player.uid})
             </h1>
-            <PlayerMatchesSummary playerUid={player.uid} className="mt-2 md:mt-4" />
+            <PlayerDataCard player={player} />
+
+            <MatchesSummaryCard playerUid={player.uid} className="mt-2 md:mt-4" />
             <Tabs
                 tabs={[
                     {
