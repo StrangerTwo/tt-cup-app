@@ -28,6 +28,7 @@ export interface BoxSelectProps<T, F extends FieldValues> {
         value: T;
     }>;
     onChange?: (x: T) => void;
+    layerStep?: number;
 }
 
 export const BoxSelect = <T, F extends FieldValues>({
@@ -40,6 +41,7 @@ export const BoxSelect = <T, F extends FieldValues>({
     form,
     options,
     onChange,
+    layerStep = 1,
 }: BoxSelectProps<T, F>) => {
     const { formState, watch, setValue } = form;
     const error = formState.errors[name];
@@ -67,7 +69,7 @@ export const BoxSelect = <T, F extends FieldValues>({
                 <input type="hidden" {...form.register(name)} />
                 {options.map((o, i) => (
                     <Card
-                        layerStep={value === o.value ? 1 : 0}
+                        layerStep={value === o.value ? layerStep : 0}
                         onClick={select(o)}
                         className={twMerge(
                             "flex flex-col items-center gap-2 p-2 text-sm",

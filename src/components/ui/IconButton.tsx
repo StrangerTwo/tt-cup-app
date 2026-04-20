@@ -9,17 +9,29 @@ interface Props {
     children: ReactNode;
     noEffects?: boolean;
     layerStep?: number;
+    border?: boolean;
+    type?: "submit" | "reset" | "button";
 }
 
-export const IconButton: FC<Props> = ({ className, onClick, children, noEffects, layerStep = 0 }) => {
-    const { hoverBgColor } = useColorLayer(layerStep);
+export const IconButton: FC<Props> = ({
+    className,
+    onClick,
+    children,
+    noEffects,
+    layerStep = 0,
+    border,
+    type = "button",
+}) => {
+    const { hoverBgColor, borderColor } = useColorLayer(layerStep);
     return (
         <button
-            type="button"
+            type={type}
             onClick={onClick}
             className={twMerge(
                 "text-control-action inline-flex size-10 cursor-pointer items-center justify-center rounded-lg bg-transparent text-sm",
                 !noEffects && hoverBgColor,
+                border && "border",
+                border && borderColor,
                 className,
             )}>
             {children}

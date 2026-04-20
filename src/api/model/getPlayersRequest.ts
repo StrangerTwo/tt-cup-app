@@ -11,5 +11,6 @@ import type { PageInfoRequest } from "./pageInfoRequest";
 export interface GetPlayersRequest {
     search?: string;
     location?: Location;
+    uids?: Array<string>;
     pageInfo: PageInfoRequest;
 }

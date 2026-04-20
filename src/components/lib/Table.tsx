@@ -2,7 +2,7 @@ import { Fragment, MouseEventHandler, ReactNode, useCallback, useEffect, useMemo
 import { twMerge } from "tailwind-merge";
 
 import { SortMode } from "../icons/SortIcon";
-import { useColorLayer } from "../ui/layout/ColorLayer";
+import { ColorLayerContext, useColorLayer } from "../ui/layout/ColorLayer";
 import { Skeleton } from "./Skeleton";
 import { TableCell } from "./TableCell";
 import { TableHeadingCell } from "./TableHeadingCell";
@@ -35,9 +35,9 @@ export type TableProps<T> = {
     onLoadMore?: () => unknown;
     filter?: (x: T) => boolean;
     keyFn?: (x: T) => React.Key | undefined;
-    expandRowFn?: (x: T) => ReactNode;
+    expandRow?: (x: T) => ReactNode;
     onRowClick?: (x: T) => void;
-    children: (x: T, i: number) => ReactNode;
+    children: (x: T, i: number, selected: boolean) => ReactNode;
 };
 
 export type Sort<T> = {
@@ -59,13 +59,18 @@ export const Table = <T,>({
     filter,
     keyFn,
     children,
-    expandRowFn,
+    expandRow,
     onRowClick,
     isPending,
     onLoadMore,
 }: TableProps<T>) => {
-    const { bgColor, borderColor, textColor } = useColorLayer(layerStep);
-    const { bgColor: highlightBgColor, hoverBgColor, textColor: highlightTextColor } = useColorLayer(layerStep + 1);
+    const { layer, bgColor, borderColor, textColor } = useColorLayer(layerStep);
+    const {
+        bgColor: highlightBgColor,
+        borderColor: highlightBorderColor,
+        hoverBgColor,
+        textColor: highlightTextColor,
+    } = useColorLayer(layerStep + 1);
     const [sort, setSort] = useState<Sort<T> | undefined>(_sort);
     const [selected, setSelected] = useState<React.Key | null>(null);
     const sentinelRef = useRef<HTMLTableRowElement>(null);
@@ -77,7 +82,7 @@ export const Table = <T,>({
 
     const rowClick = (x: T, i: number) => () => {
         onRowClick && onRowClick(x);
-        expandRowFn && setSelected((prev) => (prev === getKey(x, i) ? null : getKey(x, i)));
+        expandRow && setSelected((prev) => (prev === getKey(x, i) ? null : getKey(x, i)));
     };
 
     const sortHandler = useCallback(
@@ -134,7 +139,6 @@ export const Table = <T,>({
                                 key={h.key ?? i}
                                 heading={h}
                                 onClick={onHeadingClick[h.key]}
-                                setSort={setSort}
                                 sort={sort}
                             />
                         ))}
@@ -159,15 +163,22 @@ export const Table = <T,>({
                                     borderColor,
                                     "border-t",
                                     heading && "first:border-t-0",
-                                    (onRowClick || expandRowFn) && "cursor-pointer",
-                                    expandRowFn && selected === getKey(x, i) && "border-b-0 " + highlightBgColor,
+                                    (onRowClick || expandRow) && "cursor-pointer",
+                                    expandRow &&
+                                        selected === getKey(x, i) &&
+                                        highlightBorderColor + " border-b " + highlightBgColor,
                                 )}
                                 onClick={rowClick(x, i)}>
-                                {children(x, i)}
+                                <ColorLayerContext.Provider
+                                    value={{ layer: selected === getKey(x, i) ? layer + 1 : layer }}>
+                                    {children(x, i, selected === getKey(x, i))}
+                                </ColorLayerContext.Provider>
                             </tr>
-                            {expandRowFn && selected === getKey(x, i) && (
+                            {expandRow && selected === getKey(x, i) && (
                                 <tr className={twMerge(highlightBgColor, borderColor, "border-b last:border-b-0")}>
-                                    <TableCell colSpan={heading?.length || 42}>{expandRowFn(x)}</TableCell>
+                                    <ColorLayerContext.Provider value={{ layer: layer + 1 }}>
+                                        <TableCell colSpan={heading?.length || 42}>{expandRow(x)}</TableCell>
+                                    </ColorLayerContext.Provider>
                                 </tr>
                             )}
                         </Fragment>

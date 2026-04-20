@@ -84,8 +84,66 @@ paths:
               schema: {type: string}
               examples:
                 Example#1: {value: ''}
-                Example#2: {value: ''}
       operationId: getOpenapi
+  /place:
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/GetPlacesRequest'}
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Place'}
+      operationId: getPlaces
+  /place/by-tournament:
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CreatePlaceByTournament'}
+        required: true
+      responses:
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/ObjectId'}
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
+      operationId: createPlaceByTournament
+  /place/recommendations:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/TournamentFull'}
+      operationId: getPlaceRecommendations
   /player:
     post:
       description: ''
@@ -255,7 +313,14 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/Status'}
+              schema: {$ref: '#/components/schemas/ObjectId'}
+        '500':
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema: {type: string}
+              examples:
+                Example#1: {value: ''}
       operationId: newPlayer
   /tournament:
     post:
@@ -437,7 +502,7 @@ components:
           items: {type: string}
         tournamentId: {$ref: '#/components/schemas/ObjectId'}
         _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [time, playerUids]
+      required: [time, playerUids, _id]
     PaginatedQueryResult_Match:
       type: object
       properties:
@@ -446,11 +511,52 @@ components:
           items: {$ref: '#/components/schemas/Match'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
+    GetPlacesRequest:
+      type: object
+      properties:
+        search: {type: string}
+        location: {$ref: '#/components/schemas/Location'}
+        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
+      required: [pageInfo]
+    Place:
+      type: object
+      properties:
+        uid: {type: string}
+        location: {$ref: '#/components/schemas/Location'}
+        lastUpdate: {type: string, format: date-time}
+      required: [uid, lastUpdate]
+    PaginatedQueryResult_Place:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/Place'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+      required: [results, pageInfo]
+    CreatePlaceByTournament:
+      type: object
+      properties:
+        tournamentId: {type: string}
+        location: {$ref: '#/components/schemas/Location'}
+      required: [tournamentId]
+    TournamentFull:
+      type: object
+      properties:
+        date: {type: string, format: date}
+        place: {type: string}
+        matches:
+          type: array
+          items: {$ref: '#/components/schemas/Match'}
+        _id: {$ref: '#/components/schemas/ObjectId'}
+      required: [date, place, matches, _id, _id]
     GetPlayersRequest:
       type: object
       properties:
         search: {type: string}
         location: {$ref: '#/components/schemas/Location'}
+        uids:
+          type: array
+          items: {type: string}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
     Player:
@@ -525,7 +631,7 @@ components:
         date: {type: string, format: date}
         place: {type: string}
         _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [date, place]
+      required: [date, place, _id]
     PaginatedQueryResult_Tournament:
       type: object
       properties:
@@ -534,16 +640,6 @@ components:
           items: {$ref: '#/components/schemas/Tournament'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
-    TournamentFull:
-      type: object
-      properties:
-        date: {type: string, format: date}
-        place: {type: string}
-        matches:
-          type: array
-          items: {$ref: '#/components/schemas/Match'}
-        _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [date, place, matches, _id]
     User:
       type: object
       properties:

@@ -10,5 +10,5 @@ import type { ObjectId } from "./objectId";
 export interface Tournament {
     date: string;
     place: string;
-    _id?: ObjectId;
+    _id: ObjectId;
 }

@@ -38,9 +38,9 @@ export const NewPlayer = () => {
 
     const onSubmit = (data: NewPlayerFormType) => {
         toast.promise(
-            mutateAsync({ data }).then(() => {
+            mutateAsync({ data }).then((playerUid) => {
                 client.invalidateQueries({ queryKey: [EQueryKey.getPlayers] });
-                navigate({ to: "/player" });
+                navigate({ to: "/player/$playerUid", params: { playerUid } });
             }),
             {
                 loading: "Ukládám...",

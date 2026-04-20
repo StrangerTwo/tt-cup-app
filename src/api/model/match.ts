@@ -13,5 +13,5 @@ export interface Match {
     sets?: [number, number, ...Array<number>];
     points?: Array<string>;
     tournamentId?: ObjectId;
-    _id?: ObjectId;
+    _id: ObjectId;
 }

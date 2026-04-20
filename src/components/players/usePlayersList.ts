@@ -2,13 +2,12 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { getGetPlayerQueryKey, useGetPlayers } from "../../api/api";
 import { EQueryKey } from "../../api/EQueryKey";
-import { Player } from "../../api/model";
+import { GetPlayersRequest, Player } from "../../api/model";
 import { sortingForRequest } from "../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
 import { Sort } from "../lib/Table";
-import { PlayersFilterFormType } from "./playersFilterSchema";
 
-export const usePlayersList = (playersFilter: PlayersFilterFormType | undefined, sort: Sort<Player> | undefined) => {
+export const usePlayersList = (playersFilter: Omit<GetPlayersRequest, "pageInfo"> | undefined, sort?: Sort<Player>) => {
     const client = useQueryClient();
     const { mutateAsync } = useGetPlayers();
     const result = usePaginatedQuery({

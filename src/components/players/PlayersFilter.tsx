@@ -2,21 +2,23 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 
 import { EQueryKey } from "../../api/EQueryKey";
 import { Location } from "../../api/model";
 import { BoxSelect } from "../form/BoxSelect";
 import { Input } from "../form/Input";
-import { SearchIcon } from "../icons";
+import { RefreshIcon } from "../icons";
 import { locationLabels } from "./PlayerLocation";
 import { PlayersFilterFormType, playersFilterSchema } from "./playersFilterSchema";
 
 interface Props {
     filters: PlayersFilterFormType;
     setFilters: (filter: PlayersFilterFormType) => void;
+    isFetching: boolean;
 }
 
-export const PlayersFilter = ({ filters, setFilters }: Props) => {
+export const PlayersFilter = ({ filters, setFilters, isFetching }: Props) => {
     const client = useQueryClient();
 
     const form = useForm({
@@ -49,7 +51,7 @@ export const PlayersFilter = ({ filters, setFilters }: Props) => {
                 type="submit"
                 onClick={() => client.invalidateQueries({ queryKey: [EQueryKey.getPlayers] })}
                 className="ms-2 rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                <SearchIcon />
+                <RefreshIcon className={twMerge(isFetching && "animate-spin")} />
                 <span className="sr-only">Search</span>
             </button>
             <BoxSelect
