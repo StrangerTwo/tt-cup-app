@@ -5,13 +5,11 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
+import type { MatchesSummary } from "./matchesSummary";
+import type { Player } from "./player";
 
 export interface RivalMatchesSummary {
     rivalUid: string;
-    matchesWon: number;
-    matchesLost: number;
-    longestWinStreak: number;
-    longestLoseStreak: number;
-    currentWinStreak: number;
-    currentLoseStreak: number;
+    rival?: Player;
+    matchesSummary: MatchesSummary;
 }

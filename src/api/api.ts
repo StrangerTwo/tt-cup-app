@@ -35,10 +35,11 @@ import type {
     GetPlacesRequest,
     GetPlayer404,
     GetPlayerMatchesSummary404,
+    GetPlayerRival404,
     GetPlayerRivals404,
+    GetPlayerRivalsRequest,
     GetPlayersRequest,
     GetTournament404,
-    GetTournamentFull404,
     GetTournamentsRequest,
     MatchesSummary,
     NewPlayer,
@@ -47,12 +48,12 @@ import type {
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlace,
     PaginatedQueryResultPlayer,
+    PaginatedQueryResultRivalMatchesSummary,
     PaginatedQueryResultTournament,
     Player,
     RivalMatchesSummary,
     SetPlayerFavourite404,
     Status,
-    Tournament,
     TournamentFull,
     User,
 } from "./model";
@@ -1059,58 +1060,145 @@ export const useSetPlayerFavourite = <TError = ErrorType<string | SetPlayerFavou
 
 export const getPlayerRivals = (
     playerUid: string,
+    getPlayerRivalsRequest: GetPlayerRivalsRequest,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<Array<RivalMatchesSummary>>(
-        { url: `/player/${encodeURIComponent(String(playerUid))}/rivals`, method: "GET", signal },
+    return customInstance<PaginatedQueryResultRivalMatchesSummary>(
+        {
+            url: `/player/${encodeURIComponent(String(playerUid))}/rival`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: getPlayerRivalsRequest,
+            signal,
+        },
         options,
     );
 };
 
-export const getGetPlayerRivalsQueryKey = (playerUid?: string) => {
-    return [`/player/${playerUid}/rivals`] as const;
+export const getGetPlayerRivalsMutationOptions = <
+    TError = ErrorType<string | GetPlayerRivals404>,
+    TContext = unknown,
+>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof getPlayerRivals>>,
+        TError,
+        { playerUid: string; data: GetPlayerRivalsRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof getPlayerRivals>>,
+    TError,
+    { playerUid: string; data: GetPlayerRivalsRequest },
+    TContext
+> => {
+    const mutationKey = ["getPlayerRivals"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof getPlayerRivals>>,
+        { playerUid: string; data: GetPlayerRivalsRequest }
+    > = (props) => {
+        const { playerUid, data } = props ?? {};
+
+        return getPlayerRivals(playerUid, data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
 };
 
-export const getGetPlayerRivalsQueryOptions = <
-    TData = Awaited<ReturnType<typeof getPlayerRivals>>,
-    TError = ErrorType<string | GetPlayerRivals404>,
+export type GetPlayerRivalsMutationResult = NonNullable<Awaited<ReturnType<typeof getPlayerRivals>>>;
+export type GetPlayerRivalsMutationBody = GetPlayerRivalsRequest;
+export type GetPlayerRivalsMutationError = ErrorType<string | GetPlayerRivals404>;
+
+export const useGetPlayerRivals = <TError = ErrorType<string | GetPlayerRivals404>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof getPlayerRivals>>,
+            TError,
+            { playerUid: string; data: GetPlayerRivalsRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof getPlayerRivals>>,
+    TError,
+    { playerUid: string; data: GetPlayerRivalsRequest },
+    TContext
+> => {
+    const mutationOptions = getGetPlayerRivalsMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getPlayerRival = (
+    playerUid: string,
+    rivalUid: string,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<RivalMatchesSummary>(
+        {
+            url: `/player/${encodeURIComponent(String(playerUid))}/rival/${encodeURIComponent(String(rivalUid))}`,
+            method: "GET",
+            signal,
+        },
+        options,
+    );
+};
+
+export const getGetPlayerRivalQueryKey = (playerUid?: string, rivalUid?: string) => {
+    return [`/player/${playerUid}/rival/${rivalUid}`] as const;
+};
+
+export const getGetPlayerRivalQueryOptions = <
+    TData = Awaited<ReturnType<typeof getPlayerRival>>,
+    TError = ErrorType<string | GetPlayerRival404>,
 >(
     playerUid: string,
+    rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRivals>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRival>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
 ) => {
     const { query: queryOptions, request: requestOptions } = options ?? {};
 
-    const queryKey = queryOptions?.queryKey ?? getGetPlayerRivalsQueryKey(playerUid);
+    const queryKey = queryOptions?.queryKey ?? getGetPlayerRivalQueryKey(playerUid, rivalUid);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayerRivals>>> = ({ signal }) =>
-        getPlayerRivals(playerUid, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayerRival>>> = ({ signal }) =>
+        getPlayerRival(playerUid, rivalUid, requestOptions, signal);
 
-    return { queryKey, queryFn, enabled: !!playerUid, ...queryOptions } as UseQueryOptions<
-        Awaited<ReturnType<typeof getPlayerRivals>>,
+    return { queryKey, queryFn, enabled: !!(playerUid && rivalUid), ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getPlayerRival>>,
         TError,
         TData
     > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetPlayerRivalsQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayerRivals>>>;
-export type GetPlayerRivalsQueryError = ErrorType<string | GetPlayerRivals404>;
+export type GetPlayerRivalQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayerRival>>>;
+export type GetPlayerRivalQueryError = ErrorType<string | GetPlayerRival404>;
 
-export function useGetPlayerRivals<
-    TData = Awaited<ReturnType<typeof getPlayerRivals>>,
-    TError = ErrorType<string | GetPlayerRivals404>,
+export function useGetPlayerRival<
+    TData = Awaited<ReturnType<typeof getPlayerRival>>,
+    TError = ErrorType<string | GetPlayerRival404>,
 >(
     playerUid: string,
+    rivalUid: string,
     options: {
-        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRivals>>, TError, TData>> &
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRival>>, TError, TData>> &
             Pick<
                 DefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayerRivals>>,
+                    Awaited<ReturnType<typeof getPlayerRival>>,
                     TError,
-                    Awaited<ReturnType<typeof getPlayerRivals>>
+                    Awaited<ReturnType<typeof getPlayerRival>>
                 >,
                 "initialData"
             >;
@@ -1118,18 +1206,19 @@ export function useGetPlayerRivals<
     },
     queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayerRivals<
-    TData = Awaited<ReturnType<typeof getPlayerRivals>>,
-    TError = ErrorType<string | GetPlayerRivals404>,
+export function useGetPlayerRival<
+    TData = Awaited<ReturnType<typeof getPlayerRival>>,
+    TError = ErrorType<string | GetPlayerRival404>,
 >(
     playerUid: string,
+    rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRivals>>, TError, TData>> &
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRival>>, TError, TData>> &
             Pick<
                 UndefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayerRivals>>,
+                    Awaited<ReturnType<typeof getPlayerRival>>,
                     TError,
-                    Awaited<ReturnType<typeof getPlayerRivals>>
+                    Awaited<ReturnType<typeof getPlayerRival>>
                 >,
                 "initialData"
             >;
@@ -1137,30 +1226,32 @@ export function useGetPlayerRivals<
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayerRivals<
-    TData = Awaited<ReturnType<typeof getPlayerRivals>>,
-    TError = ErrorType<string | GetPlayerRivals404>,
+export function useGetPlayerRival<
+    TData = Awaited<ReturnType<typeof getPlayerRival>>,
+    TError = ErrorType<string | GetPlayerRival404>,
 >(
     playerUid: string,
+    rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRivals>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRival>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetPlayerRivals<
-    TData = Awaited<ReturnType<typeof getPlayerRivals>>,
-    TError = ErrorType<string | GetPlayerRivals404>,
+export function useGetPlayerRival<
+    TData = Awaited<ReturnType<typeof getPlayerRival>>,
+    TError = ErrorType<string | GetPlayerRival404>,
 >(
     playerUid: string,
+    rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRivals>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerRival>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetPlayerRivalsQueryOptions(playerUid, options);
+    const queryOptions = getGetPlayerRivalQueryOptions(playerUid, rivalUid, options);
 
     const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
         queryKey: DataTag<QueryKey, TData, TError>;
@@ -1413,7 +1504,7 @@ export const getTournament = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<Tournament>(
+    return customInstance<TournamentFull>(
         { url: `/tournament/${encodeURIComponent(String(tournamentId))}`, method: "GET", signal },
         options,
     );
@@ -1512,120 +1603,6 @@ export function useGetTournament<
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
     const queryOptions = getGetTournamentQueryOptions(tournamentId, options);
-
-    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-        queryKey: DataTag<QueryKey, TData, TError>;
-    };
-
-    query.queryKey = queryOptions.queryKey;
-
-    return query;
-}
-
-export const getTournamentFull = (
-    tournamentId: string,
-    options?: SecondParameter<typeof customInstance>,
-    signal?: AbortSignal,
-) => {
-    return customInstance<TournamentFull>(
-        { url: `/tournament/${encodeURIComponent(String(tournamentId))}/full`, method: "GET", signal },
-        options,
-    );
-};
-
-export const getGetTournamentFullQueryKey = (tournamentId?: string) => {
-    return [`/tournament/${tournamentId}/full`] as const;
-};
-
-export const getGetTournamentFullQueryOptions = <
-    TData = Awaited<ReturnType<typeof getTournamentFull>>,
-    TError = ErrorType<string | GetTournamentFull404>,
->(
-    tournamentId: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-) => {
-    const { query: queryOptions, request: requestOptions } = options ?? {};
-
-    const queryKey = queryOptions?.queryKey ?? getGetTournamentFullQueryKey(tournamentId);
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTournamentFull>>> = ({ signal }) =>
-        getTournamentFull(tournamentId, requestOptions, signal);
-
-    return { queryKey, queryFn, enabled: !!tournamentId, ...queryOptions } as UseQueryOptions<
-        Awaited<ReturnType<typeof getTournamentFull>>,
-        TError,
-        TData
-    > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type GetTournamentFullQueryResult = NonNullable<Awaited<ReturnType<typeof getTournamentFull>>>;
-export type GetTournamentFullQueryError = ErrorType<string | GetTournamentFull404>;
-
-export function useGetTournamentFull<
-    TData = Awaited<ReturnType<typeof getTournamentFull>>,
-    TError = ErrorType<string | GetTournamentFull404>,
->(
-    tournamentId: string,
-    options: {
-        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>> &
-            Pick<
-                DefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getTournamentFull>>,
-                    TError,
-                    Awaited<ReturnType<typeof getTournamentFull>>
-                >,
-                "initialData"
-            >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetTournamentFull<
-    TData = Awaited<ReturnType<typeof getTournamentFull>>,
-    TError = ErrorType<string | GetTournamentFull404>,
->(
-    tournamentId: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>> &
-            Pick<
-                UndefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getTournamentFull>>,
-                    TError,
-                    Awaited<ReturnType<typeof getTournamentFull>>
-                >,
-                "initialData"
-            >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetTournamentFull<
-    TData = Awaited<ReturnType<typeof getTournamentFull>>,
-    TError = ErrorType<string | GetTournamentFull404>,
->(
-    tournamentId: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-export function useGetTournamentFull<
-    TData = Awaited<ReturnType<typeof getTournamentFull>>,
-    TError = ErrorType<string | GetTournamentFull404>,
->(
-    tournamentId: string,
-    options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentFull>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetTournamentFullQueryOptions(tournamentId, options);
 
     const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
         queryKey: DataTag<QueryKey, TData, TError>;

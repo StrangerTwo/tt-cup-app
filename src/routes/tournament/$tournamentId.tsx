@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { useGetTournamentFull } from "../../api/api";
+import { useGetTournament } from "../../api/api";
 import { LinkIcon } from "../../components/icons";
 import { Skeleton } from "../../components/lib/Skeleton";
 import Table from "../../components/lib/Table";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/tournament/$tournamentId")({
 
 function RouteComponent() {
     const { tournamentId } = Route.useParams();
-    const { data: tournament } = useGetTournamentFull(tournamentId);
+    const { data: tournament } = useGetTournament(tournamentId);
 
     if (!tournament) return <Skeleton.Card />;
 

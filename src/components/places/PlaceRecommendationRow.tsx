@@ -2,7 +2,7 @@ import { FC } from "react";
 import { CheckmarkIcon } from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
-import { useGetTournamentFull } from "../../api/api";
+import { useGetTournament } from "../../api/api";
 import { Location, Tournament, TournamentFull } from "../../api/model";
 import { renderFullDateShort, renderHoursShort } from "../../lib/date";
 import { BoxSelect } from "../form/BoxSelect";
@@ -38,7 +38,7 @@ export const PlaceRecommendationRow: {
         { label: "Přidat", className: "text-end" },
     ],
     FC: ({ tournamentId, selected }) => {
-        const { data: tournament } = useGetTournamentFull(tournamentId);
+        const { data: tournament } = useGetTournament(tournamentId);
         const { textHighlightColor } = useColorLayer();
 
         if (!tournament)

@@ -1,10 +1,12 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { useGetPlayerRivals } from "../../api/api";
 import { Player } from "../../api/model";
-import Table from "../lib/Table";
+import { SortMode } from "../icons/SortIcon";
+import Table, { Sort } from "../lib/Table";
+import { useUrlSyncedTableState } from "../lib/useUrlSyncedTableState";
 import { Card } from "../ui/Card";
 import { RivalRow } from "./RivalRow";
+import { usePlayerRivalsList } from "./usePlayerRivalsList";
 
 interface Props {
     playerUid: Player["uid"];
@@ -12,7 +14,14 @@ interface Props {
 
 export const PlayerRivals = ({ playerUid }: Props) => {
     const navigate = useNavigate();
-    const { data, isFetching } = useGetPlayerRivals(playerUid);
+    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
+        tableId: "playerRivals",
+        defaultSorting: {
+            key: "rival.elo",
+            mode: SortMode.DESC,
+        } as Sort<any>,
+    });
+    const { data, fetchNextPage, isFetching } = usePlayerRivalsList(playerUid, filters, sort);
 
     return (
         <>
@@ -26,11 +35,21 @@ export const PlayerRivals = ({ playerUid }: Props) => {
                     heading={RivalRow.Heading}
                     data={data ?? []}
                     keyFn={(r) => r.rivalUid}
+                    onSort={Object.fromEntries(
+                        (["rival.name", "rival.elo", "rival.ranking"] as Array<any>).map((x) => [
+                            x,
+                            (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
+                        ]),
+                    )}
                     onRowClick={(r) =>
-                        navigate({ to: "/player/$playerUid/vs/$rivalUid", params: { playerUid, rivalUid: r.rivalUid } })
+                        navigate({
+                            to: "/player/$playerUid/vs/$rivalUid",
+                            params: { playerUid, rivalUid: r.rivalUid },
+                        })
                     }
+                    onLoadMore={fetchNextPage}
                     isPending={isFetching}>
-                    {(rivalMS, i) => <RivalRow.FC rivalMS={rivalMS} playerUid={playerUid} />}
+                    {(r, i) => <RivalRow.FC rivalMS={r} playerUid={playerUid} i={i} />}
                 </Table>
             </Card>
         </>
