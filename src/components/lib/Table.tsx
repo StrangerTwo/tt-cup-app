@@ -110,6 +110,7 @@ export const Table = <T,>({
         );
     }, [heading, onSort, sortHandler, sorting]);
 
+    const hash = JSON.stringify(data);
     useEffect(() => {
         if (!onLoadMore) return;
         if (!sentinelRef.current) return;
@@ -126,7 +127,7 @@ export const Table = <T,>({
 
         observer.observe(sentinelRef.current);
         return () => observer.disconnect();
-    }, [data, isPending, onLoadMore]);
+    }, [hash, data.length, onLoadMore]);
 
     return (
         <table className={twMerge("w-full text-left text-sm rtl:text-right", className)}>

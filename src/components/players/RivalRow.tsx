@@ -3,7 +3,6 @@ import { FC } from "react";
 import { useGetPlayer } from "../../api/api";
 import { RivalMatchesSummary } from "../../api/model";
 import { ScoreItem } from "../lib/ScoreItem";
-import { Skeleton } from "../lib/Skeleton";
 import { TableProps } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
 import { useColorLayer } from "../ui/layout";
@@ -32,22 +31,16 @@ export const RivalRow: {
         const { textHighlightColor } = useColorLayer();
         const { data: rival } = useGetPlayer(rivalUid);
         const { currentLoseStreak, currentWinStreak, matchesWon, matchesLost } = matchesSummary;
-        if (!rival)
-            return (
-                <TableCell colSpan={RivalRow.Heading?.length || 42}>
-                    <Skeleton.Text className="m-4" />
-                </TableCell>
-            );
 
         return (
             <>
                 <TableCell>
-                    <PlayerLocation location={rival.location} />
-                    <span className="ms-1 align-middle">{i + 1}.</span>
+                    <span className="me-1 align-middle">{i + 1}.</span>
+                    {rival?.location && <PlayerLocation location={rival.location} />}
                 </TableCell>
-                <TableCell className={textHighlightColor}>{rival?.name ?? rival.uid}</TableCell>
-                <TableCell>{rival.ranking}</TableCell>
-                <TableCell>{rival.elo ?? "-"}</TableCell>
+                <TableCell className={textHighlightColor}>{rival?.name ?? rivalUid}</TableCell>
+                <TableCell>{rival?.ranking}</TableCell>
+                <TableCell>{rival?.elo ?? "-"}</TableCell>
                 <TableCell className={textHighlightColor}>
                     <ScoreItem win={currentWinStreak > 0} lose={currentLoseStreak > 0}>
                         {currentWinStreak > 0 ? currentWinStreak : -currentLoseStreak}
