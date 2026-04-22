@@ -5,14 +5,14 @@ import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
-import { getGetPlayerQueryKey, useEditPlayer } from "../../api/api";
-import { Location, Player } from "../../api/model";
-import { resolveErrorMessage } from "../../lib/toastError";
-import { BoxSelect } from "../form/BoxSelect";
-import { Input } from "../form/Input";
-import { SubmitButton } from "../lib/SubmitButton";
+import { getGetPlayerQueryKey, useEditPlayer } from "../../../api/api";
+import { Location, Player } from "../../../api/model";
+import { resolveErrorMessage } from "../../../lib/toastError";
+import { BoxSelect } from "../../form/BoxSelect";
+import { Input } from "../../form/Input";
+import { SubmitButton } from "../../lib/SubmitButton";
+import { locationLabels } from "../PlayerLocation";
 import { EditPlayerFormType, editPlayerSchema } from "./editPlayerSchema";
-import { locationLabels } from "./PlayerLocation";
 
 interface Props {
     player: Player;

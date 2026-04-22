@@ -132,17 +132,22 @@ paths:
               examples:
                 Example#1: {value: ''}
       operationId: createPlaceByTournament
+  /place/outdated:
+    get: {description: '', operationId: getOutdatedPlaces}
   /place/recommendations:
-    get:
+    post:
       description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/GetPlaceRecommendationsRequest'}
+        required: true
       responses:
         '200':
           description: OK
           content:
             '*/*':
-              schema:
-                type: array
-                items: {$ref: '#/components/schemas/TournamentFull'}
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_TournamentFull'}
       operationId: getPlaceRecommendations
   /player:
     post:
@@ -546,6 +551,12 @@ components:
         tournamentId: {type: string}
         location: {$ref: '#/components/schemas/Location'}
       required: [tournamentId]
+    GetPlaceRecommendationsRequest:
+      type: object
+      properties:
+        search: {type: string}
+        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
+      required: [pageInfo]
     TournamentFull:
       type: object
       properties:
@@ -556,6 +567,14 @@ components:
           items: {$ref: '#/components/schemas/Match'}
         _id: {$ref: '#/components/schemas/ObjectId'}
       required: [date, place, matches, _id, _id]
+    PaginatedQueryResult_TournamentFull:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/TournamentFull'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+      required: [results, pageInfo]
     GetPlayersRequest:
       type: object
       properties:

@@ -3,10 +3,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useGetPlayer } from "../../../api/api";
 import { Skeleton } from "../../../components/lib/Skeleton";
 import { Tabs } from "../../../components/lib/Tabs";
-import { MatchHistory } from "../../../components/matches/MatchHistory";
-import { MatchesSummaryCard } from "../../../components/players/MatchesSummaryCard";
-import { PlayerDataCard } from "../../../components/players/PlayerDataCard";
-import { PlayerRivals } from "../../../components/players/PlayerRivals";
+import { MatchesSummaryCard } from "../../../components/match/MatchesSummaryCard";
+import { MatchHistory } from "../../../components/match/MatchHistory";
+import { PlayerDataCard } from "../../../components/player/PlayerDataCard";
+import { PlayerRivals } from "../../../components/player/rivals/PlayerRivals";
 
 export const Route = createFileRoute("/player/$playerUid/")({
     component: RouteComponent,

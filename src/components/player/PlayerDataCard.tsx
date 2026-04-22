@@ -5,7 +5,7 @@ import { EditIcon } from "../icons";
 import { RenderItem } from "../lib/RenderItem";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
-import { EditPlayerForm } from "./EditPlayerForm";
+import { EditPlayerForm } from "./edit/EditPlayerForm";
 
 interface Props {
     player: Player;

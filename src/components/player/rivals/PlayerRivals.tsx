@@ -1,12 +1,13 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { Player } from "../../api/model";
-import { SortMode } from "../icons/SortIcon";
-import Table, { Sort } from "../lib/Table";
-import { useUrlSyncedTableState } from "../lib/useUrlSyncedTableState";
-import { Card } from "../ui/Card";
+import { Player } from "../../../api/model";
+import { SortMode } from "../../icons/SortIcon";
+import Table, { Sort } from "../../lib/Table";
+import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
+import { Card } from "../../ui/Card";
+import { PlayerRivalsFilter } from "./PlayerRivalsFilter";
 import { RivalRow } from "./RivalRow";
-import { usePlayerRivalsList } from "./usePlayerRivalsList";
+import { usePlayerRivals } from "./usePlayerRivals";
 
 interface Props {
     playerUid: Player["uid"];
@@ -21,7 +22,7 @@ export const PlayerRivals = ({ playerUid }: Props) => {
             mode: SortMode.DESC,
         } as Sort<any>,
     });
-    const { data, fetchNextPage, isFetching } = usePlayerRivalsList(playerUid, filters, sort);
+    const { data, fetchNextPage, isFetching } = usePlayerRivals(playerUid, filters, sort);
 
     return (
         <>
@@ -29,7 +30,8 @@ export const PlayerRivals = ({ playerUid }: Props) => {
                 <Table
                     caption={
                         <>
-                            <h2 className="text-xl">Soupeři</h2>
+                            <h2 className="mb-1 text-xl md:mb-4">Soupeři</h2>
+                            <PlayerRivalsFilter filters={filters} setFilters={setFilters} isFetching={isFetching} />
                         </>
                     }
                     heading={RivalRow.Heading}

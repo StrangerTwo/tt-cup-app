@@ -1,12 +1,12 @@
 import { FC } from "react";
 
-import { useGetPlayer } from "../../api/api";
-import { Player } from "../../api/model";
-import { Skeleton } from "../lib/Skeleton";
-import { TableProps } from "../lib/Table";
-import { TableCell } from "../lib/TableCell";
-import { FavouritePlayerButton } from "./FavouritePlayerButton";
-import { PlayerLocation } from "./PlayerLocation";
+import { useGetPlayer } from "../../../api/api";
+import { Player } from "../../../api/model";
+import { Skeleton } from "../../lib/Skeleton";
+import { TableProps } from "../../lib/Table";
+import { TableCell } from "../../lib/TableCell";
+import { FavouritePlayerButton } from "../FavouritePlayerButton";
+import { PlayerLocation } from "../PlayerLocation";
 
 interface PlayerRowProps {
     playerUid: Player["uid"];

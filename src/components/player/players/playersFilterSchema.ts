@@ -1,8 +1,8 @@
 import * as yup from "yup";
 
-import { Location } from "../../api/model";
-import { trimToUndefined } from "../../lib/empty";
-import { transformEmptyToUndefined } from "../form/transform";
+import { Location } from "../../../api/model";
+import { trimToUndefined } from "../../../lib/empty";
+import { transformEmptyToUndefined } from "../../form/transform";
 
 export const playersFilterSchema = yup.object({
     search: yup.string().transform(trimToUndefined).transform(transformEmptyToUndefined),

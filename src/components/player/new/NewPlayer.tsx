@@ -5,16 +5,16 @@ import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 
-import { useNewPlayer } from "../../api/api";
-import { EQueryKey } from "../../api/EQueryKey";
-import { Location } from "../../api/model";
-import { resolveErrorMessage } from "../../lib/toastError";
-import { BoxSelect } from "../form/BoxSelect";
-import { Input } from "../form/Input";
-import { SubmitButton } from "../lib/SubmitButton";
-import { Card } from "../ui/Card";
+import { useNewPlayer } from "../../../api/api";
+import { EQueryKey } from "../../../api/EQueryKey";
+import { Location } from "../../../api/model";
+import { resolveErrorMessage } from "../../../lib/toastError";
+import { BoxSelect } from "../../form/BoxSelect";
+import { Input } from "../../form/Input";
+import { SubmitButton } from "../../lib/SubmitButton";
+import { Card } from "../../ui/Card";
+import { locationLabels } from "../PlayerLocation";
 import { newPlayerFormSchema, NewPlayerFormType } from "./newPlayerSchema";
-import { locationLabels } from "./PlayerLocation";
 
 export const NewPlayer = () => {
     const navigate = useNavigate();

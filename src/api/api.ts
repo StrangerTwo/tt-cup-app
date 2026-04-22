@@ -32,6 +32,7 @@ import type {
     EditPlayer404,
     GetMatchesRequest,
     GetPagesToCrawlRequest,
+    GetPlaceRecommendationsRequest,
     GetPlacesRequest,
     GetPlayer404,
     GetPlayerMatchesSummary404,
@@ -50,6 +51,7 @@ import type {
     PaginatedQueryResultPlayer,
     PaginatedQueryResultRivalMatchesSummary,
     PaginatedQueryResultTournament,
+    PaginatedQueryResultTournamentFull,
     Player,
     RivalMatchesSummary,
     SetPlayerFavourite404,
@@ -638,49 +640,49 @@ export const useCreatePlaceByTournament = <TError = ErrorType<string | CreatePla
     return useMutation(mutationOptions, queryClient);
 };
 
-export const getPlaceRecommendations = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
-    return customInstance<Array<TournamentFull>>({ url: `/place/recommendations`, method: "GET", signal }, options);
+export const getOutdatedPlaces = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<unknown>({ url: `/place/outdated`, method: "GET", signal }, options);
 };
 
-export const getGetPlaceRecommendationsQueryKey = () => {
-    return [`/place/recommendations`] as const;
+export const getGetOutdatedPlacesQueryKey = () => {
+    return [`/place/outdated`] as const;
 };
 
-export const getGetPlaceRecommendationsQueryOptions = <
-    TData = Awaited<ReturnType<typeof getPlaceRecommendations>>,
+export const getGetOutdatedPlacesQueryOptions = <
+    TData = Awaited<ReturnType<typeof getOutdatedPlaces>>,
     TError = ErrorType<unknown>,
 >(options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaceRecommendations>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOutdatedPlaces>>, TError, TData>>;
     request?: SecondParameter<typeof customInstance>;
 }) => {
     const { query: queryOptions, request: requestOptions } = options ?? {};
 
-    const queryKey = queryOptions?.queryKey ?? getGetPlaceRecommendationsQueryKey();
+    const queryKey = queryOptions?.queryKey ?? getGetOutdatedPlacesQueryKey();
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlaceRecommendations>>> = ({ signal }) =>
-        getPlaceRecommendations(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOutdatedPlaces>>> = ({ signal }) =>
+        getOutdatedPlaces(requestOptions, signal);
 
     return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-        Awaited<ReturnType<typeof getPlaceRecommendations>>,
+        Awaited<ReturnType<typeof getOutdatedPlaces>>,
         TError,
         TData
     > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetPlaceRecommendationsQueryResult = NonNullable<Awaited<ReturnType<typeof getPlaceRecommendations>>>;
-export type GetPlaceRecommendationsQueryError = ErrorType<unknown>;
+export type GetOutdatedPlacesQueryResult = NonNullable<Awaited<ReturnType<typeof getOutdatedPlaces>>>;
+export type GetOutdatedPlacesQueryError = ErrorType<unknown>;
 
-export function useGetPlaceRecommendations<
-    TData = Awaited<ReturnType<typeof getPlaceRecommendations>>,
+export function useGetOutdatedPlaces<
+    TData = Awaited<ReturnType<typeof getOutdatedPlaces>>,
     TError = ErrorType<unknown>,
 >(
     options: {
-        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaceRecommendations>>, TError, TData>> &
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOutdatedPlaces>>, TError, TData>> &
             Pick<
                 DefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlaceRecommendations>>,
+                    Awaited<ReturnType<typeof getOutdatedPlaces>>,
                     TError,
-                    Awaited<ReturnType<typeof getPlaceRecommendations>>
+                    Awaited<ReturnType<typeof getOutdatedPlaces>>
                 >,
                 "initialData"
             >;
@@ -688,17 +690,17 @@ export function useGetPlaceRecommendations<
     },
     queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlaceRecommendations<
-    TData = Awaited<ReturnType<typeof getPlaceRecommendations>>,
+export function useGetOutdatedPlaces<
+    TData = Awaited<ReturnType<typeof getOutdatedPlaces>>,
     TError = ErrorType<unknown>,
 >(
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaceRecommendations>>, TError, TData>> &
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOutdatedPlaces>>, TError, TData>> &
             Pick<
                 UndefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlaceRecommendations>>,
+                    Awaited<ReturnType<typeof getOutdatedPlaces>>,
                     TError,
-                    Awaited<ReturnType<typeof getPlaceRecommendations>>
+                    Awaited<ReturnType<typeof getOutdatedPlaces>>
                 >,
                 "initialData"
             >;
@@ -706,28 +708,28 @@ export function useGetPlaceRecommendations<
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlaceRecommendations<
-    TData = Awaited<ReturnType<typeof getPlaceRecommendations>>,
+export function useGetOutdatedPlaces<
+    TData = Awaited<ReturnType<typeof getOutdatedPlaces>>,
     TError = ErrorType<unknown>,
 >(
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaceRecommendations>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOutdatedPlaces>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetPlaceRecommendations<
-    TData = Awaited<ReturnType<typeof getPlaceRecommendations>>,
+export function useGetOutdatedPlaces<
+    TData = Awaited<ReturnType<typeof getOutdatedPlaces>>,
     TError = ErrorType<unknown>,
 >(
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlaceRecommendations>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getOutdatedPlaces>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetPlaceRecommendationsQueryOptions(options);
+    const queryOptions = getGetOutdatedPlacesQueryOptions(options);
 
     const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
         queryKey: DataTag<QueryKey, TData, TError>;
@@ -737,6 +739,82 @@ export function useGetPlaceRecommendations<
 
     return query;
 }
+
+export const getPlaceRecommendations = (
+    getPlaceRecommendationsRequest: GetPlaceRecommendationsRequest,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<PaginatedQueryResultTournamentFull>(
+        {
+            url: `/place/recommendations`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: getPlaceRecommendationsRequest,
+            signal,
+        },
+        options,
+    );
+};
+
+export const getGetPlaceRecommendationsMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof getPlaceRecommendations>>,
+        TError,
+        { data: GetPlaceRecommendationsRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof getPlaceRecommendations>>,
+    TError,
+    { data: GetPlaceRecommendationsRequest },
+    TContext
+> => {
+    const mutationKey = ["getPlaceRecommendations"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof getPlaceRecommendations>>,
+        { data: GetPlaceRecommendationsRequest }
+    > = (props) => {
+        const { data } = props ?? {};
+
+        return getPlaceRecommendations(data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type GetPlaceRecommendationsMutationResult = NonNullable<Awaited<ReturnType<typeof getPlaceRecommendations>>>;
+export type GetPlaceRecommendationsMutationBody = GetPlaceRecommendationsRequest;
+export type GetPlaceRecommendationsMutationError = ErrorType<unknown>;
+
+export const useGetPlaceRecommendations = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof getPlaceRecommendations>>,
+            TError,
+            { data: GetPlaceRecommendationsRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof getPlaceRecommendations>>,
+    TError,
+    { data: GetPlaceRecommendationsRequest },
+    TContext
+> => {
+    const mutationOptions = getGetPlaceRecommendationsMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
 
 export const getPlayers = (
     getPlayersRequest: GetPlayersRequest,

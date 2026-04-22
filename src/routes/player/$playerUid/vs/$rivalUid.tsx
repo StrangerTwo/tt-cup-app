@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { useGetPlayer, useGetPlayerRival } from "../../../../api/api";
 import { Skeleton } from "../../../../components/lib/Skeleton";
-import { MatchHistory } from "../../../../components/matches/MatchHistory";
-import { MatchesSummaryCard } from "../../../../components/players/MatchesSummaryCard";
-import { RivalInfoCard } from "../../../../components/players/RivalInfoCard";
+import { MatchesSummaryCard } from "../../../../components/match/MatchesSummaryCard";
+import { MatchHistory } from "../../../../components/match/MatchHistory";
+import { RivalInfoCard } from "../../../../components/player/rivals/RivalInfoCard";
 
 export const Route = createFileRoute("/player/$playerUid/vs/$rivalUid")({
     component: RouteComponent,

@@ -1,15 +1,15 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { Player } from "../../api/model";
-import { PlusIcon } from "../icons";
-import { SortMode } from "../icons/SortIcon";
-import Table, { Sort } from "../lib/Table";
-import { useUrlSyncedTableState } from "../lib/useUrlSyncedTableState";
-import { Card } from "../ui/Card";
-import { IconButton } from "../ui/IconButton";
+import { Player } from "../../../api/model";
+import { PlusIcon } from "../../icons";
+import { SortMode } from "../../icons/SortIcon";
+import Table, { Sort } from "../../lib/Table";
+import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
+import { Card } from "../../ui/Card";
+import { IconButton } from "../../ui/IconButton";
 import { PlayerRow } from "./PlayerRow";
 import { PlayersFilter } from "./PlayersFilter";
-import { usePlayersList } from "./usePlayersList";
+import { usePlayers } from "./usePlayers";
 
 export const Players = () => {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ export const Players = () => {
             mode: SortMode.DESC,
         } as Sort<Player>,
     });
-    const { data, fetchNextPage, isFetching } = usePlayersList(filters, sort);
+    const { data, fetchNextPage, isFetching } = usePlayers(filters, sort);
 
     return (
         <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">

@@ -1,13 +1,13 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-import { getGetPlayerQueryKey, useGetPlayerRivals } from "../../api/api";
-import { EQueryKey } from "../../api/EQueryKey";
-import { GetPlayerRivalsRequest, Player } from "../../api/model";
-import { sortingForRequest } from "../../lib/sortingForRequest";
-import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
-import { Sort } from "../lib/Table";
+import { getGetPlayerQueryKey, useGetPlayerRivals } from "../../../api/api";
+import { EQueryKey } from "../../../api/EQueryKey";
+import { GetPlayerRivalsRequest, Player } from "../../../api/model";
+import { sortingForRequest } from "../../../lib/sortingForRequest";
+import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
+import { Sort } from "../../lib/Table";
 
-export const usePlayerRivalsList = (
+export const usePlayerRivals = (
     playerUid: Player["uid"],
     filter: Omit<GetPlayerRivalsRequest, "pageInfo"> | undefined,
     sort?: Sort<Player>,

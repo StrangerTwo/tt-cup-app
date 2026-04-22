@@ -1,12 +1,12 @@
 import { FC } from "react";
 
-import { useGetPlayer } from "../../api/api";
-import { RivalMatchesSummary } from "../../api/model";
-import { ScoreItem } from "../lib/ScoreItem";
-import { TableProps } from "../lib/Table";
-import { TableCell } from "../lib/TableCell";
-import { useColorLayer } from "../ui/layout";
-import { PlayerLocation } from "./PlayerLocation";
+import { useGetPlayer } from "../../../api/api";
+import { RivalMatchesSummary } from "../../../api/model";
+import { ScoreItem } from "../../lib/ScoreItem";
+import { TableProps } from "../../lib/Table";
+import { TableCell } from "../../lib/TableCell";
+import { useColorLayer } from "../../ui/layout";
+import { PlayerLocation } from "../PlayerLocation";
 
 interface RivalRowProps {
     rivalMS: RivalMatchesSummary;

@@ -4,9 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-import { getGetPlaceRecommendationsQueryKey, useCreatePlaceByTournament } from "../../api/api";
-import { Tournament } from "../../api/model";
-import { resolveErrorMessage } from "../../lib/toastError";
+import { useCreatePlaceByTournament } from "../../../api/api";
+import { EQueryKey } from "../../../api/EQueryKey";
+import { Tournament } from "../../../api/model";
+import { resolveErrorMessage } from "../../../lib/toastError";
 import { createPlaceByTournamentSchema, CreatePlaceByTournamentType } from "./createPlaceByTournamentSchema";
 
 export const useCreatePlaceByTournamentForm = (tournament: Tournament) => {
@@ -21,10 +22,9 @@ export const useCreatePlaceByTournamentForm = (tournament: Tournament) => {
     const timeoutRef = useRef<NodeJS.Timeout | number>(null);
 
     const clearPlace = useCallback(() => {
-        client.setQueryData(getGetPlaceRecommendationsQueryKey(), (recommendations: Array<Tournament> | undefined) =>
-            recommendations?.filter((t) => t._id !== tournament._id),
-        );
-    }, [client, tournament._id]);
+        timeoutRef.current = null;
+        client.invalidateQueries({ queryKey: [EQueryKey.getPlaceRecommendations] });
+    }, [client]);
 
     useEffect(() => {
         return () => {

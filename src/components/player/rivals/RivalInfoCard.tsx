@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { twMerge } from "tailwind-merge";
 
-import { Player } from "../../api/model";
-import { RenderItem } from "../lib/RenderItem";
-import { Card } from "../ui/Card";
+import { Player } from "../../../api/model";
+import { RenderItem } from "../../lib/RenderItem";
+import { Card } from "../../ui/Card";
 
 interface Props {
     player: Player;

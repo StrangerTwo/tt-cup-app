@@ -2,20 +2,20 @@ import { FC } from "react";
 import { CheckmarkIcon } from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
-import { useGetTournament } from "../../api/api";
-import { Location, Tournament, TournamentFull } from "../../api/model";
-import { renderFullDateShort, renderHoursShort } from "../../lib/date";
-import { BoxSelect } from "../form/BoxSelect";
-import { ChevronIcon } from "../icons";
-import { CheckCircleIcon } from "../icons/CheckCircleIcon";
-import { Skeleton } from "../lib/Skeleton";
-import Table, { TableProps } from "../lib/Table";
-import { TableCell } from "../lib/TableCell";
-import { locationLabels, PlayerLocation } from "../players/PlayerLocation";
-import { usePlayersList } from "../players/usePlayersList";
-import { Card } from "../ui/Card";
-import { IconButton } from "../ui/IconButton";
-import { useColorLayer } from "../ui/layout";
+import { useGetTournament } from "../../../api/api";
+import { Location, Tournament, TournamentFull } from "../../../api/model";
+import { renderFullDateShort, renderHoursShort } from "../../../lib/date";
+import { BoxSelect } from "../../form/BoxSelect";
+import { ChevronIcon } from "../../icons";
+import { CheckCircleIcon } from "../../icons/CheckCircleIcon";
+import { Skeleton } from "../../lib/Skeleton";
+import Table, { TableProps } from "../../lib/Table";
+import { TableCell } from "../../lib/TableCell";
+import { locationLabels, PlayerLocation } from "../../player/PlayerLocation";
+import { usePlayers } from "../../player/players/usePlayers";
+import { Card } from "../../ui/Card";
+import { IconButton } from "../../ui/IconButton";
+import { useColorLayer } from "../../ui/layout";
 import { useCreatePlaceByTournamentForm } from "./useCreatePlaceByTournamentForm";
 
 interface PlaceRecommendationRowProps {
@@ -68,7 +68,7 @@ export const PlaceRecommendationRow: {
     ExpandRowFC: ({ tournament }) => {
         const { form, placeCreated, createPlace } = useCreatePlaceByTournamentForm(tournament);
         const { handleSubmit } = form;
-        const { data: players, isFetching } = usePlayersList({
+        const { data: players, isFetching } = usePlayers({
             uids: [...new Set(tournament.matches.flatMap((m) => m.playerUids))],
         });
 

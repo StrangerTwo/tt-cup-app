@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { PlaceRecommendations } from "../../components/places/PlaceRecommendations";
+import { PlaceRecommendations } from "../../components/place/recommendations/PlaceRecommendations";
 
 export const Route = createFileRoute("/update/")({
     component: RouteComponent,

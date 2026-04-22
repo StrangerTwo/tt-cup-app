@@ -4,7 +4,7 @@ import { useGetTournament } from "../../api/api";
 import { LinkIcon } from "../../components/icons";
 import { Skeleton } from "../../components/lib/Skeleton";
 import Table from "../../components/lib/Table";
-import { MatchRow } from "../../components/matches/MatchRow";
+import { MatchRow } from "../../components/match/MatchRow";
 import { Card } from "../../components/ui/Card";
 import { IconButton } from "../../components/ui/IconButton";
 import { renderFullDate, renderHoursShort } from "../../lib/date";
