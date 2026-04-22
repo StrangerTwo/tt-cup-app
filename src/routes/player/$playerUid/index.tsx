@@ -55,7 +55,8 @@ function RouteComponent() {
                     },
                 ]}
                 value={tab}
-                onSelect={selectTab}></Tabs>
+                onSelect={selectTab}
+            />
         </>
     );
 }

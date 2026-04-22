@@ -36,7 +36,6 @@ export const PlayerRivals = ({ playerUid }: Props) => {
                     }
                     heading={RivalRow.Heading}
                     data={data ?? []}
-                    keyFn={(r) => r.rivalUid}
                     onSort={Object.fromEntries(
                         (["rival.name", "rival.elo", "rival.ranking"] as Array<any>).map((x) => [
                             x,

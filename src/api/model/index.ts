@@ -30,6 +30,7 @@ export * from "./match";
 export * from "./matchesSummary";
 export * from "./newPlayer";
 export * from "./objectId";
+export * from "./outdatedPlace";
 export * from "./pageInfo";
 export * from "./pageInfoRequest";
 export * from "./paginatedQueryResult";

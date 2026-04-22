@@ -133,7 +133,17 @@ paths:
                 Example#1: {value: ''}
       operationId: createPlaceByTournament
   /place/outdated:
-    get: {description: '', operationId: getOutdatedPlaces}
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/OutdatedPlace'}
+      operationId: getOutdatedPlaces
   /place/recommendations:
     post:
       description: ''
@@ -535,7 +545,7 @@ components:
       properties:
         uid: {type: string}
         location: {$ref: '#/components/schemas/Location'}
-        lastUpdate: {type: string, format: date-time}
+        lastUpdate: {type: string, format: date}
       required: [uid, lastUpdate]
     PaginatedQueryResult_Place:
       type: object
@@ -551,6 +561,12 @@ components:
         tournamentId: {type: string}
         location: {$ref: '#/components/schemas/Location'}
       required: [tournamentId]
+    OutdatedPlace:
+      type: object
+      properties:
+        place: {$ref: '#/components/schemas/Place'}
+        updateUrl: {type: string}
+      required: [place, updateUrl]
     GetPlaceRecommendationsRequest:
       type: object
       properties:

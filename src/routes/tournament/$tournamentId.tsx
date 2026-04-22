@@ -7,7 +7,7 @@ import Table from "../../components/lib/Table";
 import { MatchRow } from "../../components/match/MatchRow";
 import { Card } from "../../components/ui/Card";
 import { IconButton } from "../../components/ui/IconButton";
-import { renderFullDate, renderHoursShort } from "../../lib/date";
+import { renderCzIsoDate, renderFullDate, renderHoursShort } from "../../lib/date";
 
 export const Route = createFileRoute("/tournament/$tournamentId")({
     component: RouteComponent,
@@ -35,7 +35,8 @@ function RouteComponent() {
                     caption={
                         <div className="flex items-center gap-2 md:gap-4">
                             <h2 className="text-xl">Zápasy</h2>
-                            <a href="https://ttcup.com/schedule/19.04.2026/h:51/">
+                            <a
+                                href={`https://ttcup.com/schedule/${renderCzIsoDate(tournament.date)}/${tournament.place}/`}>
                                 <IconButton>
                                     <LinkIcon />
                                 </IconButton>

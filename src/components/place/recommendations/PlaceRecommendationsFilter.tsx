@@ -42,7 +42,7 @@ export const PlaceRecommendationsFilter = ({ filters, setFilters, isFetching }: 
 
     return (
         <form className="grid max-w-xs grid-cols-[1fr_auto] md:max-w-md" onSubmit={handleSubmit(onSubmit)}>
-            <Input form={form} name="search" placeholder="Jméno" />
+            <Input form={form} name="search" placeholder="Hala" />
             <button
                 type="submit"
                 onClick={() => client.invalidateQueries({ queryKey: [EQueryKey.getPlaceRecommendations] })}

@@ -1,5 +1,6 @@
 import { format, isValid, parseISO } from "date-fns";
 
+const czIsoDateFormat = "dd.MM.yyyy";
 const fullDateFormat = "d. M. yyyy";
 const fullDateShortFormat = "d. M. yy";
 const fullDateWithHoursShortFormat = "d. M. yyyy HH:mm";
@@ -14,6 +15,11 @@ export const parseDateInput = (dateInput: Date | string, fallbackDate = new Date
 export const renderFullDate = (dateInput: Date | string): string => {
     const date = parseDateInput(dateInput);
     return format(date, fullDateFormat);
+};
+
+export const renderCzIsoDate = (dateInput: Date | string): string => {
+    const date = parseDateInput(dateInput);
+    return format(date, czIsoDateFormat);
 };
 
 export const renderFullDateShort = (dateInput: Date | string): string => {

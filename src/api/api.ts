@@ -45,6 +45,7 @@ import type {
     MatchesSummary,
     NewPlayer,
     ObjectId,
+    OutdatedPlace,
     PaginatedQueryResultCrawlPage,
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlace,
@@ -641,7 +642,7 @@ export const useCreatePlaceByTournament = <TError = ErrorType<string | CreatePla
 };
 
 export const getOutdatedPlaces = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
-    return customInstance<unknown>({ url: `/place/outdated`, method: "GET", signal }, options);
+    return customInstance<Array<OutdatedPlace>>({ url: `/place/outdated`, method: "GET", signal }, options);
 };
 
 export const getGetOutdatedPlacesQueryKey = () => {

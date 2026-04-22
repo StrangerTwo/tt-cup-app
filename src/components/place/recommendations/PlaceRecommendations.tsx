@@ -26,7 +26,7 @@ export const PlaceRecommendations = () => {
                 caption={
                     <>
                         <>
-                            <h1 className="mb-1 text-xl md:mb-4">Doporučené stoly</h1>
+                            <h1 className="mb-1 text-xl md:mb-4">Přidání stolů</h1>
                             <PlaceRecommendationsFilter
                                 filters={filters}
                                 setFilters={setFilters}
