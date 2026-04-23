@@ -118,7 +118,7 @@ const isSortingState = <T>(value: unknown): value is Sort<T> => {
 
 const parseSorting = <T>(raw: unknown): Sort<T> | undefined => {
     if (isSortingState(raw)) {
-        return raw;
+        return raw as Sort<T>;
     }
 
     if (typeof raw !== "string" || raw.trim().length === 0) {
@@ -131,7 +131,7 @@ const parseSorting = <T>(raw: unknown): Sort<T> | undefined => {
     const mode = _mode === "asc" || _mode === "desc" ? (_mode as SortMode) : undefined;
     if (!mode) return undefined;
 
-    return { key: key as keyof T, mode };
+    return { key: key as Sort<T>["key"], mode };
 };
 
 const defaultSerializeFilters = <TFilters extends object>(filters: TFilters) => filters as Record<string, unknown>;
@@ -188,7 +188,7 @@ export const useUrlSyncedTableState = <TFilters extends object, T>({
 
         return {
             filters: parsedFilters,
-            sort: sorting,
+            sort: sorting as Sort<T>,
         };
     };
 

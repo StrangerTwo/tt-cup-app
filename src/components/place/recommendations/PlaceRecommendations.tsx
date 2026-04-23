@@ -1,6 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
-
-import { Tournament } from "../../../api/model";
+import { Tournament, TournamentFull } from "../../../api/model";
 import { SortMode } from "../../icons/SortIcon";
 import Table, { Sort } from "../../lib/Table";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
@@ -10,13 +8,12 @@ import { PlaceRecommendationsFilter } from "./PlaceRecommendationsFilter";
 import { usePlaceRecommendations } from "./usePlaceRecommendations";
 
 export const PlaceRecommendations = () => {
-    const client = useQueryClient();
     const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
         tableId: "playerRivals",
         defaultSorting: {
             key: "date",
             mode: SortMode.DESC,
-        } as Sort<Tournament>,
+        } as Sort<TournamentFull>,
     });
     const { data: recommendations, isFetching } = usePlaceRecommendations(filters, sort);
 
