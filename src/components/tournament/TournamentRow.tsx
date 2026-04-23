@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -31,6 +32,7 @@ export const TournamentRow: {
         { label: "AI" },
     ],
     FC: ({ match, i }) => {
+        const navigate = useNavigate();
         const { textHighlightColor } = useColorLayer();
         const { data: playerA } = useGetPlayer(match.playerUids[0]);
         const { data: playerB } = useGetPlayer(match.playerUids[1]);
@@ -40,7 +42,14 @@ export const TournamentRow: {
             <>
                 <TableCell>X</TableCell>
                 <TableCell className="text-center">{renderHoursShort(match.time)}</TableCell>
-                <TableCell className={twMerge("text-center font-medium", textHighlightColor)}>
+                <TableCell
+                    className={twMerge("cursor-pointer text-center font-medium", textHighlightColor)}
+                    onClick={() =>
+                        navigate({
+                            to: "/player/$playerUid/vs/$rivalUid",
+                            params: { playerUid: match.playerUids[0], rivalUid: match.playerUids[1] },
+                        })
+                    }>
                     {renderNameShort(playerA?.name) ?? match.playerUids[0]} -{" "}
                     {renderNameShort(playerB?.name) ?? match.playerUids[1]}
                 </TableCell>
