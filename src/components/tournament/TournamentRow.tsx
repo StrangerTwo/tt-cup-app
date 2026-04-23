@@ -28,7 +28,7 @@ export const TournamentRow: {
         { label: "Hráč - Hráč", key: "playerUids", className: "text-center" },
         { label: "Výsledek", key: "sets", className: "text-center" },
         { label: "Bil", className: "text-center" },
-        { label: "Vz. utk" },
+        { label: "Utk", className: "text-center" },
         { label: "AI" },
     ],
     FC: ({ match, i }) => {
@@ -74,13 +74,9 @@ export const TournamentRow: {
                         <Skeleton.Text className="mb-0" />
                     )}
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                     {summary ? (
-                        <Score
-                            scoreA={summary.matchesSummary.matchesWon}
-                            scoreB={summary.matchesSummary.matchesLost}
-                            isWinForA
-                        />
+                        <Score scoreA={summary.matchesSummary.matchesWon} scoreB={summary.matchesSummary.matchesLost} />
                     ) : (
                         <Skeleton.Text className="mb-0" />
                     )}
