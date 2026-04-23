@@ -22,12 +22,12 @@ export const TournamentRow: {
     FC: FC<TournamentRowProps>;
 } = {
     Heading: [
-        { label: "AI" },
         { label: "Bet" },
         { label: "Čas", key: "time", className: "text-center" },
+        { label: "AI" },
         { label: "Hráč - Hráč", key: "playerUids", className: "text-center" },
         { label: "Výsledek", key: "sets", className: "text-center" },
-        { label: "Bilance", className: "text-center" },
+        { label: "Bil", className: "text-center" },
         { label: "Vz utk" },
     ],
     FC: ({ match, i }) => {
@@ -39,9 +39,8 @@ export const TournamentRow: {
         return (
             <>
                 <TableCell>X</TableCell>
-                <TableCell>X</TableCell>
-
                 <TableCell className="text-center">{renderHoursShort(match.time)}</TableCell>
+                <TableCell>X</TableCell>
                 <TableCell className={twMerge("text-center font-medium", textHighlightColor)}>
                     {renderNameShort(playerA?.name) ?? match.playerUids[0]} -{" "}
                     {renderNameShort(playerB?.name) ?? match.playerUids[1]}
