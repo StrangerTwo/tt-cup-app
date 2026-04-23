@@ -1,3 +1,5 @@
+import { useNavigate } from "@tanstack/react-router";
+
 import { PlaceTournamentMatches } from "../../api/model";
 import { renderCzIsoDate, renderFullDateShort, renderHoursShort } from "../../lib/date";
 import { LinkIcon } from "../icons";
@@ -12,6 +14,7 @@ import { TournamentRow } from "./TournamentRow";
 import { useTournamentsToday } from "./useTournamentsToday";
 
 export const TournamentsToday = () => {
+    const navigate = useNavigate();
     const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
         tableId: "tournamentsToday",
         defaultSorting: {
@@ -34,7 +37,7 @@ export const TournamentsToday = () => {
                             caption={
                                 <div className="flex items-center gap-4">
                                     <h2 className="text-xl">
-                                        Turnaj {place.uid} | {renderFullDateShort(new Date())}{" "}
+                                        {place.uid} | {renderFullDateShort(new Date())}{" "}
                                         {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
                                         {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
                                     </h2>
@@ -48,6 +51,12 @@ export const TournamentsToday = () => {
                             heading={TournamentRow.Heading}
                             data={matches ?? []}
                             keyFn={(m) => m.time}
+                            onRowClick={(m) =>
+                                navigate({
+                                    to: "/player/$playerUid/vs/$rivalUid",
+                                    params: { playerUid: m.playerUids[0], rivalUid: m.playerUids[1] },
+                                })
+                            }
                             onLoadMore={fetchNextPage}
                             isPending={isFetching}>
                             {(m, i) => <TournamentRow.FC match={m} i={i} />}

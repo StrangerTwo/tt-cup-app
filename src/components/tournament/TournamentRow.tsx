@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { useGetPlayer, useGetPlayerRival } from "../../api/api";
 import { Match } from "../../api/model";
 import { renderHoursShort } from "../../lib/date";
+import { renderNameShort } from "../../lib/name";
 import { Score } from "../lib/Score";
 import { ScoreItem } from "../lib/ScoreItem";
 import { Skeleton } from "../lib/Skeleton";
@@ -21,13 +22,13 @@ export const TournamentRow: {
     FC: FC<TournamentRowProps>;
 } = {
     Heading: [
-        { label: "Doporučení" },
-        { label: "Vsazeno" },
-        { label: "Čas", key: "time" },
+        { label: "AI" },
+        { label: "Bet" },
+        { label: "Čas", key: "time", className: "text-center" },
         { label: "Hráč - Hráč", key: "playerUids", className: "text-center" },
         { label: "Výsledek", key: "sets", className: "text-center" },
         { label: "Bilance", className: "text-center" },
-        { label: "Vzajemná utkání" },
+        { label: "Vz utk" },
     ],
     FC: ({ match, i }) => {
         const { textHighlightColor } = useColorLayer();
@@ -39,9 +40,11 @@ export const TournamentRow: {
             <>
                 <TableCell>X</TableCell>
                 <TableCell>X</TableCell>
-                <TableCell>{renderHoursShort(match.time)}</TableCell>
+
+                <TableCell className="text-center">{renderHoursShort(match.time)}</TableCell>
                 <TableCell className={twMerge("text-center font-medium", textHighlightColor)}>
-                    {playerA?.name ?? match.playerUids[0]} - {playerB?.name ?? match.playerUids[1]}
+                    {renderNameShort(playerA?.name) ?? match.playerUids[0]} -{" "}
+                    {renderNameShort(playerB?.name) ?? match.playerUids[1]}
                 </TableCell>
                 <TableCell className="text-center">
                     <Score
