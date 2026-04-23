@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { Player } from "../../../api/model";
+import { Player, RivalMatchesSummary } from "../../../api/model";
 import { SortMode } from "../../icons/SortIcon";
 import Table, { Sort } from "../../lib/Table";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
@@ -20,7 +20,7 @@ export const PlayerRivals = ({ playerUid }: Props) => {
         defaultSorting: {
             key: "rival.elo",
             mode: SortMode.DESC,
-        } as Sort<any>,
+        } as Sort<RivalMatchesSummary>,
     });
     const { data, fetchNextPage, isFetching } = usePlayerRivals(playerUid, filters, sort);
 
@@ -37,10 +37,9 @@ export const PlayerRivals = ({ playerUid }: Props) => {
                     heading={RivalRow.Heading}
                     data={data ?? []}
                     onSort={Object.fromEntries(
-                        (["rival.name", "rival.elo", "rival.ranking"] as Array<any>).map((x) => [
-                            x,
-                            (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
-                        ]),
+                        (["rival.name", "rival.elo", "rival.ranking"] as Array<Sort<RivalMatchesSummary>["key"]>).map(
+                            (x) => [x, (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined)],
+                        ),
                     )}
                     onRowClick={(r) =>
                         navigate({

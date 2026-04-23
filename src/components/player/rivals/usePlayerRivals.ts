@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { getGetPlayerQueryKey, useGetPlayerRivals } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { GetPlayerRivalsRequest, Player } from "../../../api/model";
+import { GetPlayerRivalsRequest, Player, RivalMatchesSummary } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
@@ -10,7 +10,7 @@ import { Sort } from "../../lib/Table";
 export const usePlayerRivals = (
     playerUid: Player["uid"],
     filter: Omit<GetPlayerRivalsRequest, "pageInfo"> | undefined,
-    sort?: Sort<Player>,
+    sort?: Sort<RivalMatchesSummary>,
 ) => {
     const client = useQueryClient();
     const { mutateAsync } = useGetPlayerRivals();

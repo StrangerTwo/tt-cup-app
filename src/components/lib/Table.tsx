@@ -1,4 +1,4 @@
-import { Fragment, MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, MouseEventHandler, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { SortMode } from "../icons/SortIcon";
@@ -6,6 +6,7 @@ import { ColorLayerContext, useColorLayer } from "../ui/layout/ColorLayer";
 import { Skeleton } from "./Skeleton";
 import { TableCell } from "./TableCell";
 import { TableHeadingCell } from "./TableHeadingCell";
+import { useLoadMoreSentinel } from "./useLoadMoreSentinel";
 
 export interface TableRowProps<T> {
     item: T;
@@ -14,7 +15,7 @@ export interface TableRowProps<T> {
 
 export interface TableHeading<T> {
     label: string;
-    key?: Extract<keyof T, string>;
+    key?: NestedKeys<T>;
     className?: string;
 }
 
@@ -23,11 +24,11 @@ export type TableProps<T> = {
     caption?: ReactNode;
     heading?: Array<TableHeading<T>>;
     sorting?: {
-        [key in keyof T]?: (a: T, B: T) => number;
+        [key in NestedKeys<T>]?: (a: T, B: T) => number;
     };
     sort?: Sort<T>;
     onSort?: {
-        [key in keyof T]?: (sortMode: SortMode | null) => unknown;
+        [key in NestedKeys<T>]?: (sortMode: SortMode | null) => unknown;
     };
     layerStep?: number;
     data: Array<T>;
@@ -40,12 +41,24 @@ export type TableProps<T> = {
     children: (x: T, i: number, selected: boolean) => ReactNode;
 };
 
+type NestedKeys<T> = {
+    [K in Extract<keyof T, string>]: T[K] extends Array<any> // Arrays → allow the key itself
+        ? K
+        : // Objects (but not arrays) → expand one level deep
+          NonNullable<T[K]> extends object
+          ? NonNullable<T[K]> extends Array<any>
+              ? K
+              : `${K}.${Extract<keyof NonNullable<T[K]>, string>}`
+          : // Primitives → allow key itself
+            K;
+}[Extract<keyof T, string>];
+
 export type Sort<T> = {
-    key: keyof T;
+    key: NestedKeys<T>;
     mode: SortMode;
 };
 
-type OnHeadingClickMap<T> = { [key in keyof T]?: MouseEventHandler<HTMLDivElement> };
+type OnHeadingClickMap<T> = { [key in NestedKeys<T>]?: MouseEventHandler<HTMLDivElement> };
 
 export const Table = <T,>({
     layerStep = 0,
@@ -73,8 +86,7 @@ export const Table = <T,>({
     } = useColorLayer(layerStep + 1);
     const [sort, setSort] = useState<Sort<T> | undefined>(_sort);
     const [selected, setSelected] = useState<React.Key | null>(null);
-    const sentinelRef = useRef<HTMLTableRowElement>(null);
-    const sentinelIdRef = useRef<number>(data.length);
+    const { sentinelRef } = useLoadMoreSentinel<HTMLTableRowElement>(data, onLoadMore, isPending);
 
     useEffect(() => setSort(sort), [sort]);
 
@@ -86,7 +98,7 @@ export const Table = <T,>({
     };
 
     const sortHandler = useCallback(
-        (key: keyof T) => {
+        (key: NestedKeys<T>) => {
             return () => {
                 const mode = sort?.key === key ? (sort.mode == SortMode.ASC ? SortMode.DESC : null) : SortMode.ASC;
                 onSort?.[key] && onSort[key](mode);
@@ -109,25 +121,6 @@ export const Table = <T,>({
             }, {} as OnHeadingClickMap<T>) ?? {}
         );
     }, [heading, onSort, sortHandler, sorting]);
-
-    const hash = JSON.stringify(data);
-    useEffect(() => {
-        if (!onLoadMore) return;
-        if (!sentinelRef.current) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting && !isPending) {
-                    onLoadMore();
-                    sentinelIdRef.current = data.length;
-                }
-            },
-            { rootMargin: "200px" },
-        );
-
-        observer.observe(sentinelRef.current);
-        return () => observer.disconnect();
-    }, [hash, data.length, onLoadMore]);
 
     return (
         <table className={twMerge("w-full text-left text-sm rtl:text-right", className)}>

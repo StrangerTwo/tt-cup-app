@@ -41,7 +41,7 @@ export const Players = () => {
                 keyFn={(p) => p.uid}
                 sort={sort}
                 onSort={Object.fromEntries(
-                    (["uid", "name", "elo", "ranking", "favourite"] as Array<keyof Player>).map((x) => [
+                    (["uid", "name", "elo", "ranking", "favourite"] as Array<Sort<Player>["key"]>).map((x) => [
                         x,
                         (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
                     ]),
