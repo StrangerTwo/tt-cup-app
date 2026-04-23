@@ -50,6 +50,7 @@ import type {
     PaginatedQueryResultCrawlPage,
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlace,
+    PaginatedQueryResultPlaceTournamentMatches,
     PaginatedQueryResultPlayer,
     PaginatedQueryResultRivalMatchesSummary,
     PaginatedQueryResultTournament,
@@ -1877,6 +1878,82 @@ export function useGetTournament<
 
     return query;
 }
+
+export const getTournamentsToday = (
+    getTournamentsRequest: GetTournamentsRequest,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<PaginatedQueryResultPlaceTournamentMatches>(
+        {
+            url: `/tournament/today`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: getTournamentsRequest,
+            signal,
+        },
+        options,
+    );
+};
+
+export const getGetTournamentsTodayMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof getTournamentsToday>>,
+        TError,
+        { data: GetTournamentsRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof getTournamentsToday>>,
+    TError,
+    { data: GetTournamentsRequest },
+    TContext
+> => {
+    const mutationKey = ["getTournamentsToday"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof getTournamentsToday>>,
+        { data: GetTournamentsRequest }
+    > = (props) => {
+        const { data } = props ?? {};
+
+        return getTournamentsToday(data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type GetTournamentsTodayMutationResult = NonNullable<Awaited<ReturnType<typeof getTournamentsToday>>>;
+export type GetTournamentsTodayMutationBody = GetTournamentsRequest;
+export type GetTournamentsTodayMutationError = ErrorType<unknown>;
+
+export const useGetTournamentsToday = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof getTournamentsToday>>,
+            TError,
+            { data: GetTournamentsRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof getTournamentsToday>>,
+    TError,
+    { data: GetTournamentsRequest },
+    TContext
+> => {
+    const mutationOptions = getGetTournamentsTodayMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
 
 export const getUser = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
     return customInstance<User>({ url: `/user`, method: "GET", signal }, options);

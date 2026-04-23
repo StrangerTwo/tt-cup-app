@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UpdateIndexRouteImport } from './routes/update/index'
+import { Route as TournamentIndexRouteImport } from './routes/tournament/index'
 import { Route as PlayerIndexRouteImport } from './routes/player/index'
 import { Route as TournamentTournamentIdRouteImport } from './routes/tournament/$tournamentId'
 import { Route as PlayerNewRouteImport } from './routes/player/new'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const UpdateIndexRoute = UpdateIndexRouteImport.update({
   id: '/update/',
   path: '/update/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TournamentIndexRoute = TournamentIndexRouteImport.update({
+  id: '/tournament/',
+  path: '/tournament/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayerIndexRoute = PlayerIndexRouteImport.update({
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/player/new': typeof PlayerNewRoute
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
   '/player': typeof PlayerIndexRoute
+  '/tournament': typeof TournamentIndexRoute
   '/update': typeof UpdateIndexRoute
   '/player/$playerUid': typeof PlayerPlayerUidIndexRoute
   '/player/$playerUid/vs/$rivalUid': typeof PlayerPlayerUidVsRivalUidRoute
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/player/new': typeof PlayerNewRoute
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
   '/player': typeof PlayerIndexRoute
+  '/tournament': typeof TournamentIndexRoute
   '/update': typeof UpdateIndexRoute
   '/player/$playerUid': typeof PlayerPlayerUidIndexRoute
   '/player/$playerUid/vs/$rivalUid': typeof PlayerPlayerUidVsRivalUidRoute
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/player/new': typeof PlayerNewRoute
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
   '/player/': typeof PlayerIndexRoute
+  '/tournament/': typeof TournamentIndexRoute
   '/update/': typeof UpdateIndexRoute
   '/player/$playerUid/': typeof PlayerPlayerUidIndexRoute
   '/player/$playerUid/vs/$rivalUid': typeof PlayerPlayerUidVsRivalUidRoute
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/player/new'
     | '/tournament/$tournamentId'
     | '/player'
+    | '/tournament'
     | '/update'
     | '/player/$playerUid'
     | '/player/$playerUid/vs/$rivalUid'
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/player/new'
     | '/tournament/$tournamentId'
     | '/player'
+    | '/tournament'
     | '/update'
     | '/player/$playerUid'
     | '/player/$playerUid/vs/$rivalUid'
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/player/new'
     | '/tournament/$tournamentId'
     | '/player/'
+    | '/tournament/'
     | '/update/'
     | '/player/$playerUid/'
     | '/player/$playerUid/vs/$rivalUid'
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   PlayerNewRoute: typeof PlayerNewRoute
   TournamentTournamentIdRoute: typeof TournamentTournamentIdRoute
   PlayerIndexRoute: typeof PlayerIndexRoute
+  TournamentIndexRoute: typeof TournamentIndexRoute
   UpdateIndexRoute: typeof UpdateIndexRoute
   PlayerPlayerUidIndexRoute: typeof PlayerPlayerUidIndexRoute
   PlayerPlayerUidVsRivalUidRoute: typeof PlayerPlayerUidVsRivalUidRoute
@@ -136,6 +149,13 @@ declare module '@tanstack/react-router' {
       path: '/update'
       fullPath: '/update'
       preLoaderRoute: typeof UpdateIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tournament/': {
+      id: '/tournament/'
+      path: '/tournament'
+      fullPath: '/tournament'
+      preLoaderRoute: typeof TournamentIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/player/': {
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlayerNewRoute: PlayerNewRoute,
   TournamentTournamentIdRoute: TournamentTournamentIdRoute,
   PlayerIndexRoute: PlayerIndexRoute,
+  TournamentIndexRoute: TournamentIndexRoute,
   UpdateIndexRoute: UpdateIndexRoute,
   PlayerPlayerUidIndexRoute: PlayerPlayerUidIndexRoute,
   PlayerPlayerUidVsRivalUidRoute: PlayerPlayerUidVsRivalUidRoute,

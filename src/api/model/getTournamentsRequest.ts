@@ -5,8 +5,10 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
+import type { Location } from "./location";
 import type { PageInfoRequest } from "./pageInfoRequest";
 
 export interface GetTournamentsRequest {
+    location?: Location;
     pageInfo: PageInfoRequest;
 }

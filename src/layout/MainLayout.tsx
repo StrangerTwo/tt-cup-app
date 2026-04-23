@@ -72,11 +72,11 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                         {hasSidebar && (
                             <Sidebar sidebarOpen={sidebarOpen} navbarHeight={navbarHeight} className="font-medium">
                                 <div className={"flex flex-col space-y-2"}>
-                                    <SidebarItem route="/" closeSidebar={closeSidebar} text="Tipy na sázení">
-                                        <TableIcon />
-                                    </SidebarItem>
                                     <SidebarItem route="/player" closeSidebar={closeSidebar} text="Hráči">
                                         <UsersIcon />
+                                    </SidebarItem>
+                                    <SidebarItem route="/tournament" closeSidebar={closeSidebar} text="Turnaje">
+                                        <TableIcon />
                                     </SidebarItem>
                                     <SidebarItem route="/update" closeSidebar={closeSidebar} text="Update">
                                         <RefreshIcon />
