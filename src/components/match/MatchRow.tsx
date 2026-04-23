@@ -1,7 +1,8 @@
 import { FC } from "react";
 
 import { Match } from "../../api/model";
-import { renderFullDateShortWithHoursShort } from "../../lib/date";
+import { renderDateShortWithHoursShort } from "../../lib/date";
+import { renderNameShort } from "../../lib/name";
 import { Score } from "../lib/Score";
 import { TableProps } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
@@ -31,13 +32,13 @@ export const MatchRow: {
         return (
             <>
                 <TableCell className={textHighlightColor}>
-                    <span className="me-2 align-middle">{renderFullDateShortWithHoursShort(match.time)}</span>
+                    <span className="me-2 align-middle">{renderDateShortWithHoursShort(match.time)}</span>
                 </TableCell>
                 <TableCell className={textHighlightColor}>
                     <Score scoreA={sets?.[0]} scoreB={sets?.[1]} isWinForA={isWinForA} isWinForB={isWinForB} />
                 </TableCell>
-                <TableCell>{playerA?.name ?? playerUids[0]}</TableCell>
-                <TableCell>{playerB?.name ?? playerUids[1]}</TableCell>
+                <TableCell>{renderNameShort(playerA?.name) ?? playerUids[0]}</TableCell>
+                <TableCell>{renderNameShort(playerB?.name) ?? playerUids[1]}</TableCell>
                 <TableCell>{match.points?.join("; ")}</TableCell>
             </>
         );
