@@ -11,4 +11,5 @@ export interface Place {
     uid: string;
     location?: Location;
     lastUpdate: string;
+    disabled?: boolean;
 }

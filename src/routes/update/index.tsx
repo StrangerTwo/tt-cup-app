@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Tabs } from "../../components/lib/Tabs";
 import { OutdatedPlaces } from "../../components/place/outdated/OutdatedPlaces";
+import { Places } from "../../components/place/places/Places";
 import { PlaceRecommendations } from "../../components/place/recommendations/PlaceRecommendations";
 
 export const Route = createFileRoute("/update/")({
@@ -34,7 +35,7 @@ function RouteComponent() {
                 {
                     header: "Haly",
                     value: "places",
-                    content: <></>,
+                    content: <Places />,
                 },
                 {
                     header: "Přidat halu",

@@ -28,7 +28,7 @@ export const usePlayerRivals = (
         }),
         dataFn: (x) => x.results,
         totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
-        queryKey: [EQueryKey.getPlayerRivals, filter, sort],
+        queryKey: [EQueryKey.getPlayerRivals, playerUid, filter, sort],
         onfulfilled: (res) => {
             res.results.forEach(({ rivalUid, rival }) => {
                 client.setQueryData(getGetPlayerQueryKey(rivalUid), (x: Player | undefined) => rival);

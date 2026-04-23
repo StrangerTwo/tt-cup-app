@@ -32,6 +32,7 @@ import type {
     EditPlayer404,
     GetMatchesRequest,
     GetPagesToCrawlRequest,
+    GetPlace404,
     GetPlaceRecommendationsRequest,
     GetPlacesRequest,
     GetPlayer404,
@@ -53,8 +54,10 @@ import type {
     PaginatedQueryResultRivalMatchesSummary,
     PaginatedQueryResultTournament,
     PaginatedQueryResultTournamentFull,
+    Place,
     Player,
     RivalMatchesSummary,
+    SetPlaceEnabled404,
     SetPlayerFavourite404,
     Status,
     TournamentFull,
@@ -162,7 +165,7 @@ export const capturePage = (
     );
 };
 
-export const getCapturePageMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+export const getCapturePageMutationOptions = <TError = ErrorType<string>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<Awaited<ReturnType<typeof capturePage>>, TError, { data: CaptureDto }, TContext>;
     request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<Awaited<ReturnType<typeof capturePage>>, TError, { data: CaptureDto }, TContext> => {
@@ -184,9 +187,9 @@ export const getCapturePageMutationOptions = <TError = ErrorType<unknown>, TCont
 
 export type CapturePageMutationResult = NonNullable<Awaited<ReturnType<typeof capturePage>>>;
 export type CapturePageMutationBody = CaptureDto;
-export type CapturePageMutationError = ErrorType<unknown>;
+export type CapturePageMutationError = ErrorType<string>;
 
-export const useCapturePage = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useCapturePage = <TError = ErrorType<string>, TContext = unknown>(
     options?: {
         mutation?: UseMutationOptions<Awaited<ReturnType<typeof capturePage>>, TError, { data: CaptureDto }, TContext>;
         request?: SecondParameter<typeof customInstance>;
@@ -286,7 +289,7 @@ export function useGetPagesToCrawl<TData = Awaited<ReturnType<typeof getPagesToC
     return query;
 }
 
-export const postCrawl = (
+export const postPagesToCrawl = (
     getPagesToCrawlRequest: GetPagesToCrawlRequest,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
@@ -303,41 +306,47 @@ export const postCrawl = (
     );
 };
 
-export const getPostCrawlMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+export const getPostPagesToCrawlMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
     mutation?: UseMutationOptions<
-        Awaited<ReturnType<typeof postCrawl>>,
+        Awaited<ReturnType<typeof postPagesToCrawl>>,
         TError,
         { data: GetPagesToCrawlRequest },
         TContext
     >;
     request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<Awaited<ReturnType<typeof postCrawl>>, TError, { data: GetPagesToCrawlRequest }, TContext> => {
-    const mutationKey = ["postCrawl"];
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof postPagesToCrawl>>,
+    TError,
+    { data: GetPagesToCrawlRequest },
+    TContext
+> => {
+    const mutationKey = ["postPagesToCrawl"];
     const { mutation: mutationOptions, request: requestOptions } = options
         ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
             ? options
             : { ...options, mutation: { ...options.mutation, mutationKey } }
         : { mutation: { mutationKey }, request: undefined };
 
-    const mutationFn: MutationFunction<Awaited<ReturnType<typeof postCrawl>>, { data: GetPagesToCrawlRequest }> = (
-        props,
-    ) => {
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof postPagesToCrawl>>,
+        { data: GetPagesToCrawlRequest }
+    > = (props) => {
         const { data } = props ?? {};
 
-        return postCrawl(data, requestOptions);
+        return postPagesToCrawl(data, requestOptions);
     };
 
     return { mutationFn, ...mutationOptions };
 };
 
-export type PostCrawlMutationResult = NonNullable<Awaited<ReturnType<typeof postCrawl>>>;
-export type PostCrawlMutationBody = GetPagesToCrawlRequest;
-export type PostCrawlMutationError = ErrorType<unknown>;
+export type PostPagesToCrawlMutationResult = NonNullable<Awaited<ReturnType<typeof postPagesToCrawl>>>;
+export type PostPagesToCrawlMutationBody = GetPagesToCrawlRequest;
+export type PostPagesToCrawlMutationError = ErrorType<unknown>;
 
-export const usePostCrawl = <TError = ErrorType<unknown>, TContext = unknown>(
+export const usePostPagesToCrawl = <TError = ErrorType<unknown>, TContext = unknown>(
     options?: {
         mutation?: UseMutationOptions<
-            Awaited<ReturnType<typeof postCrawl>>,
+            Awaited<ReturnType<typeof postPagesToCrawl>>,
             TError,
             { data: GetPagesToCrawlRequest },
             TContext
@@ -345,8 +354,13 @@ export const usePostCrawl = <TError = ErrorType<unknown>, TContext = unknown>(
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
-): UseMutationResult<Awaited<ReturnType<typeof postCrawl>>, TError, { data: GetPagesToCrawlRequest }, TContext> => {
-    const mutationOptions = getPostCrawlMutationOptions(options);
+): UseMutationResult<
+    Awaited<ReturnType<typeof postPagesToCrawl>>,
+    TError,
+    { data: GetPagesToCrawlRequest },
+    TContext
+> => {
+    const mutationOptions = getPostPagesToCrawlMutationOptions(options);
 
     return useMutation(mutationOptions, queryClient);
 };
@@ -558,6 +572,178 @@ export const useGetPlaces = <TError = ErrorType<unknown>, TContext = unknown>(
     queryClient?: QueryClient,
 ): UseMutationResult<Awaited<ReturnType<typeof getPlaces>>, TError, { data: GetPlacesRequest }, TContext> => {
     const mutationOptions = getGetPlacesMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getPlace = (placeUid: string, options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<Place>(
+        { url: `/place/${encodeURIComponent(String(placeUid))}`, method: "GET", signal },
+        options,
+    );
+};
+
+export const getGetPlaceQueryKey = (placeUid?: string) => {
+    return [`/place/${placeUid}`] as const;
+};
+
+export const getGetPlaceQueryOptions = <
+    TData = Awaited<ReturnType<typeof getPlace>>,
+    TError = ErrorType<string | GetPlace404>,
+>(
+    placeUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlace>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetPlaceQueryKey(placeUid);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlace>>> = ({ signal }) =>
+        getPlace(placeUid, requestOptions, signal);
+
+    return { queryKey, queryFn, enabled: !!placeUid, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getPlace>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetPlaceQueryResult = NonNullable<Awaited<ReturnType<typeof getPlace>>>;
+export type GetPlaceQueryError = ErrorType<string | GetPlace404>;
+
+export function useGetPlace<TData = Awaited<ReturnType<typeof getPlace>>, TError = ErrorType<string | GetPlace404>>(
+    placeUid: string,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlace>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getPlace>>,
+                    TError,
+                    Awaited<ReturnType<typeof getPlace>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetPlace<TData = Awaited<ReturnType<typeof getPlace>>, TError = ErrorType<string | GetPlace404>>(
+    placeUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlace>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getPlace>>,
+                    TError,
+                    Awaited<ReturnType<typeof getPlace>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetPlace<TData = Awaited<ReturnType<typeof getPlace>>, TError = ErrorType<string | GetPlace404>>(
+    placeUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlace>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetPlace<TData = Awaited<ReturnType<typeof getPlace>>, TError = ErrorType<string | GetPlace404>>(
+    placeUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlace>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetPlaceQueryOptions(placeUid, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
+export const setPlaceEnabled = (placeUid: string, status: Status, options?: SecondParameter<typeof customInstance>) => {
+    return customInstance<Status>(
+        {
+            url: `/place/${encodeURIComponent(String(placeUid))}/enabled`,
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            data: status,
+        },
+        options,
+    );
+};
+
+export const getSetPlaceEnabledMutationOptions = <
+    TError = ErrorType<string | SetPlaceEnabled404>,
+    TContext = unknown,
+>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof setPlaceEnabled>>,
+        TError,
+        { placeUid: string; data: Status },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof setPlaceEnabled>>,
+    TError,
+    { placeUid: string; data: Status },
+    TContext
+> => {
+    const mutationKey = ["setPlaceEnabled"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof setPlaceEnabled>>,
+        { placeUid: string; data: Status }
+    > = (props) => {
+        const { placeUid, data } = props ?? {};
+
+        return setPlaceEnabled(placeUid, data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type SetPlaceEnabledMutationResult = NonNullable<Awaited<ReturnType<typeof setPlaceEnabled>>>;
+export type SetPlaceEnabledMutationBody = Status;
+export type SetPlaceEnabledMutationError = ErrorType<string | SetPlaceEnabled404>;
+
+export const useSetPlaceEnabled = <TError = ErrorType<string | SetPlaceEnabled404>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof setPlaceEnabled>>,
+            TError,
+            { placeUid: string; data: Status },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof setPlaceEnabled>>,
+    TError,
+    { placeUid: string; data: Status },
+    TContext
+> => {
+    const mutationOptions = getSetPlaceEnabledMutationOptions(options);
 
     return useMutation(mutationOptions, queryClient);
 };

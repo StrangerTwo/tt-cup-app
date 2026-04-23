@@ -24,6 +24,11 @@ paths:
             schema: {$ref: '#/components/schemas/CaptureDto'}
         required: true
       responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
         '200':
           description: OK
           content:
@@ -53,6 +58,7 @@ paths:
           content:
             '*/*':
               schema: {$ref: '#/components/schemas/PaginatedQueryResult_CrawlPage'}
+      operationId: postPagesToCrawl
   /match:
     post:
       description: ''
@@ -100,6 +106,61 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/PaginatedQueryResult_Place'}
       operationId: getPlaces
+  /place/{placeUid}:
+    get:
+      description: ''
+      parameters:
+      - name: placeUid
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Place'}
+      operationId: getPlace
+  /place/{placeUid}/enabled:
+    patch:
+      description: ''
+      parameters:
+      - name: placeUid
+        in: path
+        required: true
+        schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Status'}
+        required: true
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Status'}
+      operationId: setPlaceEnabled
   /place/by-tournament:
     post:
       description: ''
@@ -546,6 +607,7 @@ components:
         uid: {type: string}
         location: {$ref: '#/components/schemas/Location'}
         lastUpdate: {type: string, format: date}
+        disabled: {type: boolean}
       required: [uid, lastUpdate]
     PaginatedQueryResult_Place:
       type: object
@@ -555,6 +617,11 @@ components:
           items: {$ref: '#/components/schemas/Place'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
+    Status:
+      type: object
+      properties:
+        status: {type: boolean}
+      required: [status]
     CreatePlaceByTournament:
       type: object
       properties:
@@ -628,11 +695,6 @@ components:
         location: {$ref: '#/components/schemas/Location'}
         note: {type: string}
         stisId: {type: string}
-    Status:
-      type: object
-      properties:
-        status: {type: boolean}
-      required: [status]
     GetPlayerRivalsRequest:
       type: object
       properties:
