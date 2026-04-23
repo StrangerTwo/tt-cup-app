@@ -20,9 +20,9 @@ export const MatchRow: {
 } = {
     Heading: [
         { label: "Čas", key: "time" },
-        { label: "Sety", key: "sets" },
         { label: "A" },
         { label: "B" },
+        { label: "Sety", key: "sets" },
         { label: "Body", key: "points" },
     ],
     FC: ({ match, playerUid }) => {
@@ -34,11 +34,11 @@ export const MatchRow: {
                 <TableCell className={textHighlightColor}>
                     <span className="me-2 align-middle">{renderDateShortWithHoursShort(match.time)}</span>
                 </TableCell>
+                <TableCell>{renderNameShort(playerA?.name) ?? playerUids[0]}</TableCell>
+                <TableCell>{renderNameShort(playerB?.name) ?? playerUids[1]}</TableCell>
                 <TableCell className={textHighlightColor}>
                     <Score scoreA={sets?.[0]} scoreB={sets?.[1]} isWinForA={isWinForA} isWinForB={isWinForB} />
                 </TableCell>
-                <TableCell>{renderNameShort(playerA?.name) ?? playerUids[0]}</TableCell>
-                <TableCell>{renderNameShort(playerB?.name) ?? playerUids[1]}</TableCell>
                 <TableCell>{match.points?.join("; ")}</TableCell>
             </>
         );

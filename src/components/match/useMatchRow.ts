@@ -2,7 +2,7 @@ import { useGetPlayer } from "../../api/api";
 import { Match } from "../../api/model";
 
 export const useMatchRow = (match: Match, playerUid: string | undefined) => {
-    const isReversed = playerUid === match.playerUids[0];
+    const isReversed = playerUid === match.playerUids[1];
     const playerUids = isReversed ? match.playerUids.toReversed() : match.playerUids;
     const sets = isReversed ? match.sets?.toReversed() : match.sets;
 

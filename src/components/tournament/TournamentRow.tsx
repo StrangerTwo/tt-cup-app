@@ -24,11 +24,11 @@ export const TournamentRow: {
     Heading: [
         { label: "Bet" },
         { label: "Čas", key: "time", className: "text-center" },
-        { label: "AI" },
         { label: "Hráč - Hráč", key: "playerUids", className: "text-center" },
         { label: "Výsledek", key: "sets", className: "text-center" },
         { label: "Bil", className: "text-center" },
-        { label: "Vz utk" },
+        { label: "Vz. utk" },
+        { label: "AI" },
     ],
     FC: ({ match, i }) => {
         const { textHighlightColor } = useColorLayer();
@@ -40,7 +40,6 @@ export const TournamentRow: {
             <>
                 <TableCell>X</TableCell>
                 <TableCell className="text-center">{renderHoursShort(match.time)}</TableCell>
-                <TableCell>X</TableCell>
                 <TableCell className={twMerge("text-center font-medium", textHighlightColor)}>
                     {renderNameShort(playerA?.name) ?? match.playerUids[0]} -{" "}
                     {renderNameShort(playerB?.name) ?? match.playerUids[1]}
@@ -77,6 +76,7 @@ export const TournamentRow: {
                         <Skeleton.Text className="mb-0" />
                     )}
                 </TableCell>
+                <TableCell>X</TableCell>
             </>
         );
     },
