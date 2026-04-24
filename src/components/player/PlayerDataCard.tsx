@@ -15,7 +15,7 @@ export const PlayerDataCard = ({ player }: Props) => {
     const [isEdit, setIsEdit] = useState(false);
 
     return (
-        <Card className="mt-2 flex max-w-lg justify-between gap-2 md:mt-4 md:gap-4">
+        <Card className="mt-2 flex max-w-xl justify-between gap-2 md:mt-4 md:gap-4">
             {isEdit ? (
                 <EditPlayerForm player={player} className="grow" onSubmit={() => setIsEdit(false)} />
             ) : (
@@ -32,7 +32,7 @@ export const PlayerDataCard = ({ player }: Props) => {
                             {player.stisId}
                         </a>
                     </RenderItem>
-                    <RenderItem title={"Poznámka:"} className="col-span-full">
+                    <RenderItem title={"Poznámka:"} className="col-span-full" column>
                         {player.note}
                     </RenderItem>
                 </dl>

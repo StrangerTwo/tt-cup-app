@@ -10,6 +10,7 @@ import { Location, Player } from "../../../api/model";
 import { resolveErrorMessage } from "../../../lib/toastError";
 import { BoxSelect } from "../../form/BoxSelect";
 import { Input } from "../../form/Input";
+import { TextArea } from "../../form/TextArea";
 import { SubmitButton } from "../../lib/SubmitButton";
 import { locationLabels } from "../PlayerLocation";
 import { EditPlayerFormType, editPlayerSchema } from "./editPlayerSchema";
@@ -74,7 +75,7 @@ export const EditPlayerForm = ({ player, className, onSubmit: _onSubmit }: Props
 
             <Input form={form} name="stisId" label="Stis ID" />
 
-            <Input form={form} name="note" label="Poznámka" />
+            <TextArea form={form} name="note" label="Poznámka" />
 
             <SubmitButton>Uložit</SubmitButton>
         </form>
