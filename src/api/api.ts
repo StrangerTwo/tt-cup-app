@@ -24,12 +24,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type { ErrorType } from "./api-instance";
 import { customInstance } from "./api-instance";
 import type {
+    Bet,
     CaptureDto,
     CapturePage200,
     CreatePlaceByTournament,
     CreatePlaceByTournament404,
     EditPlayer,
     EditPlayer404,
+    GetBet404,
+    GetBetsRequest,
     GetMatchesRequest,
     GetPagesToCrawlRequest,
     GetPlace404,
@@ -42,22 +45,26 @@ import type {
     GetPlayerRivalsRequest,
     GetPlayersRequest,
     GetTournament404,
+    GetTournamentBets404,
     GetTournamentsRequest,
     MatchesSummary,
+    NewBet,
     NewPlayer,
     ObjectId,
     OutdatedPlace,
+    PaginatedQueryResultBet,
     PaginatedQueryResultCrawlPage,
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlace,
-    PaginatedQueryResultPlaceTournamentMatches,
     PaginatedQueryResultPlayer,
     PaginatedQueryResultRivalMatchesSummary,
     PaginatedQueryResultTournament,
     PaginatedQueryResultTournamentFull,
+    PaginatedQueryResultTournamentToday,
     Place,
     Player,
     RivalMatchesSummary,
+    SetBet404,
     SetPlaceEnabled404,
     SetPlayerFavourite404,
     Status,
@@ -145,6 +152,322 @@ export function useGetHello<TData = Awaited<ReturnType<typeof getHello>>, TError
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
     const queryOptions = getGetHelloQueryOptions(options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
+export const getBets = (
+    getBetsRequest: GetBetsRequest,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<PaginatedQueryResultBet>(
+        { url: `/bet`, method: "POST", headers: { "Content-Type": "application/json" }, data: getBetsRequest, signal },
+        options,
+    );
+};
+
+export const getGetBetsMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<Awaited<ReturnType<typeof getBets>>, TError, { data: GetBetsRequest }, TContext>;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof getBets>>, TError, { data: GetBetsRequest }, TContext> => {
+    const mutationKey = ["getBets"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof getBets>>, { data: GetBetsRequest }> = (props) => {
+        const { data } = props ?? {};
+
+        return getBets(data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type GetBetsMutationResult = NonNullable<Awaited<ReturnType<typeof getBets>>>;
+export type GetBetsMutationBody = GetBetsRequest;
+export type GetBetsMutationError = ErrorType<unknown>;
+
+export const useGetBets = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<Awaited<ReturnType<typeof getBets>>, TError, { data: GetBetsRequest }, TContext>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getBets>>, TError, { data: GetBetsRequest }, TContext> => {
+    const mutationOptions = getGetBetsMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getBet = (matchId: string, options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<Bet>({ url: `/bet/${encodeURIComponent(String(matchId))}`, method: "GET", signal }, options);
+};
+
+export const getGetBetQueryKey = (matchId?: string) => {
+    return [`/bet/${matchId}`] as const;
+};
+
+export const getGetBetQueryOptions = <
+    TData = Awaited<ReturnType<typeof getBet>>,
+    TError = ErrorType<string | GetBet404>,
+>(
+    matchId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBet>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetBetQueryKey(matchId);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBet>>> = ({ signal }) =>
+        getBet(matchId, requestOptions, signal);
+
+    return { queryKey, queryFn, enabled: !!matchId, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getBet>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetBetQueryResult = NonNullable<Awaited<ReturnType<typeof getBet>>>;
+export type GetBetQueryError = ErrorType<string | GetBet404>;
+
+export function useGetBet<TData = Awaited<ReturnType<typeof getBet>>, TError = ErrorType<string | GetBet404>>(
+    matchId: string,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBet>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getBet>>,
+                    TError,
+                    Awaited<ReturnType<typeof getBet>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetBet<TData = Awaited<ReturnType<typeof getBet>>, TError = ErrorType<string | GetBet404>>(
+    matchId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBet>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getBet>>,
+                    TError,
+                    Awaited<ReturnType<typeof getBet>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetBet<TData = Awaited<ReturnType<typeof getBet>>, TError = ErrorType<string | GetBet404>>(
+    matchId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBet>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetBet<TData = Awaited<ReturnType<typeof getBet>>, TError = ErrorType<string | GetBet404>>(
+    matchId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBet>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetBetQueryOptions(matchId, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
+export const setBet = (matchId: string, newBet: NewBet, options?: SecondParameter<typeof customInstance>) => {
+    return customInstance<Bet>(
+        {
+            url: `/bet/${encodeURIComponent(String(matchId))}`,
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            data: newBet,
+        },
+        options,
+    );
+};
+
+export const getSetBetMutationOptions = <TError = ErrorType<string | SetBet404>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof setBet>>,
+        TError,
+        { matchId: string; data: NewBet },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof setBet>>, TError, { matchId: string; data: NewBet }, TContext> => {
+    const mutationKey = ["setBet"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof setBet>>, { matchId: string; data: NewBet }> = (
+        props,
+    ) => {
+        const { matchId, data } = props ?? {};
+
+        return setBet(matchId, data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type SetBetMutationResult = NonNullable<Awaited<ReturnType<typeof setBet>>>;
+export type SetBetMutationBody = NewBet;
+export type SetBetMutationError = ErrorType<string | SetBet404>;
+
+export const useSetBet = <TError = ErrorType<string | SetBet404>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof setBet>>,
+            TError,
+            { matchId: string; data: NewBet },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof setBet>>, TError, { matchId: string; data: NewBet }, TContext> => {
+    const mutationOptions = getSetBetMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getTournamentBets = (
+    tournamentId: string,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<Array<Bet>>(
+        { url: `/bet/${encodeURIComponent(String(tournamentId))}`, method: "GET", signal },
+        options,
+    );
+};
+
+export const getGetTournamentBetsQueryKey = (tournamentId?: string) => {
+    return [`/bet/${tournamentId}`] as const;
+};
+
+export const getGetTournamentBetsQueryOptions = <
+    TData = Awaited<ReturnType<typeof getTournamentBets>>,
+    TError = ErrorType<string | GetTournamentBets404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentBets>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetTournamentBetsQueryKey(tournamentId);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTournamentBets>>> = ({ signal }) =>
+        getTournamentBets(tournamentId, requestOptions, signal);
+
+    return { queryKey, queryFn, enabled: !!tournamentId, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getTournamentBets>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetTournamentBetsQueryResult = NonNullable<Awaited<ReturnType<typeof getTournamentBets>>>;
+export type GetTournamentBetsQueryError = ErrorType<string | GetTournamentBets404>;
+
+export function useGetTournamentBets<
+    TData = Awaited<ReturnType<typeof getTournamentBets>>,
+    TError = ErrorType<string | GetTournamentBets404>,
+>(
+    tournamentId: string,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentBets>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTournamentBets>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTournamentBets>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTournamentBets<
+    TData = Awaited<ReturnType<typeof getTournamentBets>>,
+    TError = ErrorType<string | GetTournamentBets404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentBets>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTournamentBets>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTournamentBets>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTournamentBets<
+    TData = Awaited<ReturnType<typeof getTournamentBets>>,
+    TError = ErrorType<string | GetTournamentBets404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentBets>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetTournamentBets<
+    TData = Awaited<ReturnType<typeof getTournamentBets>>,
+    TError = ErrorType<string | GetTournamentBets404>,
+>(
+    tournamentId: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournamentBets>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetTournamentBetsQueryOptions(tournamentId, options);
 
     const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
         queryKey: DataTag<QueryKey, TData, TError>;
@@ -1884,7 +2207,7 @@ export const getTournamentsToday = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultPlaceTournamentMatches>(
+    return customInstance<PaginatedQueryResultTournamentToday>(
         {
             url: `/tournament/today`,
             method: "POST",

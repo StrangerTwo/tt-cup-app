@@ -25,15 +25,11 @@ export const Skeleton: {
     Title: ({ className }) => (
         <div
             className={twMerge(
-                "mb-4 h-2.5 w-48 animate-pulse rounded-full bg-slate-200 dark:bg-slate-700",
+                "h-2.5 w-48 animate-pulse rounded-full bg-slate-200 dark:bg-slate-700",
                 className,
             )}></div>
     ),
     Text: ({ className }) => (
-        <div
-            className={twMerge(
-                "mb-2.5 h-2 animate-pulse rounded-full bg-slate-200 dark:bg-slate-700",
-                className,
-            )}></div>
+        <div className={twMerge("h-2 animate-pulse rounded-full bg-slate-200 dark:bg-slate-700", className)}></div>
     ),
 };

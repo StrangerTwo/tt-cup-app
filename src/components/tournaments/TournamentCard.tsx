@@ -1,0 +1,61 @@
+import { useGetTournament } from "../../api/api";
+import { Place, Tournament } from "../../api/model";
+import { renderCzIsoDate, renderFullDateShort, renderHoursShort } from "../../lib/date";
+import { LinkIcon } from "../icons";
+import { Skeleton } from "../lib/Skeleton";
+import Table from "../lib/Table";
+import { PlayerLocation } from "../player/PlayerLocation";
+import { Card } from "../ui/Card";
+import { IconButton } from "../ui/IconButton";
+import { TournamentRow } from "./today/TournamentRow";
+
+type Props =
+    | {
+          tournamentId: Tournament["_id"];
+          place?: Place;
+      }
+    | {
+          place: Place;
+          tournamentId?: Tournament["_id"];
+      };
+
+export const TournamentCard = ({ tournamentId, place: _place }: Props) => {
+    const { data } = useGetTournament(tournamentId!, { query: { enabled: !!tournamentId } });
+
+    const place = _place ?? data?.place;
+    if (!place) return <Skeleton.Card />;
+    const { tournament, matches, bets } = data || {};
+
+    return (
+        <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">
+            <Table
+                caption={
+                    <div className="flex items-center gap-4">
+                        <h2 className="flex items-center gap-2 text-lg">
+                            <PlayerLocation location={place.location} />
+                            <span>
+                                {place.uid} | {renderFullDateShort(new Date())}
+                            </span>
+
+                            {matches && (
+                                <span className="text-sm font-semibold">
+                                    {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
+                                    {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
+                                </span>
+                            )}
+                        </h2>
+                        <a href={`https://ttcup.com/schedule/${renderCzIsoDate(new Date())}/${place.uid}/`}>
+                            <IconButton>
+                                <LinkIcon />
+                            </IconButton>
+                        </a>
+                    </div>
+                }
+                heading={TournamentRow.Heading}
+                data={matches ?? []}
+                keyFn={(m) => m.time}>
+                {(m, i) => tournamentId && <TournamentRow.FC match={m} tournamentId={tournamentId} i={i} />}
+            </Table>
+        </Card>
+    );
+};

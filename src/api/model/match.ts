@@ -12,6 +12,6 @@ export interface Match {
     playerUids: [string, string, ...Array<string>];
     sets?: [number, number, ...Array<number>];
     points?: Array<string>;
-    tournamentId?: ObjectId;
+    tournamentId: ObjectId;
     _id: ObjectId;
 }

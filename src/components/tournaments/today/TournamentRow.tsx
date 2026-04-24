@@ -2,19 +2,21 @@ import { useNavigate } from "@tanstack/react-router";
 import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useGetPlayer, useGetPlayerRival } from "../../api/api";
-import { Match } from "../../api/model";
-import { renderHoursShort } from "../../lib/date";
-import { renderNameShort } from "../../lib/name";
-import { Score } from "../lib/Score";
-import { ScoreItem } from "../lib/ScoreItem";
-import { Skeleton } from "../lib/Skeleton";
-import { TableProps } from "../lib/Table";
-import { TableCell } from "../lib/TableCell";
-import { useColorLayer } from "../ui/layout";
+import { useGetPlayer, useGetPlayerRival } from "../../../api/api";
+import { Match, Tournament } from "../../../api/model";
+import { renderHoursShort } from "../../../lib/date";
+import { renderNameShort } from "../../../lib/name";
+import { Score } from "../../lib/Score";
+import { ScoreItem } from "../../lib/ScoreItem";
+import { Skeleton } from "../../lib/Skeleton";
+import { TableProps } from "../../lib/Table";
+import { TableCell } from "../../lib/TableCell";
+import { BetOnMatchButton } from "../../match/BetOnMatchButton";
+import { useColorLayer } from "../../ui/layout";
 
 interface TournamentRowProps {
     match: Match;
+    tournamentId: Tournament["_id"];
     i: number;
 }
 
@@ -31,7 +33,7 @@ export const TournamentRow: {
         { label: "Utk", className: "text-center" },
         { label: "AI" },
     ],
-    FC: ({ match, i }) => {
+    FC: ({ match, tournamentId, i }) => {
         const navigate = useNavigate();
         const { textHighlightColor } = useColorLayer();
         const { data: playerA } = useGetPlayer(match.playerUids[0]);
@@ -40,7 +42,9 @@ export const TournamentRow: {
 
         return (
             <>
-                <TableCell>X</TableCell>
+                <TableCell>
+                    <BetOnMatchButton matchId={match._id} layerStep={2} />
+                </TableCell>
                 <TableCell className="text-center">{renderHoursShort(match.time)}</TableCell>
                 <TableCell
                     className={twMerge("cursor-pointer text-center font-medium", textHighlightColor)}

@@ -5,12 +5,14 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
+import type { Bet } from "./bet";
 import type { Match } from "./match";
 import type { Place } from "./place";
 import type { Tournament } from "./tournament";
 
-export interface PlaceTournamentMatches {
+export interface TournamentToday {
     place: Place;
     tournament?: Tournament;
     matches: Array<Match>;
+    bets: Array<Bet>;
 }

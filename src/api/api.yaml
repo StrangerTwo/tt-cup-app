@@ -15,6 +15,102 @@ paths:
               examples:
                 Example#1: {value: ''}
       operationId: getHello
+  /bet:
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/GetBetsRequest'}
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Bet'}
+      operationId: getBets
+  /bet/{matchId}:
+    get:
+      description: ''
+      parameters:
+      - name: matchId
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Bet'}
+      operationId: getBet
+    patch:
+      description: ''
+      parameters:
+      - name: matchId
+        in: path
+        required: true
+        schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/NewBet'}
+        required: true
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Bet'}
+      operationId: setBet
+  /bet/{tournamentId}:
+    get:
+      description: ''
+      parameters:
+      - name: tournamentId
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Bet'}
+      operationId: getTournamentBets
   /capture:
     post:
       description: ''
@@ -483,7 +579,7 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/PaginatedQueryResult_PlaceTournamentMatches'}
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_TournamentToday'}
       operationId: getTournamentsToday
   /user:
     get:
@@ -520,17 +616,40 @@ paths:
                 Example#1: {value: ''}
 components:
   schemas:
-    CaptureDto:
+    PageInfoRequest:
       type: object
       properties:
-        url: {type: string}
-        html: {type: string}
-      required: [url, html]
-    CrawlPage:
+        page: {type: integer, format: int32}
+        size: {type: integer, format: int32, default: '20'}
+        sort:
+          type: array
+          items: {type: string}
+      required: [page, size]
+    GetBetsRequest:
       type: object
       properties:
-        url: {type: string}
-      required: [url]
+        location: {$ref: '#/components/schemas/Location'}
+        tournamentId: {type: string}
+        matchId: {type: string}
+        playerUids:
+          type: array
+          items: {type: string}
+        type: {$ref: '#/components/schemas/BetType'}
+        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
+      required: [pageInfo]
+    ObjectId: {type: string}
+    Bet:
+      type: object
+      properties:
+        location: {$ref: '#/components/schemas/Location'}
+        tournamentId: {$ref: '#/components/schemas/ObjectId'}
+        matchId: {$ref: '#/components/schemas/ObjectId'}
+        playerUids:
+          type: array
+          items: {type: string}
+        type: {$ref: '#/components/schemas/BetType'}
+        _id: {$ref: '#/components/schemas/ObjectId'}
+      required: [tournamentId, matchId, playerUids, type, _id, _id]
     PageInfo:
       type: object
       properties:
@@ -548,6 +667,30 @@ components:
         results: {type: array}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
+    PaginatedQueryResult_Bet:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/Bet'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+      required: [results, pageInfo]
+    NewBet:
+      type: object
+      properties:
+        type: {$ref: '#/components/schemas/BetType'}
+      required: [type]
+    CaptureDto:
+      type: object
+      properties:
+        url: {type: string}
+        html: {type: string}
+      required: [url, html]
+    CrawlPage:
+      type: object
+      properties:
+        url: {type: string}
+      required: [url]
     PaginatedQueryResult_CrawlPage:
       type: object
       properties:
@@ -556,15 +699,6 @@ components:
           items: {$ref: '#/components/schemas/CrawlPage'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
-    PageInfoRequest:
-      type: object
-      properties:
-        page: {type: integer, format: int32}
-        size: {type: integer, format: int32, default: '20'}
-        sort:
-          type: array
-          items: {type: string}
-      required: [page, size]
     GetPagesToCrawlRequest:
       type: object
       properties:
@@ -578,7 +712,6 @@ components:
           items: {type: string}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
-    ObjectId: {type: string}
     Match:
       type: object
       properties:
@@ -600,7 +733,7 @@ components:
           items: {type: string}
         tournamentId: {$ref: '#/components/schemas/ObjectId'}
         _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [time, playerUids, _id]
+      required: [time, playerUids, tournamentId, _id, _id]
     PaginatedQueryResult_Match:
       type: object
       properties:
@@ -621,7 +754,7 @@ components:
       properties:
         uid: {type: string}
         location: {$ref: '#/components/schemas/Location'}
-        lastUpdate: {type: string, format: date}
+        lastUpdate: {type: string, format: date-time}
         disabled: {type: boolean}
       required: [uid, lastUpdate]
     PaginatedQueryResult_Place:
@@ -655,16 +788,25 @@ components:
         search: {type: string}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
-    TournamentFull:
+    Tournament:
       type: object
       properties:
         date: {type: string, format: date}
         place: {type: string}
+        _id: {$ref: '#/components/schemas/ObjectId'}
+      required: [date, place, _id, _id]
+    TournamentFull:
+      type: object
+      properties:
+        place: {$ref: '#/components/schemas/Place'}
+        tournament: {$ref: '#/components/schemas/Tournament'}
         matches:
           type: array
           items: {$ref: '#/components/schemas/Match'}
-        _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [date, place, matches, _id, _id]
+        bets:
+          type: array
+          items: {$ref: '#/components/schemas/Bet'}
+      required: [tournament, matches, bets]
     PaginatedQueryResult_TournamentFull:
       type: object
       properties:
@@ -755,13 +897,6 @@ components:
         location: {$ref: '#/components/schemas/Location'}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
-    Tournament:
-      type: object
-      properties:
-        date: {type: string, format: date}
-        place: {type: string}
-        _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [date, place, _id]
     PaginatedQueryResult_Tournament:
       type: object
       properties:
@@ -770,7 +905,7 @@ components:
           items: {$ref: '#/components/schemas/Tournament'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
-    PlaceTournamentMatches:
+    TournamentToday:
       type: object
       properties:
         place: {$ref: '#/components/schemas/Place'}
@@ -778,13 +913,16 @@ components:
         matches:
           type: array
           items: {$ref: '#/components/schemas/Match'}
-      required: [place, matches]
-    PaginatedQueryResult_PlaceTournamentMatches:
+        bets:
+          type: array
+          items: {$ref: '#/components/schemas/Bet'}
+      required: [place, matches, bets]
+    PaginatedQueryResult_TournamentToday:
       type: object
       properties:
         results:
           type: array
-          items: {$ref: '#/components/schemas/PlaceTournamentMatches'}
+          items: {$ref: '#/components/schemas/TournamentToday'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
     User:
@@ -796,3 +934,7 @@ components:
       type: string
       enum: [B, P, H]
       x-enumNames: [HAVLICKUV_BROD, PRAHA, HAVIROV]
+    BetType:
+      type: string
+      enum: [N, W1, W2]
+      x-enumNames: [NO_BET, WIN_1, WIN_2]
