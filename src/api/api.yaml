@@ -314,7 +314,7 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/PaginatedQueryResult_TournamentFull'}
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_TournamentMatches'}
       operationId: getPlaceRecommendations
   /player:
     post:
@@ -795,24 +795,20 @@ components:
         place: {type: string}
         _id: {$ref: '#/components/schemas/ObjectId'}
       required: [date, place, _id, _id]
-    TournamentFull:
+    TournamentMatches:
       type: object
       properties:
-        place: {$ref: '#/components/schemas/Place'}
         tournament: {$ref: '#/components/schemas/Tournament'}
         matches:
           type: array
           items: {$ref: '#/components/schemas/Match'}
-        bets:
-          type: array
-          items: {$ref: '#/components/schemas/Bet'}
-      required: [tournament, matches, bets]
-    PaginatedQueryResult_TournamentFull:
+      required: [tournament, matches]
+    PaginatedQueryResult_TournamentMatches:
       type: object
       properties:
         results:
           type: array
-          items: {$ref: '#/components/schemas/TournamentFull'}
+          items: {$ref: '#/components/schemas/TournamentMatches'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
     GetPlayersRequest:
@@ -905,6 +901,18 @@ components:
           items: {$ref: '#/components/schemas/Tournament'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
+    TournamentFull:
+      type: object
+      properties:
+        place: {$ref: '#/components/schemas/Place'}
+        tournament: {$ref: '#/components/schemas/Tournament'}
+        matches:
+          type: array
+          items: {$ref: '#/components/schemas/Match'}
+        bets:
+          type: array
+          items: {$ref: '#/components/schemas/Bet'}
+      required: [tournament, matches, bets]
     TournamentToday:
       type: object
       properties:

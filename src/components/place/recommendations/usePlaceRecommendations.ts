@@ -1,17 +1,14 @@
-import { useQueryClient } from "@tanstack/react-query";
-
-import { getGetTournamentQueryKey, useGetPlaceRecommendations } from "../../../api/api";
+import { useGetPlaceRecommendations } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { GetPlaceRecommendationsRequest, TournamentFull } from "../../../api/model";
+import { GetPlaceRecommendationsRequest, TournamentMatches } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
 
 export const usePlaceRecommendations = (
     filter: Omit<GetPlaceRecommendationsRequest, "pageInfo"> | undefined,
-    sort?: Sort<TournamentFull>,
+    sort?: Sort<TournamentMatches>,
 ) => {
-    const client = useQueryClient();
     const { mutateAsync } = useGetPlaceRecommendations();
     return usePaginatedQuery({
         mutateAsync,
@@ -27,13 +24,5 @@ export const usePlaceRecommendations = (
         dataFn: (x) => x.results,
         totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
         queryKey: [EQueryKey.getPlaceRecommendations, filter, sort],
-        onfulfilled: (res) => {
-            res.results.forEach((tournament) => {
-                client.setQueryData(
-                    getGetTournamentQueryKey(tournament._id),
-                    (x: TournamentFull | undefined) => tournament,
-                );
-            });
-        },
     });
 };

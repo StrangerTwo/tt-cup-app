@@ -2,8 +2,7 @@ import { FC } from "react";
 import { CheckmarkIcon } from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
-import { useGetTournament } from "../../../api/api";
-import { Location, Tournament, TournamentFull } from "../../../api/model";
+import { Location, Match, Tournament, TournamentMatches } from "../../../api/model";
 import { renderFullDateShort, renderHoursShort } from "../../../lib/date";
 import { BoxSelect } from "../../form/BoxSelect";
 import { ChevronIcon } from "../../icons";
@@ -19,26 +18,26 @@ import { useColorLayer } from "../../ui/layout";
 import { useCreatePlaceByTournamentForm } from "./useCreatePlaceByTournamentForm";
 
 interface PlaceRecommendationRowProps {
-    tournamentId: Tournament["_id"];
+    tournament: Tournament;
+    matches: Array<Match>;
     selected: boolean;
 }
 
 interface PlaceRecommendationExpandRowProps {
-    tournament: TournamentFull;
+    tournament: TournamentMatches;
 }
 
 export const PlaceRecommendationRow: {
-    Heading: TableProps<TournamentFull>["heading"];
+    Heading: TableProps<TournamentMatches>["heading"];
     FC: FC<PlaceRecommendationRowProps>;
     ExpandRowFC: FC<PlaceRecommendationExpandRowProps>;
 } = {
     Heading: [
-        { label: "Hala", key: "place" },
-        { label: "Poslední turnaj", key: "date" },
+        { label: "Hala", key: "tournament.place" },
+        { label: "Poslední turnaj", key: "tournament.date" },
         { label: "Přidat", className: "text-end" },
     ],
-    FC: ({ tournamentId, selected }) => {
-        const { data: tournament } = useGetTournament(tournamentId);
+    FC: ({ tournament, matches, selected }) => {
         const { textHighlightColor } = useColorLayer();
 
         if (!tournament)
@@ -53,8 +52,8 @@ export const PlaceRecommendationRow: {
                 <TableCell className={twMerge("font-medium", textHighlightColor)}>{tournament.place}</TableCell>
                 <TableCell>
                     <span className="me-2 align-middle">
-                        {renderFullDateShort(tournament.date)} | {renderHoursShort(tournament.matches.at(0)!.time)} -{" "}
-                        {renderHoursShort(tournament.matches.at(-1)!.time)}
+                        {renderFullDateShort(tournament.date)} | {renderHoursShort(matches.at(0)!.time)} -{" "}
+                        {renderHoursShort(matches.at(-1)!.time)}
                     </span>
                 </TableCell>
                 <TableCell className="text-end">
@@ -65,11 +64,11 @@ export const PlaceRecommendationRow: {
             </>
         );
     },
-    ExpandRowFC: ({ tournament }) => {
+    ExpandRowFC: ({ tournament: { tournament, matches } }) => {
         const { form, placeCreated, createPlace } = useCreatePlaceByTournamentForm(tournament);
         const { handleSubmit } = form;
         const { data: players, isFetching } = usePlayers({
-            uids: [...new Set(tournament.matches.flatMap((m) => m.playerUids))],
+            uids: [...new Set(matches.flatMap((m) => m.playerUids))],
         });
 
         return (

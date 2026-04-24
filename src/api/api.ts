@@ -59,7 +59,7 @@ import type {
     PaginatedQueryResultPlayer,
     PaginatedQueryResultRivalMatchesSummary,
     PaginatedQueryResultTournament,
-    PaginatedQueryResultTournamentFull,
+    PaginatedQueryResultTournamentMatches,
     PaginatedQueryResultTournamentToday,
     Place,
     Player,
@@ -1256,7 +1256,7 @@ export const getPlaceRecommendations = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultTournamentFull>(
+    return customInstance<PaginatedQueryResultTournamentMatches>(
         {
             url: `/place/recommendations`,
             method: "POST",

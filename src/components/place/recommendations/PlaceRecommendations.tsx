@@ -1,4 +1,4 @@
-import { Tournament, TournamentFull } from "../../../api/model";
+import { TournamentMatches } from "../../../api/model";
 import { SortMode } from "../../icons/SortIcon";
 import Table, { Sort } from "../../lib/Table";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
@@ -11,9 +11,9 @@ export const PlaceRecommendations = () => {
     const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
         tableId: "playerRivals",
         defaultSorting: {
-            key: "date",
+            key: "tournament.date",
             mode: SortMode.DESC,
-        } as Sort<TournamentFull>,
+        } as Sort<TournamentMatches>,
     });
     const { data: recommendations, isFetching } = usePlaceRecommendations(filters, sort);
 
@@ -35,16 +35,18 @@ export const PlaceRecommendations = () => {
                 heading={PlaceRecommendationRow.Heading}
                 sort={sort}
                 onSort={Object.fromEntries(
-                    (["place", "date"] as Array<keyof Tournament>).map((x) => [
+                    (["tournament.place", "tournament.date"] as Array<Sort<TournamentMatches>["key"]>).map((x) => [
                         x,
                         (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
                     ]),
                 )}
                 data={recommendations ?? []}
-                keyFn={(p) => p._id}
+                keyFn={(p) => p.tournament._id}
                 expandRow={(t) => <PlaceRecommendationRow.ExpandRowFC tournament={t} />}
                 isPending={isFetching}>
-                {(t, i, selected) => <PlaceRecommendationRow.FC tournamentId={t._id} selected={selected} />}
+                {({ tournament, matches }, i, selected) => (
+                    <PlaceRecommendationRow.FC tournament={tournament} matches={matches} selected={selected} />
+                )}
             </Table>
         </Card>
     );

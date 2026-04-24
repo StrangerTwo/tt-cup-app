@@ -6,9 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { PageInfo } from "./pageInfo";
-import type { TournamentFull } from "./tournamentFull";
+import type { TournamentMatches } from "./tournamentMatches";
 
-export interface PaginatedQueryResultTournamentFull {
-    results: Array<TournamentFull>;
+export interface PaginatedQueryResultTournamentMatches {
+    results: Array<TournamentMatches>;
     pageInfo: PageInfo;
 }
