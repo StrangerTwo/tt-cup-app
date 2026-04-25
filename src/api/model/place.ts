@@ -9,7 +9,9 @@ import type { Location } from "./location";
 
 export interface Place {
     uid: string;
+    name: string;
+    startTime: string;
     location?: Location;
-    lastUpdate: string;
-    disabled?: boolean;
+    lastUpdate?: string;
+    enabled?: boolean;
 }

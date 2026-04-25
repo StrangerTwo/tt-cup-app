@@ -227,6 +227,35 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/Place'}
       operationId: getPlace
+    patch:
+      description: ''
+      parameters:
+      - name: placeUid
+        in: path
+        required: true
+        schema: {type: string}
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/EditPlace'}
+        required: true
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Status'}
+      operationId: editPlace
   /place/{placeUid}/enabled:
     patch:
       description: ''
@@ -257,38 +286,6 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/Status'}
       operationId: setPlaceEnabled
-  /place/by-tournament:
-    post:
-      description: ''
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: '#/components/schemas/CreatePlaceByTournament'}
-        required: true
-      responses:
-        '404':
-          description: Not Found
-          content:
-            '*/*':
-              schema: {type: object}
-        '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema: {type: string}
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema: {$ref: '#/components/schemas/ObjectId'}
-        '500':
-          description: Internal Server Error
-          content:
-            text/plain:
-              schema: {type: string}
-              examples:
-                Example#1: {value: ''}
-      operationId: createPlaceByTournament
   /place/outdated:
     get:
       description: ''
@@ -301,21 +298,6 @@ paths:
                 type: array
                 items: {$ref: '#/components/schemas/OutdatedPlace'}
       operationId: getOutdatedPlaces
-  /place/recommendations:
-    post:
-      description: ''
-      requestBody:
-        content:
-          application/json:
-            schema: {$ref: '#/components/schemas/GetPlaceRecommendationsRequest'}
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema: {$ref: '#/components/schemas/PaginatedQueryResult_TournamentMatches'}
-      operationId: getPlaceRecommendations
   /player:
     post:
       description: ''
@@ -753,10 +735,12 @@ components:
       type: object
       properties:
         uid: {type: string}
+        name: {type: string}
+        startTime: {type: string, format: partial-time}
         location: {$ref: '#/components/schemas/Location'}
         lastUpdate: {type: string, format: date-time}
-        disabled: {type: boolean}
-      required: [uid, lastUpdate]
+        enabled: {type: boolean}
+      required: [uid, name, startTime]
     PaginatedQueryResult_Place:
       type: object
       properties:
@@ -765,52 +749,21 @@ components:
           items: {$ref: '#/components/schemas/Place'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
+    EditPlace:
+      type: object
+      properties:
+        location: {$ref: '#/components/schemas/Location'}
     Status:
       type: object
       properties:
         status: {type: boolean}
       required: [status]
-    CreatePlaceByTournament:
-      type: object
-      properties:
-        tournamentId: {type: string}
-        location: {$ref: '#/components/schemas/Location'}
-      required: [tournamentId]
     OutdatedPlace:
       type: object
       properties:
         place: {$ref: '#/components/schemas/Place'}
         updateUrl: {type: string}
       required: [place, updateUrl]
-    GetPlaceRecommendationsRequest:
-      type: object
-      properties:
-        search: {type: string}
-        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
-      required: [pageInfo]
-    Tournament:
-      type: object
-      properties:
-        date: {type: string, format: date}
-        place: {type: string}
-        _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [date, place, _id, _id]
-    TournamentMatches:
-      type: object
-      properties:
-        tournament: {$ref: '#/components/schemas/Tournament'}
-        matches:
-          type: array
-          items: {$ref: '#/components/schemas/Match'}
-      required: [tournament, matches]
-    PaginatedQueryResult_TournamentMatches:
-      type: object
-      properties:
-        results:
-          type: array
-          items: {$ref: '#/components/schemas/TournamentMatches'}
-        pageInfo: {$ref: '#/components/schemas/PageInfo'}
-      required: [results, pageInfo]
     GetPlayersRequest:
       type: object
       properties:
@@ -893,6 +846,14 @@ components:
         location: {$ref: '#/components/schemas/Location'}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
+    Tournament:
+      type: object
+      properties:
+        date: {type: string, format: date}
+        place: {type: string}
+        done: {type: boolean}
+        _id: {$ref: '#/components/schemas/ObjectId'}
+      required: [date, place, _id, _id]
     PaginatedQueryResult_Tournament:
       type: object
       properties:

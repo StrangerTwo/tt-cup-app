@@ -7,7 +7,6 @@
  */
 import type { Location } from "./location";
 
-export interface CreatePlaceByTournament {
-    tournamentId: string;
+export interface EditPlace {
     location?: Location;
 }

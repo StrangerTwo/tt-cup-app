@@ -1,5 +1,4 @@
 import { useGetOutdatedPlaces } from "../../../api/api";
-import { renderFullDateShort } from "../../../lib/date";
 import { LinkIcon } from "../../icons";
 import { Skeleton } from "../../lib/Skeleton";
 import { PlayerLocation } from "../../player/PlayerLocation";
@@ -25,9 +24,7 @@ export const OutdatedPlaces = () => {
                                 </IconButton>
                             </a>
                         </h2>
-                        <p className="text-sm italic">
-                            Naposledy aktualizováno: {renderFullDateShort(place.lastUpdate)}
-                        </p>
+                        <p className="text-sm italic">Naposledy aktualizováno: {place.lastUpdate?.slice(0, -3)}</p>
                     </Card>
                 ))}
             </div>

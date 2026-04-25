@@ -30,28 +30,30 @@ export const TournamentCard = ({ tournamentId, place: _place }: Props) => {
         <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">
             <Table
                 caption={
-                    <div className="flex items-center gap-4">
-                        <h2 className="flex items-center gap-2 text-lg">
-                            <PlayerLocation location={place.location} />
-                            <span>
-                                {place.uid} | {renderFullDateShort(new Date())}
-                            </span>
-
-                            {matches && (
-                                <span className="text-sm font-semibold">
-                                    {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
-                                    {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
+                    <>
+                        <div className="flex items-center gap-4">
+                            <PlayerLocation location={place.location} className="text-xl" />
+                            <h2 className="flex items-center gap-2 text-lg">
+                                <span>
+                                    {place.name} | {renderFullDateShort(new Date())}
                                 </span>
-                            )}
-                        </h2>
-                        <a
-                            href={`https://ttcup.com/schedule/${renderCzIsoDate(new Date())}/${place.uid}/`}
-                            target="_blank">
-                            <IconButton>
-                                <LinkIcon />
-                            </IconButton>
-                        </a>
-                    </div>
+
+                                {matches && (
+                                    <span className="text-sm font-semibold">
+                                        {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
+                                        {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
+                                    </span>
+                                )}
+                            </h2>
+                            <a
+                                href={`https://ttcup.com/schedule/${renderCzIsoDate(new Date())}/${place.uid}/`}
+                                target="_blank">
+                                <IconButton>
+                                    <LinkIcon />
+                                </IconButton>
+                            </a>
+                        </div>
+                    </>
                 }
                 heading={TournamentRow.Heading}
                 data={matches ?? []}

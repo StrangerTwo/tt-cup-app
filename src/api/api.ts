@@ -27,8 +27,8 @@ import type {
     Bet,
     CaptureDto,
     CapturePage200,
-    CreatePlaceByTournament,
-    CreatePlaceByTournament404,
+    EditPlace,
+    EditPlace404,
     EditPlayer,
     EditPlayer404,
     GetBet404,
@@ -36,7 +36,6 @@ import type {
     GetMatchesRequest,
     GetPagesToCrawlRequest,
     GetPlace404,
-    GetPlaceRecommendationsRequest,
     GetPlacesRequest,
     GetPlayer404,
     GetPlayerMatchesSummary404,
@@ -59,7 +58,6 @@ import type {
     PaginatedQueryResultPlayer,
     PaginatedQueryResultRivalMatchesSummary,
     PaginatedQueryResultTournament,
-    PaginatedQueryResultTournamentMatches,
     PaginatedQueryResultTournamentToday,
     Place,
     Player,
@@ -998,6 +996,76 @@ export function useGetPlace<TData = Awaited<ReturnType<typeof getPlace>>, TError
     return query;
 }
 
+export const editPlace = (placeUid: string, editPlace: EditPlace, options?: SecondParameter<typeof customInstance>) => {
+    return customInstance<Status>(
+        {
+            url: `/place/${encodeURIComponent(String(placeUid))}`,
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            data: editPlace,
+        },
+        options,
+    );
+};
+
+export const getEditPlaceMutationOptions = <TError = ErrorType<string | EditPlace404>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof editPlace>>,
+        TError,
+        { placeUid: string; data: EditPlace },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof editPlace>>,
+    TError,
+    { placeUid: string; data: EditPlace },
+    TContext
+> => {
+    const mutationKey = ["editPlace"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof editPlace>>, { placeUid: string; data: EditPlace }> = (
+        props,
+    ) => {
+        const { placeUid, data } = props ?? {};
+
+        return editPlace(placeUid, data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type EditPlaceMutationResult = NonNullable<Awaited<ReturnType<typeof editPlace>>>;
+export type EditPlaceMutationBody = EditPlace;
+export type EditPlaceMutationError = ErrorType<string | EditPlace404>;
+
+export const useEditPlace = <TError = ErrorType<string | EditPlace404>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof editPlace>>,
+            TError,
+            { placeUid: string; data: EditPlace },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof editPlace>>,
+    TError,
+    { placeUid: string; data: EditPlace },
+    TContext
+> => {
+    const mutationOptions = getEditPlaceMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
 export const setPlaceEnabled = (placeUid: string, status: Status, options?: SecondParameter<typeof customInstance>) => {
     return customInstance<Status>(
         {
@@ -1068,85 +1136,6 @@ export const useSetPlaceEnabled = <TError = ErrorType<string | SetPlaceEnabled40
     TContext
 > => {
     const mutationOptions = getSetPlaceEnabledMutationOptions(options);
-
-    return useMutation(mutationOptions, queryClient);
-};
-
-export const createPlaceByTournament = (
-    createPlaceByTournament: CreatePlaceByTournament,
-    options?: SecondParameter<typeof customInstance>,
-    signal?: AbortSignal,
-) => {
-    return customInstance<ObjectId>(
-        {
-            url: `/place/by-tournament`,
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            data: createPlaceByTournament,
-            signal,
-        },
-        options,
-    );
-};
-
-export const getCreatePlaceByTournamentMutationOptions = <
-    TError = ErrorType<string | CreatePlaceByTournament404>,
-    TContext = unknown,
->(options?: {
-    mutation?: UseMutationOptions<
-        Awaited<ReturnType<typeof createPlaceByTournament>>,
-        TError,
-        { data: CreatePlaceByTournament },
-        TContext
-    >;
-    request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<
-    Awaited<ReturnType<typeof createPlaceByTournament>>,
-    TError,
-    { data: CreatePlaceByTournament },
-    TContext
-> => {
-    const mutationKey = ["createPlaceByTournament"];
-    const { mutation: mutationOptions, request: requestOptions } = options
-        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
-            ? options
-            : { ...options, mutation: { ...options.mutation, mutationKey } }
-        : { mutation: { mutationKey }, request: undefined };
-
-    const mutationFn: MutationFunction<
-        Awaited<ReturnType<typeof createPlaceByTournament>>,
-        { data: CreatePlaceByTournament }
-    > = (props) => {
-        const { data } = props ?? {};
-
-        return createPlaceByTournament(data, requestOptions);
-    };
-
-    return { mutationFn, ...mutationOptions };
-};
-
-export type CreatePlaceByTournamentMutationResult = NonNullable<Awaited<ReturnType<typeof createPlaceByTournament>>>;
-export type CreatePlaceByTournamentMutationBody = CreatePlaceByTournament;
-export type CreatePlaceByTournamentMutationError = ErrorType<string | CreatePlaceByTournament404>;
-
-export const useCreatePlaceByTournament = <TError = ErrorType<string | CreatePlaceByTournament404>, TContext = unknown>(
-    options?: {
-        mutation?: UseMutationOptions<
-            Awaited<ReturnType<typeof createPlaceByTournament>>,
-            TError,
-            { data: CreatePlaceByTournament },
-            TContext
-        >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseMutationResult<
-    Awaited<ReturnType<typeof createPlaceByTournament>>,
-    TError,
-    { data: CreatePlaceByTournament },
-    TContext
-> => {
-    const mutationOptions = getCreatePlaceByTournamentMutationOptions(options);
 
     return useMutation(mutationOptions, queryClient);
 };
@@ -1250,82 +1239,6 @@ export function useGetOutdatedPlaces<
 
     return query;
 }
-
-export const getPlaceRecommendations = (
-    getPlaceRecommendationsRequest: GetPlaceRecommendationsRequest,
-    options?: SecondParameter<typeof customInstance>,
-    signal?: AbortSignal,
-) => {
-    return customInstance<PaginatedQueryResultTournamentMatches>(
-        {
-            url: `/place/recommendations`,
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            data: getPlaceRecommendationsRequest,
-            signal,
-        },
-        options,
-    );
-};
-
-export const getGetPlaceRecommendationsMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
-    mutation?: UseMutationOptions<
-        Awaited<ReturnType<typeof getPlaceRecommendations>>,
-        TError,
-        { data: GetPlaceRecommendationsRequest },
-        TContext
-    >;
-    request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<
-    Awaited<ReturnType<typeof getPlaceRecommendations>>,
-    TError,
-    { data: GetPlaceRecommendationsRequest },
-    TContext
-> => {
-    const mutationKey = ["getPlaceRecommendations"];
-    const { mutation: mutationOptions, request: requestOptions } = options
-        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
-            ? options
-            : { ...options, mutation: { ...options.mutation, mutationKey } }
-        : { mutation: { mutationKey }, request: undefined };
-
-    const mutationFn: MutationFunction<
-        Awaited<ReturnType<typeof getPlaceRecommendations>>,
-        { data: GetPlaceRecommendationsRequest }
-    > = (props) => {
-        const { data } = props ?? {};
-
-        return getPlaceRecommendations(data, requestOptions);
-    };
-
-    return { mutationFn, ...mutationOptions };
-};
-
-export type GetPlaceRecommendationsMutationResult = NonNullable<Awaited<ReturnType<typeof getPlaceRecommendations>>>;
-export type GetPlaceRecommendationsMutationBody = GetPlaceRecommendationsRequest;
-export type GetPlaceRecommendationsMutationError = ErrorType<unknown>;
-
-export const useGetPlaceRecommendations = <TError = ErrorType<unknown>, TContext = unknown>(
-    options?: {
-        mutation?: UseMutationOptions<
-            Awaited<ReturnType<typeof getPlaceRecommendations>>,
-            TError,
-            { data: GetPlaceRecommendationsRequest },
-            TContext
-        >;
-        request?: SecondParameter<typeof customInstance>;
-    },
-    queryClient?: QueryClient,
-): UseMutationResult<
-    Awaited<ReturnType<typeof getPlaceRecommendations>>,
-    TError,
-    { data: GetPlaceRecommendationsRequest },
-    TContext
-> => {
-    const mutationOptions = getGetPlaceRecommendationsMutationOptions(options);
-
-    return useMutation(mutationOptions, queryClient);
-};
 
 export const getPlayers = (
     getPlayersRequest: GetPlayersRequest,

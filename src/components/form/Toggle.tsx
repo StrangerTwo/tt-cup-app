@@ -48,7 +48,7 @@ export const Toggle = <T extends FieldValues>({
     const { bgColor } = useColorLayer(1);
 
     return (
-        <div className={twMerge(className)}>
+        <div className={twMerge("flex flex-col items-start", className)}>
             <label className="inline-flex cursor-pointer items-center">
                 <input
                     id={id}

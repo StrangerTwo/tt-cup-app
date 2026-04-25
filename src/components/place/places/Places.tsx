@@ -11,7 +11,7 @@ export const Places = () => {
     const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
         tableId: "places",
         defaultSorting: {
-            key: "uid",
+            key: "lastUpdate",
             mode: SortMode.DESC,
         } as Sort<Place>,
     });
@@ -33,12 +33,12 @@ export const Places = () => {
                 keyFn={(p) => p.uid}
                 sort={sort}
                 onSort={Object.fromEntries(
-                    (["uid", "location", "lastUpdate"] as Array<keyof Place>).map((x) => [
-                        x,
-                        (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
-                    ]),
+                    (["name", "startTime", "uid", "location", "lastUpdate", "enabled"] as Array<keyof Place>).map(
+                        (x) => [x, (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined)],
+                    ),
                 )}
                 onLoadMore={fetchNextPage}
+                expandRow={(p) => <PlaceRow.ExpandRowFC place={p} />}
                 isPending={isFetching}>
                 {(p, i) => <PlaceRow.FC placeUid={p.uid} i={i} />}
             </Table>
