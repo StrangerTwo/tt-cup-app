@@ -77,7 +77,7 @@ export const Toggle = <T extends FieldValues>({
                     )}
                 />
 
-                {label && <span className="mb-2 block text-sm font-medium">{label}</span>}
+                {label && <span className="ms-1 block text-sm font-medium md:ms-2">{label}</span>}
             </label>
             <span className="text-sm text-red-600 dark:text-red-500">
                 {isDefined(error?.message) ? error?.message : null}

@@ -10,5 +10,8 @@ import type { PageInfoRequest } from "./pageInfoRequest";
 
 export interface GetTournamentsRequest {
     location?: Location;
+    done?: boolean;
+    from?: string;
+    to?: string;
     pageInfo: PageInfoRequest;
 }

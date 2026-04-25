@@ -21,7 +21,8 @@ function RouteComponent() {
             <h1 className="text-xl">
                 Turnaj {tournament.place} | {renderFullDate(tournament.date)} |{" "}
                 <span className="whitespace-nowrap">
-                    {renderHoursShort(matches.at(0)!.time)} - {renderHoursShort(matches.at(-1)!.time)}
+                    {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
+                    {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
                 </span>
             </h1>
             <p className="mb-2 text-sm italic md:mb-4">{tournament._id}</p>

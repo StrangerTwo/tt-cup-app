@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import { Place, Tournament } from "../../api/model";
 import { renderCzIsoDate, renderFullDateShort, renderHoursShort } from "../../lib/date";
 import { isDefined } from "../../lib/utils";
@@ -37,18 +39,33 @@ export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Pro
                     <>
                         <div className="flex items-center gap-4">
                             <PlayerLocation location={place.location} className="text-xl" />
-                            <h2 className="flex items-center gap-2 text-lg">
-                                <span>
-                                    {place.name} | {isDefined(date) && renderFullDateShort(date)}
-                                </span>
+                            <div className="flex flex-col">
+                                <div>
+                                    <h2 className="flex items-center gap-2 text-lg">
+                                        <span>
+                                            {place.name} | {isDefined(date) && renderFullDateShort(date)}
+                                        </span>
 
-                                {matches && (
-                                    <span className="text-sm font-semibold">
-                                        {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
-                                        {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
-                                    </span>
-                                )}
-                            </h2>
+                                        {matches && (
+                                            <span className="text-sm font-semibold">
+                                                {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
+                                                {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
+                                            </span>
+                                        )}
+                                    </h2>
+                                </div>
+                                <div className="flex gap-2 text-xs italic">
+                                    <span>{place.uid}</span>
+                                    {tournament?._id && (
+                                        <Link
+                                            to="/tournament/$tournamentId"
+                                            params={{ tournamentId: tournament?._id }}
+                                            className="underline">
+                                            {tournament?._id}
+                                        </Link>
+                                    )}
+                                </div>
+                            </div>
                             {date && (
                                 <a
                                     href={`https://ttcup.com/schedule/${renderCzIsoDate(date)}/${place.uid}/`}
@@ -62,8 +79,7 @@ export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Pro
                     </>
                 }
                 heading={TournamentRow.Heading}
-                data={matches ?? []}
-                keyFn={(m) => m.time}>
+                data={matches ?? []}>
                 {(m, i) => tournamentId && <TournamentRow.FC match={m} tournamentId={tournamentId} i={i} />}
             </Table>
         </Card>

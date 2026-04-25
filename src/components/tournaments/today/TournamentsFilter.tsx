@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge";
 import { EQueryKey } from "../../../api/EQueryKey";
 import { Location } from "../../../api/model";
 import { BoxSelect } from "../../form/BoxSelect";
+import { Toggle } from "../../form/Toggle";
 import { RefreshIcon } from "../../icons";
 import { locationLabels } from "../../player/PlayerLocation";
 import { tournamentsFilterSchema, TournamentsFilterType } from "./tournamentsFilterSchema";
@@ -23,6 +24,7 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
     const form = useForm({
         defaultValues: {
             location: filters.location,
+            finished: filters.finished,
         },
         resolver: yupResolver(tournamentsFilterSchema),
     });
@@ -32,7 +34,7 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
         setFilters(filter);
     };
 
-    const [location] = useWatch({ name: ["location"], control });
+    const [location, finished] = useWatch({ name: ["location", "finished"], control });
     const isFirstRender = useRef(true);
     useEffect(() => {
         if (isFirstRender.current) {
@@ -40,17 +42,20 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
             return;
         }
         handleSubmit(onSubmit)();
-    }, [location]);
+    }, [location, finished]);
 
     return (
         <form className="flex max-w-xs flex-col items-start md:max-w-md" onSubmit={handleSubmit(onSubmit)}>
-            <button
-                type="submit"
-                onClick={() => client.invalidateQueries({ queryKey: [EQueryKey.getTournamentsToday] })}
-                className="rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                <RefreshIcon className={twMerge(isFetching && "animate-spin")} />
-                <span className="sr-only">Search</span>
-            </button>
+            <div className="flex items-center gap-2 md:gap-4">
+                <button
+                    type="submit"
+                    onClick={() => client.invalidateQueries({ queryKey: [EQueryKey.getTournamentsToday] })}
+                    className="rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <RefreshIcon className={twMerge(isFetching && "animate-spin")} />
+                    <span className="sr-only">Search</span>
+                </button>
+                <Toggle form={form} name="finished" label="Dokončené" />
+            </div>
             <BoxSelect
                 form={form}
                 name="location"

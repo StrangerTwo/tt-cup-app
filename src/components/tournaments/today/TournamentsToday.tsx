@@ -1,30 +1,39 @@
 import { TournamentToday } from "../../../api/model";
 import { SortMode } from "../../icons/SortIcon";
 import { Skeleton } from "../../lib/Skeleton";
-import { Sort } from "../../lib/Table";
 import { useLoadMoreSentinel } from "../../lib/useLoadMoreSentinel";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
 import { Card } from "../../ui/Card";
 import { TournamentCard } from "../TournamentCard";
 import { TournamentsFilter } from "./TournamentsFilter";
+import { TournamentsFilterType } from "./tournamentsFilterSchema";
 import { useTournamentsToday } from "./useTournamentsToday";
 
 export const TournamentsToday = () => {
-    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
+    const {
+        sort,
+        setSort,
+        filters: _filters,
+        setFilters,
+    } = useUrlSyncedTableState<TournamentsFilterType, TournamentToday>({
         tableId: "tournamentsToday",
         defaultSorting: {
             key: "place.location",
             mode: SortMode.DESC,
-        } as Sort<TournamentToday>,
+        },
     });
-    const { data, isFetching, fetchNextPage } = useTournamentsToday(filters, sort);
+    const { finished, ...filters } = _filters;
+    const { data, isFetching, fetchNextPage } = useTournamentsToday(
+        { ...filters, done: finished ? undefined : false },
+        sort,
+    );
 
     const { sentinelRef } = useLoadMoreSentinel<HTMLDivElement>(data, fetchNextPage, isFetching);
 
     return (
         <>
             <Card className="mb-2 md:mb-4">
-                <TournamentsFilter filters={filters} setFilters={setFilters} isFetching={isFetching} />
+                <TournamentsFilter filters={_filters} setFilters={setFilters} isFetching={isFetching} />
             </Card>
             {data ? (
                 <>

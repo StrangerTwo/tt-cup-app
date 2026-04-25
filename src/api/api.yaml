@@ -839,6 +839,9 @@ components:
       type: object
       properties:
         location: {$ref: '#/components/schemas/Location'}
+        done: {type: boolean}
+        from: {type: string, format: partial-time}
+        to: {type: string, format: partial-time}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
     Tournament:
