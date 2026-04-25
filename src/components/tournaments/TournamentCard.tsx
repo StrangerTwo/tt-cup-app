@@ -1,6 +1,6 @@
-import { useGetTournament } from "../../api/api";
 import { Place, Tournament } from "../../api/model";
 import { renderCzIsoDate, renderFullDateShort, renderHoursShort } from "../../lib/date";
+import { isDefined } from "../../lib/utils";
 import { LinkIcon } from "../icons";
 import { Skeleton } from "../lib/Skeleton";
 import Table from "../lib/Table";
@@ -8,23 +8,27 @@ import { PlayerLocation } from "../player/PlayerLocation";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
 import { TournamentRow } from "./today/TournamentRow";
+import { useTournament } from "./useTournament";
 
 type Props =
     | {
           tournamentId: Tournament["_id"];
-          place?: Place;
+          place?: never;
+          date?: never;
       }
     | {
           place: Place;
+          date: string;
           tournamentId?: Tournament["_id"];
       };
 
-export const TournamentCard = ({ tournamentId, place: _place }: Props) => {
-    const { data } = useGetTournament(tournamentId!, { query: { enabled: !!tournamentId } });
+export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Props) => {
+    const { data } = useTournament(tournamentId);
 
     const place = _place ?? data?.place;
     if (!place) return <Skeleton.Card />;
     const { tournament, matches, bets } = data || {};
+    const date = _date ?? tournament?.date;
 
     return (
         <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">
@@ -35,7 +39,7 @@ export const TournamentCard = ({ tournamentId, place: _place }: Props) => {
                             <PlayerLocation location={place.location} className="text-xl" />
                             <h2 className="flex items-center gap-2 text-lg">
                                 <span>
-                                    {place.name} | {renderFullDateShort(new Date())}
+                                    {place.name} | {isDefined(date) && renderFullDateShort(date)}
                                 </span>
 
                                 {matches && (
@@ -45,13 +49,15 @@ export const TournamentCard = ({ tournamentId, place: _place }: Props) => {
                                     </span>
                                 )}
                             </h2>
-                            <a
-                                href={`https://ttcup.com/schedule/${renderCzIsoDate(new Date())}/${place.uid}/`}
-                                target="_blank">
-                                <IconButton>
-                                    <LinkIcon />
-                                </IconButton>
-                            </a>
+                            {date && (
+                                <a
+                                    href={`https://ttcup.com/schedule/${renderCzIsoDate(date)}/${place.uid}/`}
+                                    target="_blank">
+                                    <IconButton>
+                                        <LinkIcon />
+                                    </IconButton>
+                                </a>
+                            )}
                         </div>
                     </>
                 }

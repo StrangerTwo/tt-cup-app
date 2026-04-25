@@ -30,7 +30,12 @@ export const TournamentsToday = () => {
                 <>
                     <div className="flex flex-col gap-2 md:gap-4">
                         {data.map(({ place, tournament, matches }) => (
-                            <TournamentCard key={place.uid} tournamentId={tournament?._id} place={place} />
+                            <TournamentCard
+                                key={place.uid}
+                                tournamentId={tournament?._id}
+                                place={place}
+                                date={new Date().toISOString().slice(0, 10)}
+                            />
                         ))}
                     </div>
 
