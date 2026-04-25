@@ -25,7 +25,7 @@ export const MatchesSummaryCard = ({ playerUid, summary: _summary, className }: 
     const summary = _summary ?? data;
 
     if (!summary) {
-        return <Skeleton.Card />;
+        return <Skeleton.Card className={className} />;
     }
 
     return (

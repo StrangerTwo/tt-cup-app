@@ -327,16 +327,16 @@ paths:
           content:
             '*/*':
               schema: {type: string}
-        '404':
-          description: Not Found
-          content:
-            '*/*':
-              schema: {type: object}
         '200':
           description: OK
           content:
             '*/*':
               schema: {$ref: '#/components/schemas/Player'}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
       operationId: getPlayer
     patch:
       description: ''
@@ -445,17 +445,12 @@ paths:
           content:
             '*/*':
               schema: {type: string}
-        '404':
-          description: Not Found
-          content:
-            '*/*':
-              schema: {type: object}
         '200':
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/RivalMatchesSummary'}
-      operationId: getPlayerRival
+              schema: {$ref: '#/components/schemas/MatchesSummary'}
+      operationId: getRivalrySummary
   /player/{playerUid}/summary:
     get:
       description: ''

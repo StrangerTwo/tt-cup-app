@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useGetPlayer, useGetPlayerRival } from "../../../api/api";
+import { useGetPlayer, useGetRivalrySummary } from "../../../api/api";
 import { Match, Tournament } from "../../../api/model";
 import { renderHoursShort } from "../../../lib/date";
 import { renderNameShort } from "../../../lib/name";
@@ -38,7 +38,7 @@ export const TournamentRow: {
         const { textHighlightColor } = useColorLayer();
         const { data: playerA } = useGetPlayer(match.playerUids[0]);
         const { data: playerB } = useGetPlayer(match.playerUids[1]);
-        const { data: summary } = useGetPlayerRival(match.playerUids[0], match.playerUids[1]);
+        const { data: summary } = useGetRivalrySummary(match.playerUids[0], match.playerUids[1]);
 
         return (
             <>
@@ -67,12 +67,8 @@ export const TournamentRow: {
                 </TableCell>
                 <TableCell className="text-center">
                     {summary ? (
-                        <ScoreItem
-                            win={summary.matchesSummary.currentWinStreak > 0}
-                            lose={summary.matchesSummary.currentLoseStreak > 0}>
-                            {summary.matchesSummary.currentWinStreak > 0
-                                ? summary.matchesSummary.currentWinStreak
-                                : -summary.matchesSummary.currentLoseStreak}
+                        <ScoreItem win={summary.currentWinStreak > 0} lose={summary.currentLoseStreak > 0}>
+                            {summary.currentWinStreak > 0 ? summary.currentWinStreak : -summary.currentLoseStreak}
                         </ScoreItem>
                     ) : (
                         <Skeleton.Text className="mb-0" />
@@ -80,7 +76,7 @@ export const TournamentRow: {
                 </TableCell>
                 <TableCell className="text-center">
                     {summary ? (
-                        <Score scoreA={summary.matchesSummary.matchesWon} scoreB={summary.matchesSummary.matchesLost} />
+                        <Score scoreA={summary.matchesWon} scoreB={summary.matchesLost} />
                     ) : (
                         <Skeleton.Text className="mb-0" />
                     )}

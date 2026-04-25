@@ -23,7 +23,6 @@ export * from "./getPlace404";
 export * from "./getPlacesRequest";
 export * from "./getPlayer404";
 export * from "./getPlayerMatchesSummary404";
-export * from "./getPlayerRival404";
 export * from "./getPlayerRivals404";
 export * from "./getPlayerRivalsRequest";
 export * from "./getPlayersRequest";

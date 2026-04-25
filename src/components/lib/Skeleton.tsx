@@ -16,9 +16,9 @@ export const Skeleton: {
                 "h-48 animate-pulse rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800",
                 className,
             )}>
-            <Skeleton.Title />
-            <Skeleton.Text />
-            <Skeleton.Text />
+            <Skeleton.Title className="mb-4" />
+            <Skeleton.Text className="mb-2" />
+            <Skeleton.Text className="mb-2" />
             <Skeleton.Text />
         </div>
     ),

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { useGetPlayer, useGetPlayerRival } from "../../../../api/api";
+import { useGetPlayer, useGetRivalrySummary } from "../../../../api/api";
 import { Skeleton } from "../../../../components/lib/Skeleton";
 import { MatchesSummaryCard } from "../../../../components/match/MatchesSummaryCard";
 import { MatchHistory } from "../../../../components/match/MatchHistory";
@@ -14,7 +14,7 @@ function RouteComponent() {
     const { playerUid, rivalUid } = Route.useParams();
     const { data: player } = useGetPlayer(playerUid);
     const { data: rival } = useGetPlayer(rivalUid);
-    const { data: summary } = useGetPlayerRival(playerUid, rivalUid);
+    const { data: summary } = useGetRivalrySummary(playerUid, rivalUid);
 
     return (
         <>
@@ -31,12 +31,12 @@ function RouteComponent() {
             </div>
 
             {summary ? (
-                <MatchesSummaryCard summary={summary.matchesSummary} className="mb-2 md:mb-4" />
+                <MatchesSummaryCard summary={summary} className="mb-2 md:mb-4" />
             ) : (
-                <Skeleton.Card />
+                <Skeleton.Card className="mb-2 md:mb-4" />
             )}
 
-            <MatchHistory playerUid={(player?.uid ?? rival?.uid) as string} rivalUid={rival?.uid} />
+            <MatchHistory playerUid={playerUid} rivalUid={rivalUid} />
         </>
     );
 }

@@ -31,7 +31,7 @@ export const usePlayerRivals = (
         queryKey: [EQueryKey.getPlayerRivals, playerUid, filter, sort],
         onfulfilled: (res) => {
             res.results.forEach(({ rivalUid, rival }) => {
-                client.setQueryData(getGetPlayerQueryKey(rivalUid), (x: Player | undefined) => rival);
+                client.setQueryData(getGetPlayerQueryKey(rivalUid), (x: Player | undefined | null) => rival ?? null);
             });
         },
     });
