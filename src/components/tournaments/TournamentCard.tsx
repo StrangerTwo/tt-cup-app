@@ -44,7 +44,9 @@ export const TournamentCard = ({ tournamentId, place: _place }: Props) => {
                                 </span>
                             )}
                         </h2>
-                        <a href={`https://ttcup.com/schedule/${renderCzIsoDate(new Date())}/${place.uid}/`}>
+                        <a
+                            href={`https://ttcup.com/schedule/${renderCzIsoDate(new Date())}/${place.uid}/`}
+                            target="_blank">
                             <IconButton>
                                 <LinkIcon />
                             </IconButton>

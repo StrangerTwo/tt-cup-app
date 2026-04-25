@@ -21,7 +21,7 @@ export const RivalInfoCard = ({ player, className }: Props) => {
                 </RenderItem>
 
                 <RenderItem title={"Ranking:"} className="col-start-1">
-                    <a className="underline" href={`https://stis.ping-pong.cz/hrac-${player.stisId}`}>
+                    <a className="underline" href={`https://stis.ping-pong.cz/hrac-${player.stisId}`} target="_blank">
                         {player.ranking}
                     </a>
                 </RenderItem>

@@ -1,4 +1,4 @@
-import { useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { FC } from "react";
 
 import { SidebarIcon } from "../components/icons";
@@ -31,10 +31,10 @@ const AdminNavbar: FC<Props> = ({ onHeightChange, onSidebarToggle }) => {
                             <SidebarIcon />
                         </IconButton>
                     )}
-                    <a href="/" className="flex items-center" onClick={logoClick}>
+                    <Link to="/" className="flex items-center" onClick={logoClick}>
                         <img src="/vite.svg" className="h-8" alt="Bet tips Logo" />
                         <h1 className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">TT Cup</h1>
-                    </a>
+                    </Link>
                 </>
             }
             endChildren={

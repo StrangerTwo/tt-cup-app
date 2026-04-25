@@ -19,7 +19,7 @@ export const OutdatedPlaces = () => {
                         <h2 className="flex items-center gap-2 md:gap-4">
                             <span>{place.uid}</span>
                             <PlayerLocation location={place.location} />
-                            <a href={updateUrl}>
+                            <a href={updateUrl} target="_blank">
                                 <IconButton className="size-8">
                                     <LinkIcon className="size-4" />
                                 </IconButton>

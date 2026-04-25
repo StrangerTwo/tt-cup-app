@@ -28,7 +28,10 @@ export const PlayerDataCard = ({ player }: Props) => {
                     </RenderItem>
                     <RenderItem title={"Elo:"}>{player.elo}</RenderItem>
                     <RenderItem title={"Stis id:"}>
-                        <a className="underline" href={`https://stis.ping-pong.cz/hrac-${player.stisId}`}>
+                        <a
+                            className="underline"
+                            href={`https://stis.ping-pong.cz/hrac-${player.stisId}`}
+                            target="_blank">
                             {player.stisId}
                         </a>
                     </RenderItem>

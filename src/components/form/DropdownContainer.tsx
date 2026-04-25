@@ -56,9 +56,9 @@ export const DropdownContainer = <T,>({
                                 setOpen(false);
                                 onChange(o.value);
                             }}>
-                            <a className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            <span className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                 {o.label}
-                            </a>
+                            </span>
                         </li>
                     ))}
                 </ul>
