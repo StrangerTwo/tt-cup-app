@@ -1,14 +1,18 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getGetBetQueryKey, useGetTournament } from "../../api/api";
+import { getGetBetQueryKey, getGetTournamentQueryOptions, getTournament } from "../../api/api";
 import { Bet } from "../../api/model";
 
 export const useTournament = (tournamentId: string | undefined) => {
     const client = useQueryClient();
-    return useGetTournament(tournamentId!, {
-        query: {
-            enabled: !!tournamentId,
-            select: (res) => {
+
+    return useQuery({
+        ...getGetTournamentQueryOptions(tournamentId!),
+
+        enabled: !!tournamentId,
+
+        queryFn: () =>
+            getTournament(tournamentId!).then((res) => {
                 res.matches.forEach((match) => {
                     client.setQueryData(
                         getGetBetQueryKey(match._id),
@@ -17,7 +21,6 @@ export const useTournament = (tournamentId: string | undefined) => {
                     );
                 });
                 return res;
-            },
-        },
+            }),
     });
 };

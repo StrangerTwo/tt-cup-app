@@ -31,7 +31,7 @@ const betTypes = [BetType.NO_BET, BetType.WIN_1, BetType.WIN_2];
 
 export const BetOnMatchButton = ({ matchId, className, layerStep }: Props) => {
     const client = useQueryClient();
-    const { data: bet, isFetching } = useGetBet(matchId, { query: { retry: false } });
+    const { data: bet, isFetching } = useGetBet(matchId);
     const { mutateAsync } = useSetBet();
 
     if (isFetching) return <Skeleton.Text />;
