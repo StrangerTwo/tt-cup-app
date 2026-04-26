@@ -20,7 +20,11 @@ export const PlayerDataCard = ({ player }: Props) => {
                 <EditPlayerForm player={player} className="grow" onSubmit={() => setIsEdit(false)} />
             ) : (
                 <dl className="grid grow grid-cols-2 gap-2 md:gap-4">
-                    <RenderItem title={"Ranking:"}>{player.ranking}</RenderItem>
+                    <RenderItem title={"Ranking:"}>
+                        <a className="underline" href={`https://ttcup.com/players/${player.uid}/`} target="_blank">
+                            {player.ranking}
+                        </a>
+                    </RenderItem>
                     <RenderItem title="Lokace:">
                         <Card className="inline-flex size-[1.5em] items-center justify-center p-0 align-middle md:p-0">
                             {player.location ?? ""}

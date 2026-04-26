@@ -21,11 +21,15 @@ export const RivalInfoCard = ({ player, className }: Props) => {
                 </RenderItem>
 
                 <RenderItem title={"Ranking:"} className="col-start-1">
-                    <a className="underline" href={`https://stis.ping-pong.cz/hrac-${player.stisId}`} target="_blank">
+                    <a className="underline" href={`https://ttcup.com/players/${player.uid}/`} target="_blank">
                         {player.ranking}
                     </a>
                 </RenderItem>
-                <RenderItem title={"Elo:"}>{player.elo}</RenderItem>
+                <RenderItem title={"Elo:"}>
+                    <a className="underline" href={`https://stis.ping-pong.cz/hrac-${player.stisId}`} target="_blank">
+                        {player.elo}
+                    </a>
+                </RenderItem>
                 <RenderItem title={"Poznámka:"} className="col-span-full">
                     {player.note}
                 </RenderItem>
