@@ -7,7 +7,7 @@ import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
 
-export const usePlayers = (filter: Omit<GetPlayersRequest, "pageInfo"> | undefined, sort?: Sort<Player>) => {
+export const usePlayers = (filter: Omit<GetPlayersRequest, "pageInfo"> | undefined, sort?: Array<Sort<Player>>) => {
     const client = useQueryClient();
     const { mutateAsync } = useGetPlayers();
     const result = usePaginatedQuery({
@@ -17,7 +17,7 @@ export const usePlayers = (filter: Omit<GetPlayersRequest, "pageInfo"> | undefin
                 ...filter,
                 pageInfo: {
                     ...pageInfo,
-                    sort: sort ? sortingForRequest([sort]) : undefined,
+                    sort: sort ? sortingForRequest(sort) : undefined,
                 },
             },
         }),

@@ -1,19 +1,22 @@
-import { FC, ReactNode } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-export interface TabItem {
-    value: string;
+export interface TabItem<T extends string> {
+    value: T;
     header: ReactNode;
-    content: ReactNode;
+    content?: ReactNode;
+    navigateFn?: (navigate: ReturnType<typeof useNavigate>) => unknown;
 }
 
-interface Props {
-    value: string;
-    tabs: Array<TabItem>;
-    onSelect: (x: string) => void;
+interface Props<T extends string> {
+    value: T;
+    tabs: Array<TabItem<T>>;
+    onSelect?: (x: T) => void;
 }
 
-export const Tabs: FC<Props> = ({ value, tabs, onSelect }) => {
+export const Tabs = <T extends string>({ value, tabs, onSelect }: Props<T>) => {
+    const navigate = useNavigate();
     const selectedTab = tabs.find((tab) => tab.value === value);
 
     return (
@@ -31,7 +34,10 @@ export const Tabs: FC<Props> = ({ value, tabs, onSelect }) => {
                                 )}
                                 type="button"
                                 role="tab"
-                                onClick={() => onSelect(tab.value)}
+                                onClick={() => {
+                                    onSelect?.(tab.value);
+                                    tab.navigateFn?.(navigate);
+                                }}
                                 aria-controls={tab.value}
                                 aria-selected={tab === selectedTab}>
                                 {tab.header}

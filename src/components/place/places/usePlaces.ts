@@ -7,7 +7,7 @@ import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
 
-export const usePlaces = (filter: Omit<GetPlacesRequest, "pageInfo"> | undefined, sort?: Sort<Place>) => {
+export const usePlaces = (filter: Omit<GetPlacesRequest, "pageInfo"> | undefined, sort?: Array<Sort<Place>>) => {
     const client = useQueryClient();
     const { mutateAsync } = useGetPlaces();
     const result = usePaginatedQuery({
@@ -17,7 +17,7 @@ export const usePlaces = (filter: Omit<GetPlacesRequest, "pageInfo"> | undefined
                 ...filter,
                 pageInfo: {
                     ...pageInfo,
-                    sort: sort ? sortingForRequest([sort]) : undefined,
+                    sort: sort ? sortingForRequest(sort) : undefined,
                 },
             },
         }),

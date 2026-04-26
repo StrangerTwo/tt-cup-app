@@ -11,7 +11,7 @@ import type { Place } from "./place";
 import type { Tournament } from "./tournament";
 
 export interface TournamentFull {
-    place?: Place;
+    place: Place;
     tournament: Tournament;
     matches: Array<Match>;
     bets: Array<Bet>;

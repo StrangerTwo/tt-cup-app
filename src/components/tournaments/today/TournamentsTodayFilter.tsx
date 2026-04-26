@@ -10,31 +10,31 @@ import { BoxSelect } from "../../form/BoxSelect";
 import { Toggle } from "../../form/Toggle";
 import { RefreshIcon } from "../../icons";
 import { locationLabels } from "../../player/PlayerLocation";
-import { tournamentsFilterSchema, TournamentsFilterType } from "./tournamentsFilterSchema";
+import { tournamentsTodayFilterSchema, TournamentsTodayFilterType } from "./tournamentsTodayFilterSchema";
 
 interface Props {
-    filters: TournamentsFilterType;
-    setFilters: (filter: TournamentsFilterType) => void;
+    filters: TournamentsTodayFilterType;
+    setFilters: (filter: TournamentsTodayFilterType) => void;
     isFetching: boolean;
 }
 
-export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) => {
+export const TournamentsTodayFilter = ({ filters, setFilters, isFetching }: Props) => {
     const client = useQueryClient();
 
     const form = useForm({
         defaultValues: {
             location: filters.location,
-            finished: filters.finished,
+            done: filters.done,
         },
-        resolver: yupResolver(tournamentsFilterSchema),
+        resolver: yupResolver(tournamentsTodayFilterSchema),
     });
     const { control, handleSubmit } = form;
 
-    const onSubmit = (filter: TournamentsFilterType) => {
+    const onSubmit = (filter: TournamentsTodayFilterType) => {
         setFilters(filter);
     };
 
-    const [location, finished] = useWatch({ name: ["location", "finished"], control });
+    const [location, done] = useWatch({ name: ["location", "done"], control });
     const isFirstRender = useRef(true);
     useEffect(() => {
         if (isFirstRender.current) {
@@ -42,7 +42,7 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
             return;
         }
         handleSubmit(onSubmit)();
-    }, [location, finished]);
+    }, [location, done]);
 
     return (
         <form className="flex max-w-xs flex-col items-start md:max-w-md" onSubmit={handleSubmit(onSubmit)}>
@@ -54,7 +54,7 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
                     <RefreshIcon className={twMerge(isFetching && "animate-spin")} />
                     <span className="sr-only">Search</span>
                 </button>
-                <Toggle form={form} name="finished" label="Dokončené" />
+                <Toggle form={form} name="done" label="Dokončené" />
             </div>
             <BoxSelect
                 form={form}

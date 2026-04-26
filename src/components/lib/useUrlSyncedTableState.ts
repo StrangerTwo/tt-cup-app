@@ -12,13 +12,13 @@ type SearchRecord = Record<string, unknown>;
 
 type TableState<TFilters extends object, T> = {
     filters: TFilters;
-    sort: Sort<T> | undefined;
+    sort: Array<Sort<T>> | undefined;
 };
 
 type Options<TFilters extends object, T> = {
     tableId: string;
     defaultFilters?: TFilters;
-    defaultSorting?: Sort<T>;
+    defaultSorting?: Array<Sort<T>>;
     serializeFilters?: (filters: TFilters) => Record<string, unknown>;
     parseFilters?: (raw: unknown, defaults: TFilters) => TFilters;
 };
@@ -107,31 +107,46 @@ const areTableParamsEqual = (
     return stableStringify(currentTableParams) === stableStringify(nextTableParams);
 };
 
-const isSortingState = <T>(value: unknown): value is Sort<T> => {
-    if (!value || typeof value !== "object") {
+const isSortingState = <T>(value: unknown): value is Array<Sort<T>> => {
+    if (!Array.isArray(value)) {
         return false;
     }
 
-    const row = value as Record<string, unknown>;
-    return typeof row.id === "string" && typeof row.desc === "boolean";
+    return value.every((item) => {
+        if (!item || typeof item !== "object") {
+            return false;
+        }
+
+        const row = item as Record<string, unknown>;
+        return typeof row.id === "string" && typeof row.desc === "boolean";
+    });
 };
 
-const parseSorting = <T>(raw: unknown): Sort<T> | undefined => {
+const parseSorting = <T>(raw: unknown): Array<Sort<T>> | undefined => {
     if (isSortingState(raw)) {
-        return raw as Sort<T>;
+        return raw as Array<Sort<T>>;
     }
 
     if (typeof raw !== "string" || raw.trim().length === 0) {
         return undefined;
     }
 
-    const entry = raw.trim();
-    const [key, _mode] = entry.split(":");
-    if (!key) return undefined;
-    const mode = _mode === "asc" || _mode === "desc" ? (_mode as SortMode) : undefined;
-    if (!mode) return undefined;
+    const parsed = raw
+        .split(",")
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+        .map((entry) => {
+            const [key, _mode] = entry.split(":");
+            if (!key) return undefined;
+            const mode = _mode === "asc" || _mode === "desc" ? (_mode as SortMode) : undefined;
+            if (!mode) return undefined;
 
-    return { key: key as Sort<T>["key"], mode };
+            return { key: key as Sort<T>["key"], mode };
+        })
+        // eslint-disable-next-line unicorn/prefer-native-coercion-functions
+        .filter((entry): entry is Sort<T> => Boolean(entry));
+
+    return parsed.length > 0 ? parsed : undefined;
 };
 
 const defaultSerializeFilters = <TFilters extends object>(filters: TFilters) => filters as Record<string, unknown>;
@@ -184,11 +199,11 @@ export const useUrlSyncedTableState = <TFilters extends object, T>({
 
         const parsedFilters = filterParser(flatFilters, filters);
 
-        const sorting = parseSorting(record[keys.sorting]) ?? defaultSorting;
+        const sorting = parseSorting<T>(record[keys.sorting]) ?? defaultSorting;
 
         return {
             filters: parsedFilters,
-            sort: sorting as Sort<T>,
+            sort: sorting,
         };
     };
 
@@ -216,7 +231,7 @@ export const useUrlSyncedTableState = <TFilters extends object, T>({
 
         const shouldStoreSorting = stableStringify(nextState.sort) !== defaultSortingKey;
         if (shouldStoreSorting) {
-            next[keys.sorting] = sortingForRequest(nextState.sort ? [nextState.sort] : [])[0];
+            next[keys.sorting] = sortingForRequest(nextState.sort ?? [])[0];
         } else {
             delete next[keys.sorting];
         }
@@ -244,7 +259,7 @@ export const useUrlSyncedTableState = <TFilters extends object, T>({
         }));
     };
 
-    const setSort = (updater: Updater<Sort<T> | undefined>, resetPageIndex?: boolean) => {
+    const setSort = (updater: Updater<Array<Sort<T>> | undefined>, resetPageIndex?: boolean) => {
         updateState((current) => ({
             ...current,
             sort: resolveUpdater(updater, current.sort),

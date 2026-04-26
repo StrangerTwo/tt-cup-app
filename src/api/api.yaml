@@ -516,7 +516,7 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Tournament'}
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_TournamentFull'}
       operationId: getTournaments
   /tournament/{tournamentId}:
     get:
@@ -549,7 +549,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/GetTournamentsRequest'}
+            schema: {$ref: '#/components/schemas/GetTournamentsTodayRequest'}
         required: true
       responses:
         '200':
@@ -840,8 +840,6 @@ components:
       properties:
         location: {$ref: '#/components/schemas/Location'}
         done: {type: boolean}
-        from: {type: string, format: partial-time}
-        to: {type: string, format: partial-time}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
     Tournament:
@@ -852,14 +850,6 @@ components:
         done: {type: boolean}
         _id: {$ref: '#/components/schemas/ObjectId'}
       required: [date, place, _id, _id]
-    PaginatedQueryResult_Tournament:
-      type: object
-      properties:
-        results:
-          type: array
-          items: {$ref: '#/components/schemas/Tournament'}
-        pageInfo: {$ref: '#/components/schemas/PageInfo'}
-      required: [results, pageInfo]
     TournamentFull:
       type: object
       properties:
@@ -871,7 +861,24 @@ components:
         bets:
           type: array
           items: {$ref: '#/components/schemas/Bet'}
-      required: [tournament, matches, bets]
+      required: [place, tournament, matches, bets]
+    PaginatedQueryResult_TournamentFull:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/TournamentFull'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+      required: [results, pageInfo]
+    GetTournamentsTodayRequest:
+      type: object
+      properties:
+        location: {$ref: '#/components/schemas/Location'}
+        done: {type: boolean}
+        from: {type: string, format: partial-time}
+        to: {type: string, format: partial-time}
+        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
+      required: [pageInfo]
     TournamentToday:
       type: object
       properties:

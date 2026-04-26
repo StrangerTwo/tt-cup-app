@@ -9,16 +9,19 @@ import { Card } from "../../ui/Card";
 import { IconButton } from "../../ui/IconButton";
 import { PlayerRow } from "./PlayerRow";
 import { PlayersFilter } from "./PlayersFilter";
+import { PlayersFilterFormType } from "./playersFilterSchema";
 import { usePlayers } from "./usePlayers";
 
 export const Players = () => {
     const navigate = useNavigate();
-    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
+    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState<PlayersFilterFormType, Player>({
         tableId: "players",
-        defaultSorting: {
-            key: "ranking",
-            mode: SortMode.DESC,
-        } as Sort<Player>,
+        defaultSorting: [
+            {
+                key: "ranking",
+                mode: SortMode.DESC,
+            },
+        ],
     });
     const { data, fetchNextPage, isFetching } = usePlayers(filters, sort);
 
@@ -39,11 +42,11 @@ export const Players = () => {
                 heading={PlayerRow.Heading}
                 data={data ?? []}
                 keyFn={(p) => p.uid}
-                sort={sort}
+                sort={sort?.[0]}
                 onSort={Object.fromEntries(
                     (["uid", "name", "elo", "ranking", "favourite"] as Array<Sort<Player>["key"]>).map((x) => [
                         x,
-                        (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined),
+                        (mode: SortMode | null) => setSort(mode ? [{ key: x, mode }] : undefined),
                     ]),
                 )}
                 onRowClick={(p) => navigate({ to: "/player/$playerUid", params: { playerUid: p.uid } })}

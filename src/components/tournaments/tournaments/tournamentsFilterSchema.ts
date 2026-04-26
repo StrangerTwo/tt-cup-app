@@ -5,7 +5,7 @@ import { transformEmptyToUndefined } from "../../form/transform";
 
 export const tournamentsFilterSchema = yup.object({
     location: yup.string().transform(transformEmptyToUndefined).oneOf(Object.values(Location)),
-    finished: yup.boolean().transform(transformEmptyToUndefined),
+    done: yup.boolean().transform((x) => !!x || undefined),
 });
 
 export type TournamentsFilterType = yup.InferType<typeof tournamentsFilterSchema>;

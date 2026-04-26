@@ -45,6 +45,7 @@ import type {
     GetTournament404,
     GetTournamentBets404,
     GetTournamentsRequest,
+    GetTournamentsTodayRequest,
     MatchesSummary,
     NewBet,
     NewPlayer,
@@ -56,7 +57,7 @@ import type {
     PaginatedQueryResultPlace,
     PaginatedQueryResultPlayer,
     PaginatedQueryResultRivalMatchesSummary,
-    PaginatedQueryResultTournament,
+    PaginatedQueryResultTournamentFull,
     PaginatedQueryResultTournamentToday,
     Place,
     Player,
@@ -1922,7 +1923,7 @@ export const getTournaments = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultTournament>(
+    return customInstance<PaginatedQueryResultTournamentFull>(
         {
             url: `/tournament`,
             method: "POST",
@@ -2102,7 +2103,7 @@ export function useGetTournament<
 }
 
 export const getTournamentsToday = (
-    getTournamentsRequest: GetTournamentsRequest,
+    getTournamentsTodayRequest: GetTournamentsTodayRequest,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
@@ -2111,7 +2112,7 @@ export const getTournamentsToday = (
             url: `/tournament/today`,
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            data: getTournamentsRequest,
+            data: getTournamentsTodayRequest,
             signal,
         },
         options,
@@ -2122,14 +2123,14 @@ export const getGetTournamentsTodayMutationOptions = <TError = ErrorType<unknown
     mutation?: UseMutationOptions<
         Awaited<ReturnType<typeof getTournamentsToday>>,
         TError,
-        { data: GetTournamentsRequest },
+        { data: GetTournamentsTodayRequest },
         TContext
     >;
     request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
     Awaited<ReturnType<typeof getTournamentsToday>>,
     TError,
-    { data: GetTournamentsRequest },
+    { data: GetTournamentsTodayRequest },
     TContext
 > => {
     const mutationKey = ["getTournamentsToday"];
@@ -2141,7 +2142,7 @@ export const getGetTournamentsTodayMutationOptions = <TError = ErrorType<unknown
 
     const mutationFn: MutationFunction<
         Awaited<ReturnType<typeof getTournamentsToday>>,
-        { data: GetTournamentsRequest }
+        { data: GetTournamentsTodayRequest }
     > = (props) => {
         const { data } = props ?? {};
 
@@ -2152,7 +2153,7 @@ export const getGetTournamentsTodayMutationOptions = <TError = ErrorType<unknown
 };
 
 export type GetTournamentsTodayMutationResult = NonNullable<Awaited<ReturnType<typeof getTournamentsToday>>>;
-export type GetTournamentsTodayMutationBody = GetTournamentsRequest;
+export type GetTournamentsTodayMutationBody = GetTournamentsTodayRequest;
 export type GetTournamentsTodayMutationError = ErrorType<unknown>;
 
 export const useGetTournamentsToday = <TError = ErrorType<unknown>, TContext = unknown>(
@@ -2160,7 +2161,7 @@ export const useGetTournamentsToday = <TError = ErrorType<unknown>, TContext = u
         mutation?: UseMutationOptions<
             Awaited<ReturnType<typeof getTournamentsToday>>,
             TError,
-            { data: GetTournamentsRequest },
+            { data: GetTournamentsTodayRequest },
             TContext
         >;
         request?: SecondParameter<typeof customInstance>;
@@ -2169,7 +2170,7 @@ export const useGetTournamentsToday = <TError = ErrorType<unknown>, TContext = u
 ): UseMutationResult<
     Awaited<ReturnType<typeof getTournamentsToday>>,
     TError,
-    { data: GetTournamentsRequest },
+    { data: GetTournamentsTodayRequest },
     TContext
 > => {
     const mutationOptions = getGetTournamentsTodayMutationOptions(options);

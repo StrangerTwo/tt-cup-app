@@ -1,44 +1,24 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { Tabs } from "../../components/lib/Tabs";
-import { OutdatedPlaces } from "../../components/place/outdated/OutdatedPlaces";
-import { Places } from "../../components/place/places/Places";
+import { TabItem } from "../../components/lib/Tabs";
 
 export const Route = createFileRoute("/update/")({
-    component: RouteComponent,
-    validateSearch: (search) => {
-        return {
-            tab: search.tab,
-        } as {
-            tab?: string;
-        };
-    },
+    loader: () =>
+        redirect({
+            to: "/update/places",
+            replace: true,
+        }),
 });
 
-function RouteComponent() {
-    const navigate = useNavigate();
-    const search = Route.useSearch();
-    const tab = search.tab || "places";
-
-    const selectTab = (tab: string) => {
-        navigate({ to: "/update", search: { tab }, replace: true });
-    };
-    return (
-        <Tabs
-            tabs={[
-                {
-                    header: "Update",
-                    value: "all",
-                    content: <OutdatedPlaces />,
-                },
-                {
-                    header: "Haly",
-                    value: "places",
-                    content: <Places />,
-                },
-            ]}
-            value={tab}
-            onSelect={selectTab}
-        />
-    );
-}
+export const updateTabs: Array<TabItem<"outdated" | "places">> = [
+    {
+        header: "Update",
+        value: "outdated",
+        navigateFn: (navigate) => navigate({ to: "/update/outdated" }),
+    },
+    {
+        header: "Haly",
+        value: "places",
+        navigateFn: (navigate) => navigate({ to: "/update/places" }),
+    },
+];

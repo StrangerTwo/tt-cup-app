@@ -1,19 +1,22 @@
 import { Place } from "../../../api/model";
 import { SortMode } from "../../icons/SortIcon";
-import Table, { Sort } from "../../lib/Table";
+import Table from "../../lib/Table";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
 import { Card } from "../../ui/Card";
 import { PlaceFilter } from "./PlaceFilter";
+import { PlaceFilterFormType } from "./placeFilterSchema";
 import { PlaceRow } from "./PlaceRow";
 import { usePlaces } from "./usePlaces";
 
 export const Places = () => {
-    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
+    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState<PlaceFilterFormType, Place>({
         tableId: "places",
-        defaultSorting: {
-            key: "lastUpdate",
-            mode: SortMode.DESC,
-        } as Sort<Place>,
+        defaultSorting: [
+            {
+                key: "lastUpdate",
+                mode: SortMode.DESC,
+            },
+        ],
     });
     const { data, isFetching, fetchNextPage } = usePlaces(filters, sort);
 
@@ -31,10 +34,10 @@ export const Places = () => {
                 heading={PlaceRow.Heading}
                 data={data ?? []}
                 keyFn={(p) => p.uid}
-                sort={sort}
+                sort={sort?.[0]}
                 onSort={Object.fromEntries(
                     (["name", "startTime", "uid", "location", "lastUpdate", "enabled"] as Array<keyof Place>).map(
-                        (x) => [x, (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined)],
+                        (x) => [x, (mode: SortMode | null) => setSort(mode ? [{ key: x, mode }] : undefined)],
                     ),
                 )}
                 onLoadMore={fetchNextPage}

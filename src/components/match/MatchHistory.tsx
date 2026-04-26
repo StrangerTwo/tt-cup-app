@@ -6,7 +6,7 @@ import { Match } from "../../api/model";
 import { sortingForRequest } from "../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
 import { SortMode } from "../icons/SortIcon";
-import Table, { Sort } from "../lib/Table";
+import Table from "../lib/Table";
 import { useUrlSyncedTableState } from "../lib/useUrlSyncedTableState";
 import { Card } from "../ui/Card";
 import { MatchRow } from "./MatchRow";
@@ -19,12 +19,14 @@ interface Props {
 export const MatchHistory = ({ playerUid, rivalUid }: Props) => {
     const navigate = useNavigate();
 
-    const { sort, setSort } = useUrlSyncedTableState({
+    const { sort, setSort } = useUrlSyncedTableState<{}, Match>({
         tableId: "matches",
-        defaultSorting: {
-            key: "time",
-            mode: SortMode.DESC,
-        } as Sort<Match>,
+        defaultSorting: [
+            {
+                key: "time",
+                mode: SortMode.DESC,
+            },
+        ],
     });
 
     const { mutateAsync } = useGetMatches();
@@ -35,7 +37,7 @@ export const MatchHistory = ({ playerUid, rivalUid }: Props) => {
                 playerUids: [playerUid, rivalUid].filter(Boolean) as Array<string>,
                 pageInfo: {
                     ...pageInfo,
-                    sort: sort ? sortingForRequest([sort]) : undefined,
+                    sort: sort ? sortingForRequest(sort) : undefined,
                 },
             },
         }),
@@ -55,9 +57,9 @@ export const MatchHistory = ({ playerUid, rivalUid }: Props) => {
                 heading={MatchRow.Heading}
                 data={data ?? []}
                 keyFn={(p) => p._id}
-                sort={sort}
+                sort={sort?.[0]}
                 onSort={{
-                    time: (mode) => setSort(mode ? { key: "time", mode } : undefined),
+                    time: (mode) => setSort(mode ? [{ key: "time", mode }] : undefined),
                 }}
                 onRowClick={(match) => {
                     if (match.tournamentId)

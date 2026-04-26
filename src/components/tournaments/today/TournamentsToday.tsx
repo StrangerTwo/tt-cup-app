@@ -5,8 +5,8 @@ import { useLoadMoreSentinel } from "../../lib/useLoadMoreSentinel";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
 import { Card } from "../../ui/Card";
 import { TournamentCard } from "../TournamentCard";
-import { TournamentsFilter } from "./TournamentsFilter";
-import { TournamentsFilterType } from "./tournamentsFilterSchema";
+import { TournamentsTodayFilter } from "./TournamentsTodayFilter";
+import { TournamentsTodayFilterType } from "./tournamentsTodayFilterSchema";
 import { useTournamentsToday } from "./useTournamentsToday";
 
 export const TournamentsToday = () => {
@@ -15,16 +15,18 @@ export const TournamentsToday = () => {
         setSort,
         filters: _filters,
         setFilters,
-    } = useUrlSyncedTableState<TournamentsFilterType, TournamentToday>({
-        tableId: "tournamentsToday",
-        defaultSorting: {
-            key: "place.location",
-            mode: SortMode.DESC,
-        },
+    } = useUrlSyncedTableState<TournamentsTodayFilterType, TournamentToday>({
+        tableId: "tournaments",
+        defaultSorting: [
+            {
+                key: "place.startTime",
+                mode: SortMode.ASC,
+            },
+        ],
     });
-    const { finished, ...filters } = _filters;
+    const { done, ...filters } = _filters;
     const { data, isFetching, fetchNextPage } = useTournamentsToday(
-        { ...filters, done: finished ? undefined : false },
+        { ...filters, done: done ? undefined : false },
         sort,
     );
 
@@ -33,7 +35,7 @@ export const TournamentsToday = () => {
     return (
         <>
             <Card className="mb-2 md:mb-4">
-                <TournamentsFilter filters={_filters} setFilters={setFilters} isFetching={isFetching} />
+                <TournamentsTodayFilter filters={_filters} setFilters={setFilters} isFetching={isFetching} />
             </Card>
             {data ? (
                 <>

@@ -7,14 +7,14 @@ import {
     useGetTournamentsToday,
 } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { Bet, GetTournamentsRequest, Place, TournamentFull, TournamentToday } from "../../../api/model";
+import { Bet, GetTournamentsTodayRequest, Place, TournamentFull, TournamentToday } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
 
 export const useTournamentsToday = (
-    filter: Omit<GetTournamentsRequest, "pageInfo"> | undefined,
-    sort?: Sort<TournamentToday>,
+    filter: Omit<GetTournamentsTodayRequest, "pageInfo"> | undefined,
+    sort?: Array<Sort<TournamentToday>>,
 ) => {
     const client = useQueryClient();
     const { mutateAsync } = useGetTournamentsToday();
@@ -25,7 +25,7 @@ export const useTournamentsToday = (
                 ...filter,
                 pageInfo: {
                     ...pageInfo,
-                    sort: sort ? sortingForRequest([sort]) : undefined,
+                    sort: sort ? sortingForRequest(sort) : undefined,
                 },
             },
         }),

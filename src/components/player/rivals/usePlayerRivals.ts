@@ -10,7 +10,7 @@ import { Sort } from "../../lib/Table";
 export const usePlayerRivals = (
     playerUid: Player["uid"],
     filter: Omit<GetPlayerRivalsRequest, "pageInfo"> | undefined,
-    sort?: Sort<RivalMatchesSummary>,
+    sort?: Array<Sort<RivalMatchesSummary>>,
 ) => {
     const client = useQueryClient();
     const { mutateAsync } = useGetPlayerRivals();
@@ -22,7 +22,7 @@ export const usePlayerRivals = (
                 ...filter,
                 pageInfo: {
                     ...pageInfo,
-                    sort: sort ? sortingForRequest([sort]) : undefined,
+                    sort: sort ? sortingForRequest(sort) : undefined,
                 },
             },
         }),

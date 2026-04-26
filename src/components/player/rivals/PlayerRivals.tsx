@@ -6,6 +6,7 @@ import Table, { Sort } from "../../lib/Table";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
 import { Card } from "../../ui/Card";
 import { PlayerRivalsFilter } from "./PlayerRivalsFilter";
+import { PlayerRivalsFilterFormType } from "./playerRivalsFilterSchema";
 import { RivalRow } from "./RivalRow";
 import { usePlayerRivals } from "./usePlayerRivals";
 
@@ -15,12 +16,17 @@ interface Props {
 
 export const PlayerRivals = ({ playerUid }: Props) => {
     const navigate = useNavigate();
-    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState({
+    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState<
+        PlayerRivalsFilterFormType,
+        RivalMatchesSummary
+    >({
         tableId: "playerRivals",
-        defaultSorting: {
-            key: "rival.elo",
-            mode: SortMode.DESC,
-        } as Sort<RivalMatchesSummary>,
+        defaultSorting: [
+            {
+                key: "rival.elo",
+                mode: SortMode.DESC,
+            },
+        ],
     });
     const { data, fetchNextPage, isFetching } = usePlayerRivals(playerUid, filters, sort);
 
@@ -36,9 +42,10 @@ export const PlayerRivals = ({ playerUid }: Props) => {
                     }
                     heading={RivalRow.Heading}
                     data={data ?? []}
+                    sort={sort?.[0]}
                     onSort={Object.fromEntries(
                         (["rival.name", "rival.elo", "rival.ranking"] as Array<Sort<RivalMatchesSummary>["key"]>).map(
-                            (x) => [x, (mode: SortMode | null) => setSort(mode ? { key: x, mode } : undefined)],
+                            (x) => [x, (mode: SortMode | null) => setSort(mode ? [{ key: x, mode }] : undefined)],
                         ),
                     )}
                     onRowClick={(r) =>

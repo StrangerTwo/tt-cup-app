@@ -13,6 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as UpdateIndexRouteImport } from './routes/update/index'
 import { Route as TournamentIndexRouteImport } from './routes/tournament/index'
 import { Route as PlayerIndexRouteImport } from './routes/player/index'
+import { Route as ArchiveIndexRouteImport } from './routes/archive/index'
+import { Route as UpdatePlacesRouteImport } from './routes/update/places'
+import { Route as UpdateOutdatedRouteImport } from './routes/update/outdated'
 import { Route as TournamentTournamentIdRouteImport } from './routes/tournament/$tournamentId'
 import { Route as PlayerNewRouteImport } from './routes/player/new'
 import { Route as PlayerPlayerUidIndexRouteImport } from './routes/player/$playerUid/index'
@@ -36,6 +39,21 @@ const TournamentIndexRoute = TournamentIndexRouteImport.update({
 const PlayerIndexRoute = PlayerIndexRouteImport.update({
   id: '/player/',
   path: '/player/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArchiveIndexRoute = ArchiveIndexRouteImport.update({
+  id: '/archive/',
+  path: '/archive/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UpdatePlacesRoute = UpdatePlacesRouteImport.update({
+  id: '/update/places',
+  path: '/update/places',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UpdateOutdatedRoute = UpdateOutdatedRouteImport.update({
+  id: '/update/outdated',
+  path: '/update/outdated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TournamentTournamentIdRoute = TournamentTournamentIdRouteImport.update({
@@ -64,6 +82,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/player/new': typeof PlayerNewRoute
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
+  '/update/outdated': typeof UpdateOutdatedRoute
+  '/update/places': typeof UpdatePlacesRoute
+  '/archive': typeof ArchiveIndexRoute
   '/player': typeof PlayerIndexRoute
   '/tournament': typeof TournamentIndexRoute
   '/update': typeof UpdateIndexRoute
@@ -74,6 +95,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/player/new': typeof PlayerNewRoute
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
+  '/update/outdated': typeof UpdateOutdatedRoute
+  '/update/places': typeof UpdatePlacesRoute
+  '/archive': typeof ArchiveIndexRoute
   '/player': typeof PlayerIndexRoute
   '/tournament': typeof TournamentIndexRoute
   '/update': typeof UpdateIndexRoute
@@ -85,6 +109,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/player/new': typeof PlayerNewRoute
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
+  '/update/outdated': typeof UpdateOutdatedRoute
+  '/update/places': typeof UpdatePlacesRoute
+  '/archive/': typeof ArchiveIndexRoute
   '/player/': typeof PlayerIndexRoute
   '/tournament/': typeof TournamentIndexRoute
   '/update/': typeof UpdateIndexRoute
@@ -97,6 +124,9 @@ export interface FileRouteTypes {
     | '/'
     | '/player/new'
     | '/tournament/$tournamentId'
+    | '/update/outdated'
+    | '/update/places'
+    | '/archive'
     | '/player'
     | '/tournament'
     | '/update'
@@ -107,6 +137,9 @@ export interface FileRouteTypes {
     | '/'
     | '/player/new'
     | '/tournament/$tournamentId'
+    | '/update/outdated'
+    | '/update/places'
+    | '/archive'
     | '/player'
     | '/tournament'
     | '/update'
@@ -117,6 +150,9 @@ export interface FileRouteTypes {
     | '/'
     | '/player/new'
     | '/tournament/$tournamentId'
+    | '/update/outdated'
+    | '/update/places'
+    | '/archive/'
     | '/player/'
     | '/tournament/'
     | '/update/'
@@ -128,6 +164,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PlayerNewRoute: typeof PlayerNewRoute
   TournamentTournamentIdRoute: typeof TournamentTournamentIdRoute
+  UpdateOutdatedRoute: typeof UpdateOutdatedRoute
+  UpdatePlacesRoute: typeof UpdatePlacesRoute
+  ArchiveIndexRoute: typeof ArchiveIndexRoute
   PlayerIndexRoute: typeof PlayerIndexRoute
   TournamentIndexRoute: typeof TournamentIndexRoute
   UpdateIndexRoute: typeof UpdateIndexRoute
@@ -165,6 +204,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayerIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/archive/': {
+      id: '/archive/'
+      path: '/archive'
+      fullPath: '/archive'
+      preLoaderRoute: typeof ArchiveIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/update/places': {
+      id: '/update/places'
+      path: '/update/places'
+      fullPath: '/update/places'
+      preLoaderRoute: typeof UpdatePlacesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/update/outdated': {
+      id: '/update/outdated'
+      path: '/update/outdated'
+      fullPath: '/update/outdated'
+      preLoaderRoute: typeof UpdateOutdatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tournament/$tournamentId': {
       id: '/tournament/$tournamentId'
       path: '/tournament/$tournamentId'
@@ -200,6 +260,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PlayerNewRoute: PlayerNewRoute,
   TournamentTournamentIdRoute: TournamentTournamentIdRoute,
+  UpdateOutdatedRoute: UpdateOutdatedRoute,
+  UpdatePlacesRoute: UpdatePlacesRoute,
+  ArchiveIndexRoute: ArchiveIndexRoute,
   PlayerIndexRoute: PlayerIndexRoute,
   TournamentIndexRoute: TournamentIndexRoute,
   UpdateIndexRoute: UpdateIndexRoute,

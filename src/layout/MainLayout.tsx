@@ -78,6 +78,9 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                                     <SidebarItem route="/tournament" closeSidebar={closeSidebar} text="Turnaje">
                                         <TableIcon />
                                     </SidebarItem>
+                                    <SidebarItem route="/archive" closeSidebar={closeSidebar} text="Archiv">
+                                        <TableIcon />
+                                    </SidebarItem>
                                     <SidebarItem route="/update" closeSidebar={closeSidebar} text="Update">
                                         <RefreshIcon />
                                     </SidebarItem>
