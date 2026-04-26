@@ -23,7 +23,6 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
     const form = useForm({
         defaultValues: {
             location: filters.location,
-            done: filters.done,
         },
         resolver: yupResolver(tournamentsFilterSchema),
     });
@@ -33,7 +32,7 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
         setFilters(filter);
     };
 
-    const [location, done] = useWatch({ name: ["location", "done"], control });
+    const [location] = useWatch({ name: ["location"], control });
     const isFirstRender = useRef(true);
     useEffect(() => {
         if (isFirstRender.current) {
@@ -41,7 +40,7 @@ export const TournamentsFilter = ({ filters, setFilters, isFetching }: Props) =>
             return;
         }
         handleSubmit(onSubmit)();
-    }, [location, done]);
+    }, [location]);
 
     return (
         <form className="flex max-w-xs flex-col items-start md:max-w-md" onSubmit={handleSubmit(onSubmit)}>

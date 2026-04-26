@@ -18,9 +18,6 @@ export const Route = createFileRoute("/archive/")({
 function RouteComponent() {
     const { sort, setSort, filters, setFilters } = useUrlSyncedTableState<TournamentsFilterType, TournamentFull>({
         tableId: "tournaments",
-        defaultFilters: {
-            done: true,
-        },
         defaultSorting: [
             {
                 key: "tournament.date",
@@ -32,7 +29,7 @@ function RouteComponent() {
             },
         ],
     });
-    const { data, isFetching, fetchNextPage } = useTournaments(filters, sort);
+    const { data, isFetching, fetchNextPage } = useTournaments({ ...filters, done: true }, sort);
 
     const { sentinelRef } = useLoadMoreSentinel<HTMLDivElement>(data, fetchNextPage, isFetching);
 
