@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-import { getGetPlayerQueryKey, useGetPlayerRivals } from "../../../api/api";
+import { getGetPlayerQueryKey, getGetRivalrySummaryQueryKey, useGetPlayerRivals } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { GetPlayerRivalsRequest, Player, RivalMatchesSummary } from "../../../api/model";
+import { GetPlayerRivalsRequest, MatchesSummary, Player, RivalMatchesSummary } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
@@ -30,8 +30,12 @@ export const usePlayerRivals = (
         totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
         queryKey: [EQueryKey.getPlayerRivals, playerUid, filter, sort],
         onfulfilled: (res) => {
-            res.results.forEach(({ rivalUid, rival }) => {
+            res.results.forEach(({ rivalUid, rival, matchesSummary }) => {
                 client.setQueryData(getGetPlayerQueryKey(rivalUid), (x: Player | undefined | null) => rival ?? null);
+                client.setQueryData(
+                    getGetRivalrySummaryQueryKey(playerUid, rivalUid),
+                    (x: MatchesSummary | undefined | null): MatchesSummary => matchesSummary,
+                );
             });
         },
     });

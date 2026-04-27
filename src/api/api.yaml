@@ -541,6 +541,10 @@ paths:
     get:
       description: ''
       parameters:
+      - name: players
+        in: query
+        required: false
+        schema: {type: boolean}
       - name: tournamentId
         in: path
         required: true
@@ -896,6 +900,9 @@ components:
         bets:
           type: array
           items: {$ref: '#/components/schemas/Bet'}
+        players:
+          type: array
+          items: {$ref: '#/components/schemas/Player'}
       required: [place, tournament, matches, bets]
     Tournaments:
       type: object

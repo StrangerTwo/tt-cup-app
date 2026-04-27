@@ -8,6 +8,7 @@
 import type { Bet } from "./bet";
 import type { Match } from "./match";
 import type { Place } from "./place";
+import type { Player } from "./player";
 import type { Tournament } from "./tournament";
 
 export interface TournamentFull {
@@ -15,4 +16,5 @@ export interface TournamentFull {
     tournament: Tournament;
     matches: Array<Match>;
     bets: Array<Bet>;
+    players?: Array<Player>;
 }

@@ -46,6 +46,7 @@ import type {
     GetPlayersRequest,
     GetTournament404,
     GetTournamentBets404,
+    GetTournamentParams,
     GetTournamentsRequest,
     GetTournamentsTodayRequest,
     MatchesSummary,
@@ -2091,17 +2092,18 @@ export const useGetTournaments = <TError = ErrorType<unknown>, TContext = unknow
 
 export const getTournament = (
     tournamentId: string,
+    params?: GetTournamentParams,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
     return customInstance<TournamentFull>(
-        { url: `/tournament/${encodeURIComponent(String(tournamentId))}`, method: "GET", signal },
+        { url: `/tournament/${encodeURIComponent(String(tournamentId))}`, method: "GET", params, signal },
         options,
     );
 };
 
-export const getGetTournamentQueryKey = (tournamentId?: string) => {
-    return [`/tournament/${tournamentId}`] as const;
+export const getGetTournamentQueryKey = (tournamentId?: string, params?: GetTournamentParams) => {
+    return [`/tournament/${tournamentId}`, ...(params ? [params] : [])] as const;
 };
 
 export const getGetTournamentQueryOptions = <
@@ -2109,6 +2111,7 @@ export const getGetTournamentQueryOptions = <
     TError = ErrorType<string | GetTournament404>,
 >(
     tournamentId: string,
+    params?: GetTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
@@ -2116,10 +2119,10 @@ export const getGetTournamentQueryOptions = <
 ) => {
     const { query: queryOptions, request: requestOptions } = options ?? {};
 
-    const queryKey = queryOptions?.queryKey ?? getGetTournamentQueryKey(tournamentId);
+    const queryKey = queryOptions?.queryKey ?? getGetTournamentQueryKey(tournamentId, params);
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getTournament>>> = ({ signal }) =>
-        getTournament(tournamentId, requestOptions, signal);
+        getTournament(tournamentId, params, requestOptions, signal);
 
     return { queryKey, queryFn, enabled: !!tournamentId, ...queryOptions } as UseQueryOptions<
         Awaited<ReturnType<typeof getTournament>>,
@@ -2136,6 +2139,7 @@ export function useGetTournament<
     TError = ErrorType<string | GetTournament404>,
 >(
     tournamentId: string,
+    params: undefined | GetTournamentParams,
     options: {
         query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>> &
             Pick<
@@ -2155,6 +2159,7 @@ export function useGetTournament<
     TError = ErrorType<string | GetTournament404>,
 >(
     tournamentId: string,
+    params?: GetTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>> &
             Pick<
@@ -2174,6 +2179,7 @@ export function useGetTournament<
     TError = ErrorType<string | GetTournament404>,
 >(
     tournamentId: string,
+    params?: GetTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
@@ -2186,13 +2192,14 @@ export function useGetTournament<
     TError = ErrorType<string | GetTournament404>,
 >(
     tournamentId: string,
+    params?: GetTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTournament>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetTournamentQueryOptions(tournamentId, options);
+    const queryOptions = getGetTournamentQueryOptions(tournamentId, params, options);
 
     const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
         queryKey: DataTag<QueryKey, TData, TError>;

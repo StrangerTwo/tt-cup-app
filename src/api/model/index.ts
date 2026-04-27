@@ -31,6 +31,7 @@ export * from "./getPlayerRivalsRequest";
 export * from "./getPlayersRequest";
 export * from "./getTournament404";
 export * from "./getTournamentBets404";
+export * from "./getTournamentParams";
 export * from "./getTournamentsRequest";
 export * from "./getTournamentsTodayRequest";
 export * from "./location";
