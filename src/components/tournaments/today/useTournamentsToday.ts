@@ -3,11 +3,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
     getGetBetQueryKey,
     getGetPlaceQueryKey,
+    getGetPlayerQueryKey,
     getGetTournamentQueryKey,
     useGetTournamentsToday,
 } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { Bet, GetTournamentsTodayRequest, Place, TournamentFull, TournamentToday } from "../../../api/model";
+import { Bet, GetTournamentsTodayRequest, Place, Player, TournamentFull, TournamentToday } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
@@ -19,6 +20,7 @@ export const useTournamentsToday = (
     const client = useQueryClient();
     const { mutateAsync } = useGetTournamentsToday();
     return usePaginatedQuery({
+        initialPagination: { size: 10, page: 0 },
         mutateAsync,
         paramFn: (pageInfo) => ({
             data: {
@@ -46,6 +48,14 @@ export const useTournamentsToday = (
                         (b: Bet | null | undefined): Bet | null => bets.find((x) => x.matchId === match._id) ?? null,
                     );
                 });
+            });
+            const playerUids = res.results.flatMap((x) => x.matches).flatMap((x) => x.playerUids);
+            playerUids.forEach((playerUid) => {
+                client.setQueryData(
+                    getGetPlayerQueryKey(playerUid),
+                    (p: Player | null | undefined): Player | null =>
+                        res.players.find((x) => x.uid === playerUid) ?? null,
+                );
             });
         },
     });

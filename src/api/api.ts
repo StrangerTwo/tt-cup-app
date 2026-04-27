@@ -59,8 +59,6 @@ import type {
     PaginatedQueryResultPlace,
     PaginatedQueryResultPlayer,
     PaginatedQueryResultRivalMatchesSummary,
-    PaginatedQueryResultTournamentFull,
-    PaginatedQueryResultTournamentToday,
     Place,
     Player,
     SetBet404,
@@ -68,6 +66,8 @@ import type {
     SetPlayerFavourite404,
     Status,
     TournamentFull,
+    Tournaments,
+    TournamentsToday,
     User,
 } from "./model";
 
@@ -2024,7 +2024,7 @@ export const getTournaments = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultTournamentFull>(
+    return customInstance<Tournaments>(
         {
             url: `/tournament`,
             method: "POST",
@@ -2208,7 +2208,7 @@ export const getTournamentsToday = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultTournamentToday>(
+    return customInstance<TournamentsToday>(
         {
             url: `/tournament/today`,
             method: "POST",

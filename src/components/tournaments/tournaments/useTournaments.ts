@@ -1,8 +1,14 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-import { getGetBetQueryKey, getGetPlaceQueryKey, getGetTournamentQueryKey, useGetTournaments } from "../../../api/api";
+import {
+    getGetBetQueryKey,
+    getGetPlaceQueryKey,
+    getGetPlayerQueryKey,
+    getGetTournamentQueryKey,
+    useGetTournaments,
+} from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { Bet, GetTournamentsRequest, Place, TournamentFull } from "../../../api/model";
+import { Bet, GetTournamentsRequest, Place, Player, TournamentFull } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
@@ -42,6 +48,14 @@ export const useTournaments = (
                         (b: Bet | null | undefined): Bet | null => bets.find((x) => x.matchId === match._id) ?? null,
                     );
                 });
+            });
+            const playerUids = res.results.flatMap((x) => x.matches).flatMap((x) => x.playerUids);
+            playerUids.forEach((playerUid) => {
+                client.setQueryData(
+                    getGetPlayerQueryKey(playerUid),
+                    (p: Player | null | undefined): Player | null =>
+                        res.players.find((x) => x.uid === playerUid) ?? null,
+                );
             });
         },
     });
