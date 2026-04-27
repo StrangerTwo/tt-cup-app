@@ -15,5 +15,6 @@ export interface Bet {
     matchId: ObjectId;
     playerUids: Array<string>;
     type: BetType;
+    win?: boolean;
     _id: ObjectId;
 }

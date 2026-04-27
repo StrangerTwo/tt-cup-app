@@ -16,6 +16,25 @@ paths:
                 Example#1: {value: ''}
       operationId: getHello
   /bet:
+    get:
+      description: ''
+      parameters:
+      - name: location
+        in: query
+        required: false
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/BetSummary'}
+      operationId: getBetsSummary
     post:
       description: ''
       requestBody:
@@ -28,7 +47,7 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Bet'}
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_BetFull'}
       operationId: getBets
   /bet/{matchId}:
     get:
@@ -593,6 +612,13 @@ paths:
                 Example#1: {value: ''}
 components:
   schemas:
+    BetSummary:
+      type: object
+      properties:
+        betsWon: {type: integer, format: int32}
+        betsLost: {type: integer, format: int32}
+        betsUnresolved: {type: integer, format: int32}
+      required: [betsWon, betsLost, betsUnresolved]
     PageInfoRequest:
       type: object
       properties:
@@ -612,6 +638,8 @@ components:
           type: array
           items: {type: string}
         type: {$ref: '#/components/schemas/BetType'}
+        win: {type: boolean}
+        resolved: {type: boolean}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
     ObjectId: {type: string}
@@ -625,8 +653,37 @@ components:
           type: array
           items: {type: string}
         type: {$ref: '#/components/schemas/BetType'}
+        win: {type: boolean}
         _id: {$ref: '#/components/schemas/ObjectId'}
       required: [tournamentId, matchId, playerUids, type, _id, _id]
+    Match:
+      type: object
+      properties:
+        time: {type: string, format: date-time}
+        playerUids:
+          type: array
+          items: {type: string}
+          prefixItems:
+          - {type: string}
+          - {type: string}
+        sets:
+          type: array
+          items: {type: integer, format: int32}
+          prefixItems:
+          - {type: integer, format: int32}
+          - {type: integer, format: int32}
+        points:
+          type: array
+          items: {type: string}
+        tournamentId: {$ref: '#/components/schemas/ObjectId'}
+        _id: {$ref: '#/components/schemas/ObjectId'}
+      required: [time, playerUids, tournamentId, _id, _id]
+    BetFull:
+      type: object
+      properties:
+        bet: {$ref: '#/components/schemas/Bet'}
+        match: {$ref: '#/components/schemas/Match'}
+      required: [bet, match]
     PageInfo:
       type: object
       properties:
@@ -644,12 +701,12 @@ components:
         results: {type: array}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
-    PaginatedQueryResult_Bet:
+    PaginatedQueryResult_BetFull:
       type: object
       properties:
         results:
           type: array
-          items: {$ref: '#/components/schemas/Bet'}
+          items: {$ref: '#/components/schemas/BetFull'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
     NewBet:
@@ -689,28 +746,6 @@ components:
           items: {type: string}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
-    Match:
-      type: object
-      properties:
-        time: {type: string, format: date-time}
-        playerUids:
-          type: array
-          items: {type: string}
-          prefixItems:
-          - {type: string}
-          - {type: string}
-        sets:
-          type: array
-          items: {type: integer, format: int32}
-          prefixItems:
-          - {type: integer, format: int32}
-          - {type: integer, format: int32}
-        points:
-          type: array
-          items: {type: string}
-        tournamentId: {$ref: '#/components/schemas/ObjectId'}
-        _id: {$ref: '#/components/schemas/ObjectId'}
-      required: [time, playerUids, tournamentId, _id, _id]
     PaginatedQueryResult_Match:
       type: object
       properties:

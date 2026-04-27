@@ -7,6 +7,8 @@
  */
 
 export * from "./bet";
+export * from "./betFull";
+export * from "./betSummary";
 export * from "./betType";
 export * from "./captureDto";
 export * from "./capturePage200";
@@ -17,6 +19,7 @@ export * from "./editPlayer";
 export * from "./editPlayer404";
 export * from "./getBet404";
 export * from "./getBetsRequest";
+export * from "./getBetsSummaryParams";
 export * from "./getMatchesRequest";
 export * from "./getPagesToCrawlRequest";
 export * from "./getPlace404";
@@ -40,7 +43,7 @@ export * from "./outdatedPlace";
 export * from "./pageInfo";
 export * from "./pageInfoRequest";
 export * from "./paginatedQueryResult";
-export * from "./paginatedQueryResultBet";
+export * from "./paginatedQueryResultBetFull";
 export * from "./paginatedQueryResultCrawlPage";
 export * from "./paginatedQueryResultMatch";
 export * from "./paginatedQueryResultPlace";

@@ -25,6 +25,7 @@ import type { ErrorType } from "./api-instance";
 import { customInstance } from "./api-instance";
 import type {
     Bet,
+    BetSummary,
     CaptureDto,
     CapturePage200,
     EditPlace,
@@ -33,6 +34,7 @@ import type {
     EditPlayer404,
     GetBet404,
     GetBetsRequest,
+    GetBetsSummaryParams,
     GetMatchesRequest,
     GetPagesToCrawlRequest,
     GetPlace404,
@@ -51,7 +53,7 @@ import type {
     NewPlayer,
     ObjectId,
     OutdatedPlace,
-    PaginatedQueryResultBet,
+    PaginatedQueryResultBetFull,
     PaginatedQueryResultCrawlPage,
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlace,
@@ -159,12 +161,111 @@ export function useGetHello<TData = Awaited<ReturnType<typeof getHello>>, TError
     return query;
 }
 
+export const getBetsSummary = (
+    params?: GetBetsSummaryParams,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<BetSummary>({ url: `/bet`, method: "GET", params, signal }, options);
+};
+
+export const getGetBetsSummaryQueryKey = (params?: GetBetsSummaryParams) => {
+    return [`/bet`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetBetsSummaryQueryOptions = <
+    TData = Awaited<ReturnType<typeof getBetsSummary>>,
+    TError = ErrorType<string>,
+>(
+    params?: GetBetsSummaryParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBetsSummary>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetBetsSummaryQueryKey(params);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBetsSummary>>> = ({ signal }) =>
+        getBetsSummary(params, requestOptions, signal);
+
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getBetsSummary>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetBetsSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getBetsSummary>>>;
+export type GetBetsSummaryQueryError = ErrorType<string>;
+
+export function useGetBetsSummary<TData = Awaited<ReturnType<typeof getBetsSummary>>, TError = ErrorType<string>>(
+    params: undefined | GetBetsSummaryParams,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBetsSummary>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getBetsSummary>>,
+                    TError,
+                    Awaited<ReturnType<typeof getBetsSummary>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetBetsSummary<TData = Awaited<ReturnType<typeof getBetsSummary>>, TError = ErrorType<string>>(
+    params?: GetBetsSummaryParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBetsSummary>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getBetsSummary>>,
+                    TError,
+                    Awaited<ReturnType<typeof getBetsSummary>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetBetsSummary<TData = Awaited<ReturnType<typeof getBetsSummary>>, TError = ErrorType<string>>(
+    params?: GetBetsSummaryParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBetsSummary>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetBetsSummary<TData = Awaited<ReturnType<typeof getBetsSummary>>, TError = ErrorType<string>>(
+    params?: GetBetsSummaryParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBetsSummary>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetBetsSummaryQueryOptions(params, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
 export const getBets = (
     getBetsRequest: GetBetsRequest,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultBet>(
+    return customInstance<PaginatedQueryResultBetFull>(
         { url: `/bet`, method: "POST", headers: { "Content-Type": "application/json" }, data: getBetsRequest, signal },
         options,
     );

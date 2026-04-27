@@ -5,10 +5,10 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
-import type { Bet } from "./bet";
+import type { BetFull } from "./betFull";
 import type { PageInfo } from "./pageInfo";
 
-export interface PaginatedQueryResultBet {
-    results: Array<Bet>;
+export interface PaginatedQueryResultBetFull {
+    results: Array<BetFull>;
     pageInfo: PageInfo;
 }

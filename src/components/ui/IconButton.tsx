@@ -28,7 +28,7 @@ export const IconButton: FC<Props> = ({
             type={type}
             onClick={onClick}
             className={twMerge(
-                "text-control-action inline-flex size-10 cursor-pointer items-center justify-center rounded-lg bg-transparent text-sm",
+                "inline-flex size-10 cursor-pointer items-center justify-center rounded-lg bg-transparent text-sm",
                 !noEffects && hoverBgColor,
                 border && "border",
                 border && borderColor,

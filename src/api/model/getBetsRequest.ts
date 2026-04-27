@@ -15,5 +15,7 @@ export interface GetBetsRequest {
     matchId?: string;
     playerUids?: Array<string>;
     type?: BetType;
+    win?: boolean;
+    resolved?: boolean;
     pageInfo: PageInfoRequest;
 }

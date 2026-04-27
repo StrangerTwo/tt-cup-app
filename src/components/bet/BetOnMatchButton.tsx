@@ -52,7 +52,12 @@ export const BetOnMatchButton = ({ matchId, className, layerStep }: Props) => {
     };
 
     return (
-        <Card className="inline-flex p-0 md:p-0">
+        <Card
+            className={twMerge(
+                "inline-flex p-0 md:p-0",
+                bet?.win === true && "bg-green-500 text-white dark:bg-green-800",
+                bet?.win === false && "bg-red-500 text-white dark:bg-red-800",
+            )}>
             <IconButton
                 className={twMerge("group size-6", className)}
                 layerStep={layerStep}

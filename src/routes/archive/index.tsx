@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { TournamentFull } from "../../api/model";
+import { BetSummaryCard } from "../../components/bet/BetSummaryCard";
 import { SortMode } from "../../components/icons/SortIcon";
-import { Skeleton } from "../../components/lib/Skeleton";
-import { useLoadMoreSentinel } from "../../components/lib/useLoadMoreSentinel";
 import { useUrlSyncedTableState } from "../../components/lib/useUrlSyncedTableState";
-import { TournamentCard } from "../../components/tournaments/TournamentCard";
+import { Tournaments } from "../../components/tournaments/tournaments/Tournaments";
 import { TournamentsFilter } from "../../components/tournaments/tournaments/TournamentsFilter";
 import { TournamentsFilterType } from "../../components/tournaments/tournaments/tournamentsFilterSchema";
 import { useTournaments } from "../../components/tournaments/tournaments/useTournaments";
@@ -29,29 +28,15 @@ function RouteComponent() {
             },
         ],
     });
-    const { data, isFetching, fetchNextPage } = useTournaments({ ...filters, done: true }, sort);
-
-    const { sentinelRef } = useLoadMoreSentinel<HTMLDivElement>(data, fetchNextPage, isFetching);
+    const { isFetching } = useTournaments({ ...filters, done: true }, sort);
 
     return (
         <>
             <Card className="mb-2 md:mb-4">
                 <TournamentsFilter filters={{}} setFilters={setFilters} isFetching={isFetching} />
             </Card>
-            {data ? (
-                <>
-                    <div className="mb-32 flex flex-col gap-2 md:gap-4">
-                        {data.map(({ place, tournament, matches }) => (
-                            <TournamentCard key={tournament._id} tournamentId={tournament?._id} />
-                        ))}
-                        {isFetching && <Skeleton.Card />}
-                    </div>
-
-                    <div ref={sentinelRef} />
-                </>
-            ) : (
-                <Skeleton.Card />
-            )}
+            <BetSummaryCard location={filters.location} className="mb-2 md:mb-4" />
+            <Tournaments filters={filters} sort={sort} />
         </>
     );
 }

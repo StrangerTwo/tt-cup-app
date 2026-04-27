@@ -6,12 +6,12 @@ import { useGetPlayer, useGetRivalrySummary } from "../../../api/api";
 import { Match, Tournament } from "../../../api/model";
 import { renderHoursShort } from "../../../lib/date";
 import { renderNameShort } from "../../../lib/name";
+import { BetOnMatchButton } from "../../bet/BetOnMatchButton";
 import { Score } from "../../lib/Score";
 import { ScoreItem } from "../../lib/ScoreItem";
 import { Skeleton } from "../../lib/Skeleton";
 import { TableProps } from "../../lib/Table";
 import { TableCell } from "../../lib/TableCell";
-import { BetOnMatchButton } from "../../match/BetOnMatchButton";
 import { useColorLayer } from "../../ui/layout";
 
 interface TournamentRowProps {
@@ -61,8 +61,8 @@ export const TournamentRow: {
                     <Score
                         scoreA={match.sets?.[0]}
                         scoreB={match.sets?.[1]}
-                        isWinForA={match.sets && match.sets?.[0] > match.sets?.[1]}
-                        isWinForB={match.sets && match.sets?.[0] < match.sets?.[1]}
+                        isWinForA={match.sets?.[0] == 3}
+                        isWinForB={match.sets?.[1] == 3}
                     />
                 </TableCell>
                 <TableCell className="text-center">

@@ -9,8 +9,8 @@ export const useMatchRow = (match: Match, playerUid: string | undefined) => {
     const { data: playerA } = useGetPlayer(playerUids[0]);
     const { data: playerB } = useGetPlayer(playerUids[1]);
 
-    const isWinForA = sets ? sets[0] > sets[1] : undefined;
-    const isWinForB = sets ? sets[1] > sets[0] : undefined;
+    const isWinForA = sets?.[0] == 3;
+    const isWinForB = sets?.[1] == 3;
 
     return {
         playerUids,
