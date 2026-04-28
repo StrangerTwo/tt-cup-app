@@ -1,7 +1,6 @@
 import { FC, MouseEventHandler, ReactNode, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import UnAuthTemplate from "../auth/UnAuthTemplate";
 import { RefreshIcon, TableIcon, UsersIcon } from "../components/icons";
 import { ColorLayerContext, useColorLayer } from "../components/ui/layout";
 import Sidebar from "../components/ui/layout/Sidebar";
@@ -56,7 +55,7 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                 setSidebarExpanded,
             }}>
             <ColorLayerContext.Provider value={{ layer }}>
-                <AuthProvider auth={auth} unAuthTemp={<UnAuthTemplate />}>
+                <AuthProvider auth={auth}>
                     {hasNavbar && (
                         <AdminNavbar
                             onHeightChange={hasSidebar ? (h) => setNavbarHeight(h) : undefined}
