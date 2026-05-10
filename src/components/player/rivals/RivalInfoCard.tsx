@@ -22,7 +22,7 @@ export const RivalInfoCard = ({ player, className }: Props) => {
 
                 <RenderItem title={"Ranking:"} className="col-start-1">
                     <a className="underline" href={`https://ttcup.com/players/${player.uid}/`} target="_blank">
-                        {player.ranking}
+                        {player.ranking ?? "---"}
                     </a>
                 </RenderItem>
                 <RenderItem title={"Elo:"}>

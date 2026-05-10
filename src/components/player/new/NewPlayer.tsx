@@ -1,12 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 
-import { useNewPlayer } from "../../../api/api";
-import { EQueryKey } from "../../../api/EQueryKey";
+import { getGetPlayerQueryKey, useNewPlayer } from "../../../api/api";
 import { Location } from "../../../api/model";
 import { resolveErrorMessage } from "../../../lib/toastError";
 import { BoxSelect } from "../../form/BoxSelect";
@@ -17,11 +16,13 @@ import { locationLabels } from "../PlayerLocation";
 import { newPlayerFormSchema, NewPlayerFormType } from "./newPlayerSchema";
 
 export const NewPlayer = () => {
-    const navigate = useNavigate();
+    const { uid } = useSearch({ from: "/player/new" });
+    const router = useRouter();
 
     const client = useQueryClient();
     const { mutateAsync } = useNewPlayer();
     const form = useForm({
+        defaultValues: { uid },
         resolver: yupResolver(newPlayerFormSchema),
     });
     const { handleSubmit, setValue, control } = form;
@@ -39,8 +40,10 @@ export const NewPlayer = () => {
     const onSubmit = (data: NewPlayerFormType) => {
         toast.promise(
             mutateAsync({ data }).then(() => {
-                client.invalidateQueries({ queryKey: [EQueryKey.getPlayers] });
-                navigate({ to: "/player/$playerUid", params: { playerUid: data.uid } });
+                client.removeQueries({ queryKey: getGetPlayerQueryKey(data.uid) });
+                router.history.canGoBack()
+                    ? router.history.back()
+                    : router.navigate({ to: "/player/$playerUid", params: { playerUid: data.uid } });
             }),
             {
                 loading: "Ukládám...",

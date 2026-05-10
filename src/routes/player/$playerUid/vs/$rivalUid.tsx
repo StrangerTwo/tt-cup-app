@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { useGetPlayer, useGetRivalrySummary } from "../../../../api/api";
 import { Skeleton } from "../../../../components/lib/Skeleton";
@@ -22,7 +22,15 @@ function RouteComponent() {
                 {player?.name} vs {rival?.name}
             </h1>
             <p className="mb-2 text-sm italic md:mb-4">
-                ({playerUid}) vs ({rivalUid})
+                (
+                <Link to="/player/$playerUid" params={{ playerUid }} className="underline decoration-dotted">
+                    {playerUid}
+                </Link>
+                ) vs (
+                <Link to="/player/$playerUid" params={{ playerUid: rivalUid }} className="underline decoration-dotted">
+                    {rivalUid}
+                </Link>
+                )
             </p>
 
             <div className="mb-2 flex flex-col gap-2 md:mb-4 md:flex-row md:gap-4">

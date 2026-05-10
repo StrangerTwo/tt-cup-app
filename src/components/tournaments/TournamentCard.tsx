@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useCallback, useEffect, useState } from "react";
 
 import { Place, Tournament } from "../../api/model";
 import { renderCzIsoDate, renderFullDateShort, renderHoursShort } from "../../lib/date";
@@ -10,6 +11,7 @@ import { PlayerLocation } from "../player/PlayerLocation";
 import { Card } from "../ui/Card";
 import { IconButton } from "../ui/IconButton";
 import { TournamentRow } from "./today/TournamentRow";
+import { useQueryTournament } from "./useQueryTournament";
 import { useTournament } from "./useTournament";
 
 type Props =
@@ -26,11 +28,32 @@ type Props =
 
 export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Props) => {
     const { data } = useTournament(tournamentId);
-
     const place = _place ?? data?.place;
+    const { isFetching, refetch } = useQueryTournament(
+        { date: new Date().toISOString().slice(0, 10), place: place?.uid },
+        false,
+    );
+    const [doRefetch, setDoRefetch] = useState(false);
+
+    const triggerRefetch = useCallback(() => {
+        if (doRefetch) {
+            refetch();
+            setDoRefetch(false);
+        }
+    }, [doRefetch, refetch]);
+
+    useEffect(() => {
+        window.addEventListener("focus", triggerRefetch);
+        return () => window.removeEventListener("focus", triggerRefetch);
+    }, [triggerRefetch]);
+
     if (!place) return <Skeleton.Card />;
     const { tournament, matches, bets } = data || {};
     const date = _date ?? tournament?.date;
+
+    const refreshTournament = () => {
+        setDoRefetch(true);
+    };
 
     return (
         <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">
@@ -68,6 +91,8 @@ export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Pro
                             </div>
                             {date && (
                                 <a
+                                    onAuxClick={refreshTournament}
+                                    onClick={refreshTournament}
                                     href={`https://ttcup.com/schedule/${renderCzIsoDate(date)}/${place.uid}/`}
                                     target="_blank">
                                     <IconButton>
@@ -79,7 +104,8 @@ export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Pro
                     </>
                 }
                 heading={TournamentRow.Heading}
-                data={matches ?? []}>
+                data={isFetching ? [] : (matches ?? [])}
+                isPending={isFetching}>
                 {(m, i) => tournamentId && <TournamentRow.FC match={m} tournamentId={tournamentId} i={i} />}
             </Table>
         </Card>

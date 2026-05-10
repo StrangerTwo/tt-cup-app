@@ -1,4 +1,4 @@
-import { useMatchRoute, useNavigate } from "@tanstack/react-router";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 import { FC, ReactNode, useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -21,18 +21,17 @@ const SidebarItem: FC<Props> = ({ children, text, pip, className, route, closeSi
 
     const { sidebarExpanded } = useContext(MainLayoutCtx);
 
-    const navigate = useNavigate();
     const match = useMatchRoute();
 
     const isSelected = match({ to: route, fuzzy: true });
     const itemOnClick = () => {
-        navigate({ to: route });
         if (window.innerWidth <= 768) closeSidebar();
     };
 
     return (
         <ColorLayerContext.Provider value={{ layer }}>
-            <div
+            <Link
+                to={route}
                 className={twMerge(
                     "group flex cursor-pointer items-center rounded-lg p-2",
                     bgColor,
@@ -67,7 +66,7 @@ const SidebarItem: FC<Props> = ({ children, text, pip, className, route, closeSi
                         {pip}
                     </span>
                 )}
-            </div>
+            </Link>
         </ColorLayerContext.Provider>
     );
 };

@@ -1,12 +1,15 @@
 import { FC } from "react";
+import { twMerge } from "tailwind-merge";
 
 import { useGetPlayer } from "../../../api/api";
 import { RivalMatchesSummary } from "../../../api/model";
+import { Score } from "../../lib/Score";
 import { ScoreItem } from "../../lib/ScoreItem";
 import { TableProps } from "../../lib/Table";
 import { TableCell } from "../../lib/TableCell";
 import { useColorLayer } from "../../ui/layout";
 import { PlayerLocation } from "../PlayerLocation";
+import { PlayerName } from "../PlayerName";
 
 interface RivalRowProps {
     rivalMS: RivalMatchesSummary;
@@ -23,9 +26,8 @@ export const RivalRow: {
         { label: "Soupeř", key: "rival.name" as any },
         { label: "Rank", key: "rival.ranking" },
         { label: "Elo", key: "rival.elo" },
-        { label: "Bilance" },
-        { label: "Výher" },
-        { label: "Proher" },
+        { label: "Last", className: "text-center" },
+        { label: "Utk", className: "text-center" },
     ],
     FC: ({ rivalMS: { matchesSummary, rival: _rival, rivalUid }, playerUid, i }) => {
         const { textHighlightColor } = useColorLayer();
@@ -34,23 +36,20 @@ export const RivalRow: {
 
         return (
             <>
-                <TableCell>
-                    <span className="me-1 align-middle">{i + 1}.</span>
-                    {rival?.location && <PlayerLocation location={rival.location} />}
+                <TableCell>{rival?.location && <PlayerLocation location={rival.location} />}</TableCell>
+                <TableCell
+                    className={twMerge(textHighlightColor, "max-w-24 overflow-hidden text-ellipsis md:max-w-none")}>
+                    <PlayerName player={rival} uid={rivalUid} />
                 </TableCell>
-                <TableCell className={textHighlightColor}>{rival?.name ?? rivalUid}</TableCell>
                 <TableCell>{rival?.ranking}</TableCell>
                 <TableCell>{rival?.elo ?? "-"}</TableCell>
-                <TableCell className={textHighlightColor}>
+                <TableCell className={twMerge(textHighlightColor, "text-center")}>
                     <ScoreItem win={currentWinStreak > 0} lose={currentLoseStreak > 0}>
                         {currentWinStreak > 0 ? currentWinStreak : -currentLoseStreak}
                     </ScoreItem>
                 </TableCell>
-                <TableCell className={textHighlightColor}>
-                    <ScoreItem win>{matchesWon}</ScoreItem>
-                </TableCell>
-                <TableCell className={textHighlightColor}>
-                    <ScoreItem lose>{matchesLost}</ScoreItem>
+                <TableCell className={twMerge(textHighlightColor, "text-center")}>
+                    <Score scoreA={matchesWon} scoreB={matchesLost} isWinForA />
                 </TableCell>
             </>
         );

@@ -25,7 +25,9 @@ function RouteComponent() {
     const search = Route.useSearch();
     const tab = search.tab || "all";
 
-    const { data: player } = useGetPlayer(playerUid);
+    const { data: player, isStale, status, isRefetching } = useGetPlayer(playerUid);
+
+    console.log(player, isStale, status, isRefetching);
 
     const selectTab = (tab: string) => {
         navigate({ to: "/player/$playerUid", params: { playerUid }, search: { tab }, replace: true });

@@ -44,6 +44,8 @@ import type {
     GetPlayerRivals404,
     GetPlayerRivalsRequest,
     GetPlayersRequest,
+    GetQueryTournament404,
+    GetQueryTournamentParams,
     GetTournament404,
     GetTournamentBets404,
     GetTournamentParams,
@@ -2019,6 +2021,117 @@ export const useNewPlayer = <TError = ErrorType<string>, TContext = unknown>(
 
     return useMutation(mutationOptions, queryClient);
 };
+
+export const getQueryTournament = (
+    params?: GetQueryTournamentParams,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<TournamentFull>({ url: `/tournament`, method: "GET", params, signal }, options);
+};
+
+export const getGetQueryTournamentQueryKey = (params?: GetQueryTournamentParams) => {
+    return [`/tournament`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetQueryTournamentQueryOptions = <
+    TData = Awaited<ReturnType<typeof getQueryTournament>>,
+    TError = ErrorType<string | GetQueryTournament404>,
+>(
+    params?: GetQueryTournamentParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetQueryTournamentQueryKey(params);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getQueryTournament>>> = ({ signal }) =>
+        getQueryTournament(params, requestOptions, signal);
+
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getQueryTournament>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetQueryTournamentQueryResult = NonNullable<Awaited<ReturnType<typeof getQueryTournament>>>;
+export type GetQueryTournamentQueryError = ErrorType<string | GetQueryTournament404>;
+
+export function useGetQueryTournament<
+    TData = Awaited<ReturnType<typeof getQueryTournament>>,
+    TError = ErrorType<string | GetQueryTournament404>,
+>(
+    params: undefined | GetQueryTournamentParams,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getQueryTournament>>,
+                    TError,
+                    Awaited<ReturnType<typeof getQueryTournament>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetQueryTournament<
+    TData = Awaited<ReturnType<typeof getQueryTournament>>,
+    TError = ErrorType<string | GetQueryTournament404>,
+>(
+    params?: GetQueryTournamentParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getQueryTournament>>,
+                    TError,
+                    Awaited<ReturnType<typeof getQueryTournament>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetQueryTournament<
+    TData = Awaited<ReturnType<typeof getQueryTournament>>,
+    TError = ErrorType<string | GetQueryTournament404>,
+>(
+    params?: GetQueryTournamentParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetQueryTournament<
+    TData = Awaited<ReturnType<typeof getQueryTournament>>,
+    TError = ErrorType<string | GetQueryTournament404>,
+>(
+    params?: GetQueryTournamentParams,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetQueryTournamentQueryOptions(params, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
 
 export const getTournaments = (
     getTournamentsRequest: GetTournamentsRequest,

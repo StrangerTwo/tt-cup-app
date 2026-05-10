@@ -5,16 +5,16 @@ import { TabItem } from "../../components/lib/Tabs";
 export const Route = createFileRoute("/update/")({
     loader: () =>
         redirect({
-            to: "/update/places",
+            to: "/update/crawl",
             replace: true,
         }),
 });
 
-export const updateTabs: Array<TabItem<"outdated" | "places">> = [
+export const updateTabs: Array<TabItem<"crawl" | "places">> = [
     {
         header: "Update",
-        value: "outdated",
-        navigateFn: (navigate) => navigate({ to: "/update/outdated" }),
+        value: "crawl",
+        navigateFn: (navigate) => navigate({ to: "/update/crawl" }),
     },
     {
         header: "Haly",

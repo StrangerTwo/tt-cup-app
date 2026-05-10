@@ -2,10 +2,10 @@ import { FC } from "react";
 
 import { Match } from "../../api/model";
 import { renderDateShortWithHoursShort } from "../../lib/date";
-import { renderNameShort } from "../../lib/name";
 import { Score } from "../lib/Score";
 import { TableProps } from "../lib/Table";
 import { TableCell } from "../lib/TableCell";
+import { PlayerName } from "../player/PlayerName";
 import { useColorLayer } from "../ui/layout";
 import { useMatchRow } from "./useMatchRow";
 
@@ -34,8 +34,12 @@ export const MatchRow: {
                 <TableCell className={textHighlightColor}>
                     <span className="me-2 align-middle">{renderDateShortWithHoursShort(match.time)}</span>
                 </TableCell>
-                <TableCell>{renderNameShort(playerA?.name) ?? playerUids[0]}</TableCell>
-                <TableCell>{renderNameShort(playerB?.name) ?? playerUids[1]}</TableCell>
+                <TableCell>
+                    <PlayerName player={playerA} uid={playerUids[0]} />
+                </TableCell>
+                <TableCell>
+                    <PlayerName player={playerB} uid={playerUids[1]} />
+                </TableCell>
                 <TableCell className={textHighlightColor}>
                     <Score scoreA={sets?.[0]} scoreB={sets?.[1]} isWinForA={isWinForA} isWinForB={isWinForB} />
                 </TableCell>

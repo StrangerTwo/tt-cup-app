@@ -29,6 +29,8 @@ export * from "./getPlayerMatchesSummary404";
 export * from "./getPlayerRivals404";
 export * from "./getPlayerRivalsRequest";
 export * from "./getPlayersRequest";
+export * from "./getQueryTournament404";
+export * from "./getQueryTournamentParams";
 export * from "./getTournament404";
 export * from "./getTournamentBets404";
 export * from "./getTournamentParams";

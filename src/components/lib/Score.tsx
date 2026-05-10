@@ -15,7 +15,7 @@ export const Score = ({ scoreA, scoreB, isWinForA, isWinForB }: Props) => {
             <ScoreItem win={isWinForA} lose={isWinForB}>
                 {scoreA}
             </ScoreItem>
-            <span className="mx-2">:</span>
+            <span className="mx-0.5 md:mx-2">:</span>
             <ScoreItem win={isWinForB} lose={isWinForA}>
                 {scoreB}
             </ScoreItem>
