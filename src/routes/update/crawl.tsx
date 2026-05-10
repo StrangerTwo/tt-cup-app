@@ -2,11 +2,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { getGetPagesToCrawlQueryKey, useGetPagesToCrawl } from "../../api/api";
+import { getGetPagesToCrawlQueryKey, getIsCrawlPage, useGetPagesToCrawl } from "../../api/api";
 import { CrawlPage, PaginatedQueryResultCrawlPage } from "../../api/model";
 import { SubmitButton } from "../../components/lib/SubmitButton";
 import { Tabs } from "../../components/lib/Tabs";
 import { Card } from "../../components/ui/Card";
+import { sleep } from "../../lib/sleep";
+import { isDefined } from "../../lib/utils";
 import { updateTabs } from ".";
 
 export const Route = createFileRoute("/update/crawl")({
@@ -16,45 +18,64 @@ export const Route = createFileRoute("/update/crawl")({
 function RouteComponent() {
     const client = useQueryClient();
     const { data, refetch } = useGetPagesToCrawl();
+    const [error, setError] = useState<string>();
     const [going, setGoing] = useState(false);
     const goingRef = useRef<NodeJS.Timeout | number>(null);
+    const captchaSafeRef = useRef(true);
 
-    const visit = useCallback(
-        (page: CrawlPage) => {
-            window.open(page.url, "myPage");
-            client.setQueryData(
-                getGetPagesToCrawlQueryKey(),
-                (x: PaginatedQueryResultCrawlPage): PaginatedQueryResultCrawlPage => ({
-                    results: x.results.filter((p) => p.url !== page.url),
-                    pageInfo: {
-                        ...x.pageInfo,
-                        totalElements: x.pageInfo.totalElements - 1,
-                    },
-                }),
-            );
+    const awaitPageVisit = useCallback(
+        async (page: CrawlPage) => {
+            const onVisited = () => {
+                client.setQueryData(
+                    getGetPagesToCrawlQueryKey(),
+                    (x: PaginatedQueryResultCrawlPage): PaginatedQueryResultCrawlPage => ({
+                        results: x.results.filter((p) => p.url !== page.url),
+                        pageInfo: {
+                            ...x.pageInfo,
+                            totalElements: x.pageInfo.totalElements - 1,
+                        },
+                    }),
+                );
+                captchaSafeRef.current = true;
+            };
+            await sleep(5000);
+            if ((await getIsCrawlPage(page.url)).status === false) {
+                onVisited();
+            } else {
+                await sleep(5000);
+                if ((await getIsCrawlPage(page.url)).status === false) {
+                    onVisited();
+                }
+            }
         },
         [client],
     );
 
-    const go = useCallback(() => {
+    const go = useCallback(async () => {
         const res = client.getQueryData<PaginatedQueryResultCrawlPage>(getGetPagesToCrawlQueryKey());
-        const page = res?.results.at(0);
-        if (!page) {
-            setGoing(false);
-            return;
-        }
-        visit(page);
         if (!res) return;
+        const page = res.results.at(0);
+        if (!page) throw new Error("Jsme na konci");
+        if (captchaSafeRef.current == false) throw new Error("Tahle stránka je CAPTCHA, vyřeš");
+        captchaSafeRef.current = false;
+        window.open(page.url, "myPage");
+        await awaitPageVisit(page);
+
         if (res.results.length <= 5 && res.pageInfo.totalElements > 5) {
             refetch();
         }
-    }, [client, refetch, visit]);
+    }, [client, refetch, awaitPageVisit]);
 
     const goRecursive = useCallback(() => {
         goingRef.current = setTimeout(
-            () => {
-                go();
-                goRecursive();
+            async () => {
+                try {
+                    await go();
+                    goRecursive();
+                } catch (error_: unknown) {
+                    setError(String(error_));
+                    setGoing(false);
+                }
             },
             12_000 + Math.random() * 12_000,
         );
@@ -66,7 +87,6 @@ function RouteComponent() {
             goingRef.current = null;
         }
         if (going) {
-            go();
             goRecursive();
         }
         return () => {
@@ -81,9 +101,24 @@ function RouteComponent() {
         <>
             <Tabs tabs={updateTabs} value={"crawl"} />
             <h1 className="mb-2 text-xl md:mb-4">Stránky ke stáhnutí</h1>
-            <span>Celkem: {data?.pageInfo.totalElements}</span>
+            <p>Celkem: {data?.pageInfo.totalElements}</p>
+            <p className="text-sm text-red-600 dark:text-red-500">{isDefined(error) ? error : null}</p>
 
-            <SubmitButton loading={going} className="mt-2 md:mt-4" onClick={() => setGoing((x) => !x)} type="button">
+            <SubmitButton
+                loading={going}
+                className="mt-2 md:mt-4"
+                onClick={() => {
+                    setError(undefined);
+                    captchaSafeRef.current = true;
+
+                    try {
+                        go();
+                        setGoing((x) => !x);
+                    } catch (error_: unknown) {
+                        setError(String(error_));
+                    }
+                }}
+                type="button">
                 Go recursive
             </SubmitButton>
 
@@ -93,7 +128,7 @@ function RouteComponent() {
                         key={crawlPage.url}
                         className="flex max-w-lg justify-between"
                         hoverEffects
-                        onClick={() => visit(crawlPage)}>
+                        onClick={() => awaitPageVisit(crawlPage)}>
                         <span className="text-sm">{crawlPage.url}</span>
                     </Card>
                 ))}

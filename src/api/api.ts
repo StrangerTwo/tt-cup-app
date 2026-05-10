@@ -790,6 +790,101 @@ export const usePostPagesToCrawl = <TError = ErrorType<unknown>, TContext = unkn
     return useMutation(mutationOptions, queryClient);
 };
 
+export const getIsCrawlPage = (url: string, options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<Status>({ url: `/crawl/${encodeURIComponent(String(url))}`, method: "GET", signal }, options);
+};
+
+export const getGetIsCrawlPageQueryKey = (url?: string) => {
+    return [`/crawl/${url}`] as const;
+};
+
+export const getGetIsCrawlPageQueryOptions = <
+    TData = Awaited<ReturnType<typeof getIsCrawlPage>>,
+    TError = ErrorType<string>,
+>(
+    url: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsCrawlPage>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetIsCrawlPageQueryKey(url);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getIsCrawlPage>>> = ({ signal }) =>
+        getIsCrawlPage(url, requestOptions, signal);
+
+    return { queryKey, queryFn, enabled: !!url, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getIsCrawlPage>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetIsCrawlPageQueryResult = NonNullable<Awaited<ReturnType<typeof getIsCrawlPage>>>;
+export type GetIsCrawlPageQueryError = ErrorType<string>;
+
+export function useGetIsCrawlPage<TData = Awaited<ReturnType<typeof getIsCrawlPage>>, TError = ErrorType<string>>(
+    url: string,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsCrawlPage>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getIsCrawlPage>>,
+                    TError,
+                    Awaited<ReturnType<typeof getIsCrawlPage>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetIsCrawlPage<TData = Awaited<ReturnType<typeof getIsCrawlPage>>, TError = ErrorType<string>>(
+    url: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsCrawlPage>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getIsCrawlPage>>,
+                    TError,
+                    Awaited<ReturnType<typeof getIsCrawlPage>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetIsCrawlPage<TData = Awaited<ReturnType<typeof getIsCrawlPage>>, TError = ErrorType<string>>(
+    url: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsCrawlPage>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetIsCrawlPage<TData = Awaited<ReturnType<typeof getIsCrawlPage>>, TError = ErrorType<string>>(
+    url: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsCrawlPage>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetIsCrawlPageQueryOptions(url, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
 export const getMatches = (
     getMatchesRequest: GetMatchesRequest,
     options?: SecondParameter<typeof customInstance>,
