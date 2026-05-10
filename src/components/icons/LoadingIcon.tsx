@@ -10,7 +10,7 @@ export const LoadingIcon: FC<Props> = ({ className, hoverEffects }) => {
     return (
         <svg
             className={twMerge(
-                "size-5 animate-spin text-gray-200 dark:text-gray-600",
+                "size-5 animate-spin",
                 hoverEffects &&
                     "text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white",
                 className,
