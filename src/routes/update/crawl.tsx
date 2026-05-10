@@ -112,7 +112,7 @@ function RouteComponent() {
                     captchaSafeRef.current = true;
 
                     try {
-                        go();
+                        if (!going) go();
                         setGoing((x) => !x);
                     } catch (error_: unknown) {
                         setError(String(error_));
