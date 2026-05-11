@@ -40,18 +40,18 @@ import type {
     GetPlace404,
     GetPlacesRequest,
     GetPlayer404,
-    GetPlayerMatchesSummary404,
     GetPlayerRivals404,
     GetPlayerRivalsRequest,
     GetPlayersRequest,
     GetQueryTournament404,
     GetQueryTournamentParams,
+    GetSummaryForPlayer404,
+    GetSummaryForRivalry404,
     GetTournament404,
     GetTournamentBets404,
     GetTournamentParams,
     GetTournamentsRequest,
     GetTournamentsTodayRequest,
-    MatchesSummary,
     NewBet,
     NewPlayer,
     ObjectId,
@@ -60,7 +60,7 @@ import type {
     PaginatedQueryResultCrawlPage,
     PaginatedQueryResultMatch,
     PaginatedQueryResultPlace,
-    PaginatedQueryResultPlayer,
+    PaginatedQueryResultPlayerSummary,
     PaginatedQueryResultRivalMatchesSummary,
     Place,
     Player,
@@ -68,6 +68,7 @@ import type {
     SetPlaceEnabled404,
     SetPlayerFavourite404,
     Status,
+    Summary,
     TournamentFull,
     Tournaments,
     TournamentsToday,
@@ -1443,7 +1444,7 @@ export const getPlayers = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultPlayer>(
+    return customInstance<PaginatedQueryResultPlayerSummary>(
         {
             url: `/player`,
             method: "POST",
@@ -1838,13 +1839,13 @@ export const useGetPlayerRivals = <TError = ErrorType<string | GetPlayerRivals40
     return useMutation(mutationOptions, queryClient);
 };
 
-export const getRivalrySummary = (
+export const getSummaryForRivalry = (
     playerUid: string,
     rivalUid: string,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<MatchesSummary>(
+    return customInstance<Summary>(
         {
             url: `/player/${encodeURIComponent(String(playerUid))}/rival/${encodeURIComponent(String(rivalUid))}`,
             method: "GET",
@@ -1854,48 +1855,51 @@ export const getRivalrySummary = (
     );
 };
 
-export const getGetRivalrySummaryQueryKey = (playerUid?: string, rivalUid?: string) => {
+export const getGetSummaryForRivalryQueryKey = (playerUid?: string, rivalUid?: string) => {
     return [`/player/${playerUid}/rival/${rivalUid}`] as const;
 };
 
-export const getGetRivalrySummaryQueryOptions = <
-    TData = Awaited<ReturnType<typeof getRivalrySummary>>,
-    TError = ErrorType<string>,
+export const getGetSummaryForRivalryQueryOptions = <
+    TData = Awaited<ReturnType<typeof getSummaryForRivalry>>,
+    TError = ErrorType<string | GetSummaryForRivalry404>,
 >(
     playerUid: string,
     rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRivalrySummary>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForRivalry>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
 ) => {
     const { query: queryOptions, request: requestOptions } = options ?? {};
 
-    const queryKey = queryOptions?.queryKey ?? getGetRivalrySummaryQueryKey(playerUid, rivalUid);
+    const queryKey = queryOptions?.queryKey ?? getGetSummaryForRivalryQueryKey(playerUid, rivalUid);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRivalrySummary>>> = ({ signal }) =>
-        getRivalrySummary(playerUid, rivalUid, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSummaryForRivalry>>> = ({ signal }) =>
+        getSummaryForRivalry(playerUid, rivalUid, requestOptions, signal);
 
     return { queryKey, queryFn, enabled: !!(playerUid && rivalUid), ...queryOptions } as UseQueryOptions<
-        Awaited<ReturnType<typeof getRivalrySummary>>,
+        Awaited<ReturnType<typeof getSummaryForRivalry>>,
         TError,
         TData
     > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetRivalrySummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getRivalrySummary>>>;
-export type GetRivalrySummaryQueryError = ErrorType<string>;
+export type GetSummaryForRivalryQueryResult = NonNullable<Awaited<ReturnType<typeof getSummaryForRivalry>>>;
+export type GetSummaryForRivalryQueryError = ErrorType<string | GetSummaryForRivalry404>;
 
-export function useGetRivalrySummary<TData = Awaited<ReturnType<typeof getRivalrySummary>>, TError = ErrorType<string>>(
+export function useGetSummaryForRivalry<
+    TData = Awaited<ReturnType<typeof getSummaryForRivalry>>,
+    TError = ErrorType<string | GetSummaryForRivalry404>,
+>(
     playerUid: string,
     rivalUid: string,
     options: {
-        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRivalrySummary>>, TError, TData>> &
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForRivalry>>, TError, TData>> &
             Pick<
                 DefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getRivalrySummary>>,
+                    Awaited<ReturnType<typeof getSummaryForRivalry>>,
                     TError,
-                    Awaited<ReturnType<typeof getRivalrySummary>>
+                    Awaited<ReturnType<typeof getSummaryForRivalry>>
                 >,
                 "initialData"
             >;
@@ -1903,16 +1907,19 @@ export function useGetRivalrySummary<TData = Awaited<ReturnType<typeof getRivalr
     },
     queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetRivalrySummary<TData = Awaited<ReturnType<typeof getRivalrySummary>>, TError = ErrorType<string>>(
+export function useGetSummaryForRivalry<
+    TData = Awaited<ReturnType<typeof getSummaryForRivalry>>,
+    TError = ErrorType<string | GetSummaryForRivalry404>,
+>(
     playerUid: string,
     rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRivalrySummary>>, TError, TData>> &
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForRivalry>>, TError, TData>> &
             Pick<
                 UndefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getRivalrySummary>>,
+                    Awaited<ReturnType<typeof getSummaryForRivalry>>,
                     TError,
-                    Awaited<ReturnType<typeof getRivalrySummary>>
+                    Awaited<ReturnType<typeof getSummaryForRivalry>>
                 >,
                 "initialData"
             >;
@@ -1920,26 +1927,32 @@ export function useGetRivalrySummary<TData = Awaited<ReturnType<typeof getRivalr
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetRivalrySummary<TData = Awaited<ReturnType<typeof getRivalrySummary>>, TError = ErrorType<string>>(
+export function useGetSummaryForRivalry<
+    TData = Awaited<ReturnType<typeof getSummaryForRivalry>>,
+    TError = ErrorType<string | GetSummaryForRivalry404>,
+>(
     playerUid: string,
     rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRivalrySummary>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForRivalry>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetRivalrySummary<TData = Awaited<ReturnType<typeof getRivalrySummary>>, TError = ErrorType<string>>(
+export function useGetSummaryForRivalry<
+    TData = Awaited<ReturnType<typeof getSummaryForRivalry>>,
+    TError = ErrorType<string | GetSummaryForRivalry404>,
+>(
     playerUid: string,
     rivalUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRivalrySummary>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForRivalry>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetRivalrySummaryQueryOptions(playerUid, rivalUid, options);
+    const queryOptions = getGetSummaryForRivalryQueryOptions(playerUid, rivalUid, options);
 
     const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
         queryKey: DataTag<QueryKey, TData, TError>;
@@ -1950,60 +1963,60 @@ export function useGetRivalrySummary<TData = Awaited<ReturnType<typeof getRivalr
     return query;
 }
 
-export const getPlayerMatchesSummary = (
+export const getSummaryForPlayer = (
     playerUid: string,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<MatchesSummary>(
+    return customInstance<Summary>(
         { url: `/player/${encodeURIComponent(String(playerUid))}/summary`, method: "GET", signal },
         options,
     );
 };
 
-export const getGetPlayerMatchesSummaryQueryKey = (playerUid?: string) => {
+export const getGetSummaryForPlayerQueryKey = (playerUid?: string) => {
     return [`/player/${playerUid}/summary`] as const;
 };
 
-export const getGetPlayerMatchesSummaryQueryOptions = <
-    TData = Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
-    TError = ErrorType<string | GetPlayerMatchesSummary404>,
+export const getGetSummaryForPlayerQueryOptions = <
+    TData = Awaited<ReturnType<typeof getSummaryForPlayer>>,
+    TError = ErrorType<string | GetSummaryForPlayer404>,
 >(
     playerUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatchesSummary>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForPlayer>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
 ) => {
     const { query: queryOptions, request: requestOptions } = options ?? {};
 
-    const queryKey = queryOptions?.queryKey ?? getGetPlayerMatchesSummaryQueryKey(playerUid);
+    const queryKey = queryOptions?.queryKey ?? getGetSummaryForPlayerQueryKey(playerUid);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlayerMatchesSummary>>> = ({ signal }) =>
-        getPlayerMatchesSummary(playerUid, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSummaryForPlayer>>> = ({ signal }) =>
+        getSummaryForPlayer(playerUid, requestOptions, signal);
 
     return { queryKey, queryFn, enabled: !!playerUid, ...queryOptions } as UseQueryOptions<
-        Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
+        Awaited<ReturnType<typeof getSummaryForPlayer>>,
         TError,
         TData
     > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetPlayerMatchesSummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getPlayerMatchesSummary>>>;
-export type GetPlayerMatchesSummaryQueryError = ErrorType<string | GetPlayerMatchesSummary404>;
+export type GetSummaryForPlayerQueryResult = NonNullable<Awaited<ReturnType<typeof getSummaryForPlayer>>>;
+export type GetSummaryForPlayerQueryError = ErrorType<string | GetSummaryForPlayer404>;
 
-export function useGetPlayerMatchesSummary<
-    TData = Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
-    TError = ErrorType<string | GetPlayerMatchesSummary404>,
+export function useGetSummaryForPlayer<
+    TData = Awaited<ReturnType<typeof getSummaryForPlayer>>,
+    TError = ErrorType<string | GetSummaryForPlayer404>,
 >(
     playerUid: string,
     options: {
-        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatchesSummary>>, TError, TData>> &
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForPlayer>>, TError, TData>> &
             Pick<
                 DefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
+                    Awaited<ReturnType<typeof getSummaryForPlayer>>,
                     TError,
-                    Awaited<ReturnType<typeof getPlayerMatchesSummary>>
+                    Awaited<ReturnType<typeof getSummaryForPlayer>>
                 >,
                 "initialData"
             >;
@@ -2011,18 +2024,18 @@ export function useGetPlayerMatchesSummary<
     },
     queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayerMatchesSummary<
-    TData = Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
-    TError = ErrorType<string | GetPlayerMatchesSummary404>,
+export function useGetSummaryForPlayer<
+    TData = Awaited<ReturnType<typeof getSummaryForPlayer>>,
+    TError = ErrorType<string | GetSummaryForPlayer404>,
 >(
     playerUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatchesSummary>>, TError, TData>> &
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForPlayer>>, TError, TData>> &
             Pick<
                 UndefinedInitialDataOptions<
-                    Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
+                    Awaited<ReturnType<typeof getSummaryForPlayer>>,
                     TError,
-                    Awaited<ReturnType<typeof getPlayerMatchesSummary>>
+                    Awaited<ReturnType<typeof getSummaryForPlayer>>
                 >,
                 "initialData"
             >;
@@ -2030,30 +2043,30 @@ export function useGetPlayerMatchesSummary<
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetPlayerMatchesSummary<
-    TData = Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
-    TError = ErrorType<string | GetPlayerMatchesSummary404>,
+export function useGetSummaryForPlayer<
+    TData = Awaited<ReturnType<typeof getSummaryForPlayer>>,
+    TError = ErrorType<string | GetSummaryForPlayer404>,
 >(
     playerUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatchesSummary>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForPlayer>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetPlayerMatchesSummary<
-    TData = Awaited<ReturnType<typeof getPlayerMatchesSummary>>,
-    TError = ErrorType<string | GetPlayerMatchesSummary404>,
+export function useGetSummaryForPlayer<
+    TData = Awaited<ReturnType<typeof getSummaryForPlayer>>,
+    TError = ErrorType<string | GetSummaryForPlayer404>,
 >(
     playerUid: string,
     options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlayerMatchesSummary>>, TError, TData>>;
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSummaryForPlayer>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
     },
     queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-    const queryOptions = getGetPlayerMatchesSummaryQueryOptions(playerUid, options);
+    const queryOptions = getGetSummaryForPlayerQueryOptions(playerUid, options);
 
     const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
         queryKey: DataTag<QueryKey, TData, TError>;

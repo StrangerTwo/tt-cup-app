@@ -6,9 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { PageInfo } from "./pageInfo";
-import type { Player } from "./player";
+import type { PlayerSummary } from "./playerSummary";
 
-export interface PaginatedQueryResultPlayer {
-    results: Array<Player>;
+export interface PaginatedQueryResultPlayerSummary {
+    results: Array<PlayerSummary>;
     pageInfo: PageInfo;
 }

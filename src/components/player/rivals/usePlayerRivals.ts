@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-import { getGetPlayerQueryKey, getGetRivalrySummaryQueryKey, useGetPlayerRivals } from "../../../api/api";
+import { getGetPlayerQueryKey, getGetSummaryForRivalryQueryKey, useGetPlayerRivals } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
 import { GetPlayerRivalsRequest, MatchesSummary, Player, RivalMatchesSummary } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
@@ -33,7 +33,7 @@ export const usePlayerRivals = (
             res.results.forEach(({ rivalUid, rival, matchesSummary }) => {
                 client.setQueryData(getGetPlayerQueryKey(rivalUid), (x: Player | undefined | null) => rival ?? null);
                 client.setQueryData(
-                    getGetRivalrySummaryQueryKey(playerUid, rivalUid),
+                    getGetSummaryForRivalryQueryKey(playerUid, rivalUid),
                     (x: MatchesSummary | undefined | null): MatchesSummary => matchesSummary,
                 );
             });

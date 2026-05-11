@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { useGetPlayer, useGetRivalrySummary } from "../../../../api/api";
-import { Skeleton } from "../../../../components/lib/Skeleton";
+import { useGetPlayer } from "../../../../api/api";
 import { MatchesSummaryCard } from "../../../../components/match/MatchesSummaryCard";
 import { MatchHistory } from "../../../../components/match/MatchHistory";
 import { RivalInfoCard } from "../../../../components/player/rivals/RivalInfoCard";
@@ -14,7 +13,6 @@ function RouteComponent() {
     const { playerUid, rivalUid } = Route.useParams();
     const { data: player } = useGetPlayer(playerUid);
     const { data: rival } = useGetPlayer(rivalUid);
-    const { data: summary } = useGetRivalrySummary(playerUid, rivalUid);
 
     return (
         <>
@@ -34,15 +32,11 @@ function RouteComponent() {
             </p>
 
             <div className="mb-2 flex flex-col gap-2 md:mb-4 md:flex-row md:gap-4">
-                {player ? <RivalInfoCard player={player} /> : <Skeleton.Card />}
-                {rival ? <RivalInfoCard player={rival} /> : <Skeleton.Card />}
+                <RivalInfoCard playerUid={playerUid} />
+                <RivalInfoCard playerUid={rivalUid} />
             </div>
 
-            {summary ? (
-                <MatchesSummaryCard summary={summary} className="mb-2 md:mb-4" />
-            ) : (
-                <Skeleton.Card className="mb-2 md:mb-4" />
-            )}
+            <MatchesSummaryCard playerUid={playerUid} rivalUid={rivalUid} className="mb-2 md:mb-4" />
 
             <MatchHistory playerUid={playerUid} rivalUid={rivalUid} />
         </>

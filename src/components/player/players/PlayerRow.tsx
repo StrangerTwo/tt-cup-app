@@ -1,7 +1,8 @@
 import { FC } from "react";
 
-import { useGetPlayer } from "../../../api/api";
-import { Player } from "../../../api/model";
+import { useGetPlayer, useGetSummaryForPlayer } from "../../../api/api";
+import { Player, PlayerSummary } from "../../../api/model";
+import { Score } from "../../lib/Score";
 import { Skeleton } from "../../lib/Skeleton";
 import { TableProps } from "../../lib/Table";
 import { TableCell } from "../../lib/TableCell";
@@ -14,19 +15,21 @@ interface PlayerRowProps {
 }
 
 export const PlayerRow: {
-    Heading: TableProps<Player>["heading"];
+    Heading: TableProps<PlayerSummary>["heading"];
     FC: FC<PlayerRowProps>;
 } = {
     Heading: [
         { label: "#" },
-        { label: "Jméno hráče", key: "name" },
-        { label: "Rank", key: "ranking" },
-        { label: "Elo", key: "elo" },
-        { label: "Oblíbené", key: "favourite" },
-        { label: "uid", key: "uid" },
+        { label: "Jméno hráče", key: "player.name" },
+        { label: "Rank", key: "player.ranking" },
+        { label: "Elo", key: "player.elo" },
+        { label: "★", key: "player.favourite" },
+        { label: "Utk", key: "summary.winRate" },
+        { label: "uid", key: "player.uid" },
     ],
     FC: ({ playerUid, i }) => {
         const { data: player } = useGetPlayer(playerUid);
+        const { data: summary } = useGetSummaryForPlayer(playerUid);
 
         if (!player)
             return (
@@ -46,6 +49,13 @@ export const PlayerRow: {
                 <TableCell>{player.elo ?? "-"}</TableCell>
                 <TableCell>
                     <FavouritePlayerButton playerUid={player.uid} className={"size-5 align-middle"} layerStep={1} />
+                </TableCell>
+                <TableCell>
+                    {summary ? (
+                        <Score scoreA={summary.matchesWon} scoreB={summary.matchesLost} isWinForA />
+                    ) : (
+                        <Skeleton.Text />
+                    )}
                 </TableCell>
                 <TableCell>{player.uid}</TableCell>
             </>

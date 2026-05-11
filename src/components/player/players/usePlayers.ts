@@ -1,13 +1,16 @@
 import { useQueryClient } from "@tanstack/react-query";
 
-import { getGetPlayerQueryKey, useGetPlayers } from "../../../api/api";
+import { getGetPlayerQueryKey, getGetSummaryForPlayerQueryKey, useGetPlayers } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { GetPlayersRequest, Player } from "../../../api/model";
+import { GetPlayersRequest, Player, PlayerSummary, Summary } from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
 
-export const usePlayers = (filter: Omit<GetPlayersRequest, "pageInfo"> | undefined, sort?: Array<Sort<Player>>) => {
+export const usePlayers = (
+    filter: Omit<GetPlayersRequest, "pageInfo"> | undefined,
+    sort?: Array<Sort<PlayerSummary>>,
+) => {
     const client = useQueryClient();
     const { mutateAsync } = useGetPlayers();
     const result = usePaginatedQuery({
@@ -25,8 +28,9 @@ export const usePlayers = (filter: Omit<GetPlayersRequest, "pageInfo"> | undefin
         totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
         queryKey: [EQueryKey.getPlayers, filter, sort],
         onfulfilled: (res) => {
-            res.results.forEach((player) => {
+            res.results.forEach(({ player, summary }) => {
                 client.setQueryData(getGetPlayerQueryKey(player.uid), (x: Player | undefined) => player);
+                client.setQueryData(getGetSummaryForPlayerQueryKey(player.uid), (x: Summary | undefined) => summary);
             });
         },
     });

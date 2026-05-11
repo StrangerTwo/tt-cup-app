@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { Player } from "../../../api/model";
+import { PlayerSummary } from "../../../api/model";
 import { PlusIcon } from "../../icons";
 import { SortMode } from "../../icons/SortIcon";
 import Table, { Sort } from "../../lib/Table";
@@ -14,11 +14,11 @@ import { usePlayers } from "./usePlayers";
 
 export const Players = () => {
     const navigate = useNavigate();
-    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState<PlayersFilterFormType, Player>({
+    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState<PlayersFilterFormType, PlayerSummary>({
         tableId: "players",
         defaultSorting: [
             {
-                key: "ranking",
+                key: "player.ranking",
                 mode: SortMode.DESC,
             },
         ],
@@ -41,18 +41,24 @@ export const Players = () => {
                 }
                 heading={PlayerRow.Heading}
                 data={data ?? []}
-                keyFn={(p) => p.uid}
+                keyFn={(p) => p.player.uid}
                 sort={sort?.[0]}
                 onSort={Object.fromEntries(
-                    (["uid", "name", "elo", "ranking", "favourite"] as Array<Sort<Player>["key"]>).map((x) => [
-                        x,
-                        (mode: SortMode | null) => setSort(mode ? [{ key: x, mode }] : undefined),
-                    ]),
+                    (
+                        [
+                            "player.uid",
+                            "player.name",
+                            "player.elo",
+                            "player.ranking",
+                            "player.favourite",
+                            "summary.winRate",
+                        ] as Array<Sort<PlayerSummary>["key"]>
+                    ).map((x) => [x, (mode: SortMode | null) => setSort(mode ? [{ key: x, mode }] : undefined)]),
                 )}
-                onRowClick={(p) => navigate({ to: "/player/$playerUid", params: { playerUid: p.uid } })}
+                onRowClick={({ player }) => navigate({ to: "/player/$playerUid", params: { playerUid: player.uid } })}
                 onLoadMore={fetchNextPage}
                 isPending={isFetching}>
-                {(p, i) => <PlayerRow.FC playerUid={p.uid} i={i} />}
+                {({ player, summary }, i) => <PlayerRow.FC playerUid={player.uid} i={i} />}
             </Table>
         </Card>
     );

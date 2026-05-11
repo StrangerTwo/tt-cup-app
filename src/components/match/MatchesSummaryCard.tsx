@@ -1,7 +1,8 @@
 import { twMerge } from "tailwind-merge";
 
-import { useGetPlayerMatchesSummary } from "../../api/api";
-import { MatchesSummary, Player } from "../../api/model";
+import { useGetSummaryForPlayer, useGetSummaryForRivalry } from "../../api/api";
+import { Player } from "../../api/model";
+import { isDefined } from "../../lib/utils";
 import { RenderItem } from "../lib/RenderItem";
 import { Score } from "../lib/Score";
 import { Skeleton } from "../lib/Skeleton";
@@ -12,17 +13,21 @@ type Props = {
 } & (
     | {
           playerUid: Player["uid"];
-          summary?: never;
+          rivalUid: Player["uid"];
       }
     | {
-          playerUid?: never;
-          summary: MatchesSummary;
+          playerUid: Player["uid"];
+          rivalUid?: never;
       }
 );
 
-export const MatchesSummaryCard = ({ playerUid, summary: _summary, className }: Props) => {
-    const { data } = useGetPlayerMatchesSummary(playerUid!, { query: { enabled: !!playerUid } });
-    const summary = _summary ?? data;
+export const MatchesSummaryCard = ({ playerUid, rivalUid, className }: Props) => {
+    const isRivalry = isDefined(rivalUid);
+    console.log(isRivalry, playerUid, rivalUid);
+
+    const { data: playerSummary } = useGetSummaryForPlayer(playerUid, { query: { enabled: !isRivalry } });
+    const { data: rivalrySummary } = useGetSummaryForRivalry(playerUid, rivalUid!, { query: { enabled: isRivalry } });
+    const summary = isRivalry ? rivalrySummary : playerSummary;
 
     if (!summary) {
         return <Skeleton.Card className={className} />;

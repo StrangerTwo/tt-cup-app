@@ -6,4 +6,4 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetPlayerMatchesSummary404 = { [key: string]: unknown };
+export type GetSummaryForPlayer404 = { [key: string]: unknown };

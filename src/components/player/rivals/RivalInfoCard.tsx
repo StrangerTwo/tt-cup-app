@@ -1,16 +1,22 @@
 import { Link } from "@tanstack/react-router";
 import { twMerge } from "tailwind-merge";
 
+import { useGetPlayer } from "../../../api/api";
 import { Player } from "../../../api/model";
 import { RenderItem } from "../../lib/RenderItem";
+import { Skeleton } from "../../lib/Skeleton";
 import { Card } from "../../ui/Card";
 
 interface Props {
-    player: Player;
+    playerUid: Player["uid"];
     className?: string;
 }
 
-export const RivalInfoCard = ({ player, className }: Props) => {
+export const RivalInfoCard = ({ playerUid, className }: Props) => {
+    const { data: player } = useGetPlayer(playerUid);
+
+    if (!player) return <Skeleton.Card />;
+
     return (
         <Card className={twMerge("max-w-md", className)}>
             <dl className="grid grow grid-cols-2 gap-2 md:gap-4">

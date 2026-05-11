@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { useGetPlayer, useGetRivalrySummary } from "../../../api/api";
+import { useGetPlayer, useGetSummaryForRivalry } from "../../../api/api";
 import { Match, Tournament } from "../../../api/model";
 import { renderHoursShort } from "../../../lib/date";
 import { renderNameShort } from "../../../lib/name";
@@ -38,7 +38,7 @@ export const TournamentRow: {
         const { textHighlightColor } = useColorLayer();
         const { data: playerA } = useGetPlayer(match.playerUids[0]);
         const { data: playerB } = useGetPlayer(match.playerUids[1]);
-        const { data: summary } = useGetRivalrySummary(match.playerUids[0], match.playerUids[1]);
+        const { data: summary } = useGetSummaryForRivalry(match.playerUids[0], match.playerUids[1]);
 
         return (
             <>

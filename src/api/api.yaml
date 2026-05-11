@@ -350,7 +350,7 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Player'}
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_PlayerSummary'}
       operationId: getPlayers
   /player/{playerUid}:
     get:
@@ -488,8 +488,13 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/MatchesSummary'}
-      operationId: getRivalrySummary
+              schema: {$ref: '#/components/schemas/Summary'}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+      operationId: getSummaryForRivalry
   /player/{playerUid}/summary:
     get:
       description: ''
@@ -513,8 +518,8 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/MatchesSummary'}
-      operationId: getPlayerMatchesSummary
+              schema: {$ref: '#/components/schemas/Summary'}
+      operationId: getSummaryForPlayer
   /player/new:
     post:
       description: ''
@@ -873,12 +878,32 @@ components:
         stisId: {type: string}
         recrawl: {type: boolean}
       required: [uid]
-    PaginatedQueryResult_Player:
+    Summary:
+      type: object
+      properties:
+        playerUid: {type: string}
+        rivalUid: {type: string}
+        matchesWon: {type: integer, format: int32}
+        matchesLost: {type: integer, format: int32}
+        longestWinStreak: {type: integer, format: int32}
+        longestLoseStreak: {type: integer, format: int32}
+        currentWinStreak: {type: integer, format: int32}
+        currentLoseStreak: {type: integer, format: int32}
+        winRate: {type: number, format: double}
+      required: [playerUid, matchesWon, matchesLost, longestWinStreak, longestLoseStreak,
+        currentWinStreak, currentLoseStreak, winRate]
+    PlayerSummary:
+      type: object
+      properties:
+        player: {$ref: '#/components/schemas/Player'}
+        summary: {$ref: '#/components/schemas/Summary'}
+      required: [player, summary]
+    PaginatedQueryResult_PlayerSummary:
       type: object
       properties:
         results:
           type: array
-          items: {$ref: '#/components/schemas/Player'}
+          items: {$ref: '#/components/schemas/PlayerSummary'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
     EditPlayer:
