@@ -7,10 +7,12 @@
  */
 import type { PageInfo } from "./pageInfo";
 import type { Player } from "./player";
+import type { Summary } from "./summary";
 import type { TournamentFull } from "./tournamentFull";
 
 export interface Tournaments {
     results: Array<TournamentFull>;
     pageInfo: PageInfo;
     players: Array<Player>;
+    summaries: Array<Summary>;
 }

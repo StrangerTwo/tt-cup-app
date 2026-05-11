@@ -15,5 +15,5 @@ export interface Summary {
     longestLoseStreak: number;
     currentWinStreak: number;
     currentLoseStreak: number;
-    winRate: number;
+    winRate?: number;
 }

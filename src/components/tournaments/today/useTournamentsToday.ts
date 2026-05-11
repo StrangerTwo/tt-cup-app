@@ -4,11 +4,21 @@ import {
     getGetBetQueryKey,
     getGetPlaceQueryKey,
     getGetPlayerQueryKey,
+    getGetSummaryForPlayerQueryKey,
+    getGetSummaryForRivalryQueryKey,
     getGetTournamentQueryKey,
     useGetTournamentsToday,
 } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
-import { Bet, GetTournamentsTodayRequest, Place, Player, TournamentFull, TournamentToday } from "../../../api/model";
+import {
+    Bet,
+    GetTournamentsTodayRequest,
+    Place,
+    Player,
+    Summary,
+    TournamentFull,
+    TournamentToday,
+} from "../../../api/model";
 import { sortingForRequest } from "../../../lib/sortingForRequest";
 import { usePaginatedQuery } from "../../../lib/usePaginatedQuery";
 import { Sort } from "../../lib/Table";
@@ -56,6 +66,18 @@ export const useTournamentsToday = (
                     (p: Player | null | undefined): Player | null =>
                         res.players.find((x) => x.uid === playerUid) ?? null,
                 );
+            });
+            res.summaries.forEach((summary) => {
+                if (summary.rivalUid)
+                    client.setQueryData(
+                        getGetSummaryForRivalryQueryKey(summary.playerUid, summary.rivalUid),
+                        (s: Summary | undefined): Summary => summary,
+                    );
+                else
+                    client.setQueryData(
+                        getGetSummaryForPlayerQueryKey(summary.playerUid),
+                        (s: Summary | undefined): Summary => summary,
+                    );
             });
         },
     });

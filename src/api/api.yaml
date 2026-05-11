@@ -891,7 +891,7 @@ components:
         currentLoseStreak: {type: integer, format: int32}
         winRate: {type: number, format: double}
       required: [playerUid, matchesWon, matchesLost, longestWinStreak, longestLoseStreak,
-        currentWinStreak, currentLoseStreak, winRate]
+        currentWinStreak, currentLoseStreak]
     PlayerSummary:
       type: object
       properties:
@@ -991,7 +991,10 @@ components:
         players:
           type: array
           items: {$ref: '#/components/schemas/Player'}
-      required: [results, pageInfo, players]
+        summaries:
+          type: array
+          items: {$ref: '#/components/schemas/Summary'}
+      required: [results, pageInfo, players, summaries]
     GetTournamentsTodayRequest:
       type: object
       properties:
@@ -1023,7 +1026,10 @@ components:
         players:
           type: array
           items: {$ref: '#/components/schemas/Player'}
-      required: [results, pageInfo, players]
+        summaries:
+          type: array
+          items: {$ref: '#/components/schemas/Summary'}
+      required: [results, pageInfo, players, summaries]
     User:
       type: object
       properties:
