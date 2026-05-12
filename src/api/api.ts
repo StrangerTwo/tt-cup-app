@@ -47,6 +47,7 @@ import type {
     GetQueryTournamentParams,
     GetSummaryForPlayer404,
     GetSummaryForRivalry404,
+    GetTopMatchesRequest,
     GetTournament404,
     GetTournamentBets404,
     GetTournamentParams,
@@ -947,6 +948,71 @@ export const useGetMatches = <TError = ErrorType<unknown>, TContext = unknown>(
     queryClient?: QueryClient,
 ): UseMutationResult<Awaited<ReturnType<typeof getMatches>>, TError, { data: GetMatchesRequest }, TContext> => {
     const mutationOptions = getGetMatchesMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getTopMatches = (
+    getTopMatchesRequest: GetTopMatchesRequest,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<PaginatedQueryResultMatch>(
+        {
+            url: `/match/top`,
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            data: getTopMatchesRequest,
+            signal,
+        },
+        options,
+    );
+};
+
+export const getGetTopMatchesMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof getTopMatches>>,
+        TError,
+        { data: GetTopMatchesRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof getTopMatches>>, TError, { data: GetTopMatchesRequest }, TContext> => {
+    const mutationKey = ["getTopMatches"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof getTopMatches>>, { data: GetTopMatchesRequest }> = (
+        props,
+    ) => {
+        const { data } = props ?? {};
+
+        return getTopMatches(data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type GetTopMatchesMutationResult = NonNullable<Awaited<ReturnType<typeof getTopMatches>>>;
+export type GetTopMatchesMutationBody = GetTopMatchesRequest;
+export type GetTopMatchesMutationError = ErrorType<unknown>;
+
+export const useGetTopMatches = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof getTopMatches>>,
+            TError,
+            { data: GetTopMatchesRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getTopMatches>>, TError, { data: GetTopMatchesRequest }, TContext> => {
+    const mutationOptions = getGetTopMatchesMutationOptions(options);
 
     return useMutation(mutationOptions, queryClient);
 };

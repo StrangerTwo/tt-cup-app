@@ -209,6 +209,21 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/PaginatedQueryResult_Match'}
       operationId: getMatches
+  /match/top:
+    post:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/GetTopMatchesRequest'}
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Match'}
+      operationId: getTopMatches
   /openapi.yaml:
     get:
       description: ''
@@ -820,6 +835,19 @@ components:
           items: {$ref: '#/components/schemas/Match'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
+    CustomFilter:
+      type: object
+      oneOf:
+      - {$ref: '#/components/schemas/EloDifferenceFilter'}
+      - {$ref: '#/components/schemas/StarPlayerFilter'}
+    GetTopMatchesRequest:
+      type: object
+      properties:
+        filters:
+          type: array
+          items: {$ref: '#/components/schemas/CustomFilter'}
+        pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
+      required: [filters, pageInfo]
     GetPlacesRequest:
       type: object
       properties:
@@ -1043,3 +1071,18 @@ components:
       type: string
       enum: [N, W1, W2]
       x-enumNames: [NO_BET, WIN_1, WIN_2]
+    CustomFilterType:
+      type: string
+      enum: ['*', ELO, RANK, BIL, L_WON]
+      x-enumNames: [STAR_PLAYER, ELO_DIFFERENCE, RANK_DIFFERENCE, BILANCE, LAST_MATCH_STRONG_LOST]
+    EloDifferenceFilter:
+      type: object
+      properties:
+        type: {type: string, const: ELO}
+        value: {type: integer}
+      required: [type, value]
+    StarPlayerFilter:
+      type: object
+      properties:
+        type: {type: string, const: '*'}
+      required: [type]

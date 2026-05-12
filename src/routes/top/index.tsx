@@ -2,9 +2,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { twMerge } from "tailwind-merge";
 
+import { useGetTopMatches } from "../../api/api";
 import { EQueryKey } from "../../api/EQueryKey";
 import { RefreshIcon } from "../../components/icons";
 import { Card } from "../../components/ui/Card";
+import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
 
 export const Route = createFileRoute("/top/")({
     component: RouteComponent,
@@ -12,6 +14,28 @@ export const Route = createFileRoute("/top/")({
 
 function RouteComponent() {
     const client = useQueryClient();
+    const { mutateAsync } = useGetTopMatches();
+    const result = usePaginatedQuery({
+        mutateAsync,
+        paramFn: (pageInfo) => ({
+            data: {
+                // ...filter,
+                filters: [
+                    {
+                        type: "ELO" as const,
+                        value: 5,
+                    },
+                ],
+                pageInfo: {
+                    ...pageInfo,
+                    // sort: sort ? sortingForRequest([sort]) : undefined,
+                },
+            },
+        }),
+        dataFn: (x) => x.results,
+        totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
+        queryKey: [EQueryKey.getTopMatches],
+    });
 
     return (
         <>
