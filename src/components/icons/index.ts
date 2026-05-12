@@ -9,6 +9,7 @@ export * from "./CloseIcon";
 export * from "./DashboardIcon";
 export * from "./EditIcon";
 export * from "./EditNoteIcon";
+export * from "./FatArrowIcon";
 export * from "./FileIcon";
 export * from "./InboxIcon";
 export * from "./LinkIcon";

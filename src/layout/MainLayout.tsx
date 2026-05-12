@@ -2,7 +2,7 @@ import { FC, MouseEventHandler, ReactNode, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import UnAuthTemplate from "../auth/UnAuthTemplate";
-import { RefreshIcon, TableIcon, UsersIcon } from "../components/icons";
+import { FatArrowIcon, RefreshIcon, TableIcon, UsersIcon } from "../components/icons";
 import { ColorLayerContext, useColorLayer } from "../components/ui/layout";
 import Sidebar from "../components/ui/layout/Sidebar";
 import { AuthProvider } from "../firebase/AuthProvider";
@@ -80,6 +80,9 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                                     </SidebarItem>
                                     <SidebarItem route="/archive" closeSidebar={closeSidebar} text="Archiv">
                                         <TableIcon />
+                                    </SidebarItem>
+                                    <SidebarItem route="/top" closeSidebar={closeSidebar} text="Top zápasy">
+                                        <FatArrowIcon direction="up" />
                                     </SidebarItem>
                                     <SidebarItem route="/update" closeSidebar={closeSidebar} text="Update">
                                         <RefreshIcon />

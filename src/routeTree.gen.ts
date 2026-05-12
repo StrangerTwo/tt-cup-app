@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UpdateIndexRouteImport } from './routes/update/index'
 import { Route as TournamentIndexRouteImport } from './routes/tournament/index'
+import { Route as TopIndexRouteImport } from './routes/top/index'
 import { Route as PlayerIndexRouteImport } from './routes/player/index'
 import { Route as ArchiveIndexRouteImport } from './routes/archive/index'
 import { Route as UpdatePlacesRouteImport } from './routes/update/places'
@@ -34,6 +35,11 @@ const UpdateIndexRoute = UpdateIndexRouteImport.update({
 const TournamentIndexRoute = TournamentIndexRouteImport.update({
   id: '/tournament/',
   path: '/tournament/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TopIndexRoute = TopIndexRouteImport.update({
+  id: '/top/',
+  path: '/top/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayerIndexRoute = PlayerIndexRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/update/places': typeof UpdatePlacesRoute
   '/archive': typeof ArchiveIndexRoute
   '/player': typeof PlayerIndexRoute
+  '/top': typeof TopIndexRoute
   '/tournament': typeof TournamentIndexRoute
   '/update': typeof UpdateIndexRoute
   '/player/$playerUid': typeof PlayerPlayerUidIndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/update/places': typeof UpdatePlacesRoute
   '/archive': typeof ArchiveIndexRoute
   '/player': typeof PlayerIndexRoute
+  '/top': typeof TopIndexRoute
   '/tournament': typeof TournamentIndexRoute
   '/update': typeof UpdateIndexRoute
   '/player/$playerUid': typeof PlayerPlayerUidIndexRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/update/places': typeof UpdatePlacesRoute
   '/archive/': typeof ArchiveIndexRoute
   '/player/': typeof PlayerIndexRoute
+  '/top/': typeof TopIndexRoute
   '/tournament/': typeof TournamentIndexRoute
   '/update/': typeof UpdateIndexRoute
   '/player/$playerUid/': typeof PlayerPlayerUidIndexRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/update/places'
     | '/archive'
     | '/player'
+    | '/top'
     | '/tournament'
     | '/update'
     | '/player/$playerUid'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/update/places'
     | '/archive'
     | '/player'
+    | '/top'
     | '/tournament'
     | '/update'
     | '/player/$playerUid'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/update/places'
     | '/archive/'
     | '/player/'
+    | '/top/'
     | '/tournament/'
     | '/update/'
     | '/player/$playerUid/'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   UpdatePlacesRoute: typeof UpdatePlacesRoute
   ArchiveIndexRoute: typeof ArchiveIndexRoute
   PlayerIndexRoute: typeof PlayerIndexRoute
+  TopIndexRoute: typeof TopIndexRoute
   TournamentIndexRoute: typeof TournamentIndexRoute
   UpdateIndexRoute: typeof UpdateIndexRoute
   PlayerPlayerUidIndexRoute: typeof PlayerPlayerUidIndexRoute
@@ -195,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/tournament'
       fullPath: '/tournament'
       preLoaderRoute: typeof TournamentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/top/': {
+      id: '/top/'
+      path: '/top'
+      fullPath: '/top'
+      preLoaderRoute: typeof TopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/player/': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   UpdatePlacesRoute: UpdatePlacesRoute,
   ArchiveIndexRoute: ArchiveIndexRoute,
   PlayerIndexRoute: PlayerIndexRoute,
+  TopIndexRoute: TopIndexRoute,
   TournamentIndexRoute: TournamentIndexRoute,
   UpdateIndexRoute: UpdateIndexRoute,
   PlayerPlayerUidIndexRoute: PlayerPlayerUidIndexRoute,
