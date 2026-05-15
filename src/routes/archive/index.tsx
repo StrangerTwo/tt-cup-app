@@ -33,7 +33,7 @@ function RouteComponent() {
     return (
         <>
             <Card className="mb-2 md:mb-4">
-                <TournamentsFilter filters={{}} setFilters={setFilters} isFetching={isFetching} />
+                <TournamentsFilter filters={filters} setFilters={setFilters} isFetching={isFetching} />
             </Card>
             <BetSummaryCard location={filters.location} className="mb-2 md:mb-4" />
             <Tournaments filters={filters} sort={sort} />

@@ -6,9 +6,9 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type CustomFilterType = (typeof CustomFilterType)[keyof typeof CustomFilterType];
+export type MatchFilterType = (typeof MatchFilterType)[keyof typeof MatchFilterType];
 
-export const CustomFilterType = {
+export const MatchFilterType = {
     STAR_PLAYER: "*",
     ELO_DIFFERENCE: "ELO",
     RANK_DIFFERENCE: "RANK",

@@ -53,6 +53,7 @@ import type {
     GetTournamentParams,
     GetTournamentsRequest,
     GetTournamentsTodayRequest,
+    MatchFilter,
     NewBet,
     NewPlayer,
     ObjectId,
@@ -68,6 +69,7 @@ import type {
     SetBet404,
     SetPlaceEnabled404,
     SetPlayerFavourite404,
+    SetTopMatchConfigRequest,
     Status,
     Summary,
     TournamentFull,
@@ -1013,6 +1015,168 @@ export const useGetTopMatches = <TError = ErrorType<unknown>, TContext = unknown
     queryClient?: QueryClient,
 ): UseMutationResult<Awaited<ReturnType<typeof getTopMatches>>, TError, { data: GetTopMatchesRequest }, TContext> => {
     const mutationOptions = getGetTopMatchesMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getMatchFilters = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<Array<MatchFilter>>({ url: `/match/top/config`, method: "GET", signal }, options);
+};
+
+export const getGetMatchFiltersQueryKey = () => {
+    return [`/match/top/config`] as const;
+};
+
+export const getGetMatchFiltersQueryOptions = <
+    TData = Awaited<ReturnType<typeof getMatchFilters>>,
+    TError = ErrorType<unknown>,
+>(options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchFilters>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+}) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetMatchFiltersQueryKey();
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMatchFilters>>> = ({ signal }) =>
+        getMatchFilters(requestOptions, signal);
+
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getMatchFilters>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetMatchFiltersQueryResult = NonNullable<Awaited<ReturnType<typeof getMatchFilters>>>;
+export type GetMatchFiltersQueryError = ErrorType<unknown>;
+
+export function useGetMatchFilters<TData = Awaited<ReturnType<typeof getMatchFilters>>, TError = ErrorType<unknown>>(
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchFilters>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getMatchFilters>>,
+                    TError,
+                    Awaited<ReturnType<typeof getMatchFilters>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetMatchFilters<TData = Awaited<ReturnType<typeof getMatchFilters>>, TError = ErrorType<unknown>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchFilters>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getMatchFilters>>,
+                    TError,
+                    Awaited<ReturnType<typeof getMatchFilters>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetMatchFilters<TData = Awaited<ReturnType<typeof getMatchFilters>>, TError = ErrorType<unknown>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchFilters>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetMatchFilters<TData = Awaited<ReturnType<typeof getMatchFilters>>, TError = ErrorType<unknown>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMatchFilters>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetMatchFiltersQueryOptions(options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
+export const setMatchFilters = (
+    setTopMatchConfigRequest: SetTopMatchConfigRequest,
+    options?: SecondParameter<typeof customInstance>,
+) => {
+    return customInstance<Status>(
+        {
+            url: `/match/top/config`,
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            data: setTopMatchConfigRequest,
+        },
+        options,
+    );
+};
+
+export const getSetMatchFiltersMutationOptions = <TError = ErrorType<unknown>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof setMatchFilters>>,
+        TError,
+        { data: SetTopMatchConfigRequest },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof setMatchFilters>>,
+    TError,
+    { data: SetTopMatchConfigRequest },
+    TContext
+> => {
+    const mutationKey = ["setMatchFilters"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof setMatchFilters>>,
+        { data: SetTopMatchConfigRequest }
+    > = (props) => {
+        const { data } = props ?? {};
+
+        return setMatchFilters(data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type SetMatchFiltersMutationResult = NonNullable<Awaited<ReturnType<typeof setMatchFilters>>>;
+export type SetMatchFiltersMutationBody = SetTopMatchConfigRequest;
+export type SetMatchFiltersMutationError = ErrorType<unknown>;
+
+export const useSetMatchFilters = <TError = ErrorType<unknown>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof setMatchFilters>>,
+            TError,
+            { data: SetTopMatchConfigRequest },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof setMatchFilters>>,
+    TError,
+    { data: SetTopMatchConfigRequest },
+    TContext
+> => {
+    const mutationOptions = getSetMatchFiltersMutationOptions(options);
 
     return useMutation(mutationOptions, queryClient);
 };

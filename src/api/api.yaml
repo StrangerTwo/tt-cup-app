@@ -224,6 +224,36 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/PaginatedQueryResult_Match'}
       operationId: getTopMatches
+  /match/top/config:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/MatchFilter'}
+      operationId: getMatchFilters
+    put:
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/SetTopMatchConfigRequest'}
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Status'}
+              examples:
+                Example#1:
+                  description: ''
+                  value: {status: true}
+      operationId: setMatchFilters
   /openapi.yaml:
     get:
       description: ''
@@ -240,6 +270,11 @@ paths:
               schema: {type: string}
               examples:
                 Example#1: {value: ''}
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
       operationId: getOpenapi
   /place:
     post:
@@ -835,19 +870,29 @@ components:
           items: {$ref: '#/components/schemas/Match'}
         pageInfo: {$ref: '#/components/schemas/PageInfo'}
       required: [results, pageInfo]
-    CustomFilter:
+    MatchFilter:
       type: object
       oneOf:
+      - {$ref: '#/components/schemas/BilanceFilter'}
       - {$ref: '#/components/schemas/EloDifferenceFilter'}
+      - {$ref: '#/components/schemas/LastMatchStrongLostFilter'}
+      - {$ref: '#/components/schemas/RankDifferenceFilter'}
       - {$ref: '#/components/schemas/StarPlayerFilter'}
     GetTopMatchesRequest:
       type: object
       properties:
         filters:
           type: array
-          items: {$ref: '#/components/schemas/CustomFilter'}
+          items: {$ref: '#/components/schemas/MatchFilter'}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [filters, pageInfo]
+    SetTopMatchConfigRequest:
+      type: object
+      properties:
+        filters:
+          type: array
+          items: {$ref: '#/components/schemas/MatchFilter'}
+      required: [filters]
     GetPlacesRequest:
       type: object
       properties:
@@ -1071,14 +1116,31 @@ components:
       type: string
       enum: [N, W1, W2]
       x-enumNames: [NO_BET, WIN_1, WIN_2]
-    CustomFilterType:
+    MatchFilterType:
       type: string
       enum: ['*', ELO, RANK, BIL, L_WON]
       x-enumNames: [STAR_PLAYER, ELO_DIFFERENCE, RANK_DIFFERENCE, BILANCE, LAST_MATCH_STRONG_LOST]
+    BilanceFilter:
+      type: object
+      properties:
+        type: {type: string, const: BIL}
+        value: {type: integer}
+      required: [type, value]
     EloDifferenceFilter:
       type: object
       properties:
         type: {type: string, const: ELO}
+        value: {type: integer}
+      required: [type, value]
+    LastMatchStrongLostFilter:
+      type: object
+      properties:
+        type: {type: string, const: L_WON}
+      required: [type]
+    RankDifferenceFilter:
+      type: object
+      properties:
+        type: {type: string, const: RANK}
         value: {type: integer}
       required: [type, value]
     StarPlayerFilter:

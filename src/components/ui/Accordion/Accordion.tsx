@@ -42,7 +42,7 @@ export const Accordion: FC<Props> = ({
     }, [sneakPeak]);
 
     return (
-        <Card className={twMerge("overflow-hidden p-0", className)} layerStep={layerStep}>
+        <Card className={twMerge("overflow-hidden p-0 md:p-0", className)} layerStep={layerStep}>
             <div
                 className={twMerge(
                     "flex items-center justify-between transition-[margin]",

@@ -5,10 +5,10 @@
  * tt_cup_api API
  * OpenAPI spec version: 1.0.0
  */
-import type { CustomFilter } from "./customFilter";
+import type { MatchFilter } from "./matchFilter";
 import type { PageInfoRequest } from "./pageInfoRequest";
 
 export interface GetTopMatchesRequest {
-    filters: Array<CustomFilter>;
+    filters: Array<MatchFilter>;
     pageInfo: PageInfoRequest;
 }
