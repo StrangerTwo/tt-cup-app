@@ -7,7 +7,7 @@ import { sleep } from "../../lib/sleep";
 
 export const useCrawl = () => {
     const client = useQueryClient();
-    const { data, refetch } = useGetPagesToCrawl();
+    const { data, refetch } = useGetPagesToCrawl({ query: { refetchInterval: 60_000 } });
     const [going, setGoing] = useState(false);
     const [error, setError] = useState<string>();
     const captchaSafeRef = useRef(true);

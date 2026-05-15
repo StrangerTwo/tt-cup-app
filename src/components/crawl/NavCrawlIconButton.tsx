@@ -1,7 +1,4 @@
-import { twMerge } from "tailwind-merge";
-
-import { RefreshIcon } from "../icons";
-import { IconButton } from "../ui/IconButton";
+import { SubmitButton } from "../lib/SubmitButton";
 import { useCrawl } from "./useCrawl";
 
 export const NavCrawlIconButton = () => {
@@ -10,11 +7,12 @@ export const NavCrawlIconButton = () => {
     if (!data?.pageInfo.totalElements) return null;
 
     return (
-        <IconButton
+        <SubmitButton
             type="button"
-            className="bg-blue-700 text-white hover:bg-blue-800  dark:bg-blue-600 dark:hover:bg-blue-700"
-            onClick={() => onGoRecursiveBtnClick()}>
-            <RefreshIcon className={twMerge(going && "animate-spin")} />
-        </IconButton>
+            className="h-10 min-w-10 justify-center bg-blue-700 px-2 text-white hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"
+            onClick={() => onGoRecursiveBtnClick()}
+            loading={going}>
+            {data?.pageInfo.totalElements}
+        </SubmitButton>
     );
 };
