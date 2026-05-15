@@ -2197,7 +2197,7 @@ export const useNewPlayer = <TError = ErrorType<string>, TContext = unknown>(
 };
 
 export const getQueryTournament = (
-    params?: GetQueryTournamentParams,
+    params: GetQueryTournamentParams,
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
@@ -2212,7 +2212,7 @@ export const getGetQueryTournamentQueryOptions = <
     TData = Awaited<ReturnType<typeof getQueryTournament>>,
     TError = ErrorType<string | GetQueryTournament404>,
 >(
-    params?: GetQueryTournamentParams,
+    params: GetQueryTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
@@ -2239,7 +2239,7 @@ export function useGetQueryTournament<
     TData = Awaited<ReturnType<typeof getQueryTournament>>,
     TError = ErrorType<string | GetQueryTournament404>,
 >(
-    params: undefined | GetQueryTournamentParams,
+    params: GetQueryTournamentParams,
     options: {
         query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>> &
             Pick<
@@ -2258,7 +2258,7 @@ export function useGetQueryTournament<
     TData = Awaited<ReturnType<typeof getQueryTournament>>,
     TError = ErrorType<string | GetQueryTournament404>,
 >(
-    params?: GetQueryTournamentParams,
+    params: GetQueryTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>> &
             Pick<
@@ -2277,7 +2277,7 @@ export function useGetQueryTournament<
     TData = Awaited<ReturnType<typeof getQueryTournament>>,
     TError = ErrorType<string | GetQueryTournament404>,
 >(
-    params?: GetQueryTournamentParams,
+    params: GetQueryTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;
@@ -2289,7 +2289,7 @@ export function useGetQueryTournament<
     TData = Awaited<ReturnType<typeof getQueryTournament>>,
     TError = ErrorType<string | GetQueryTournament404>,
 >(
-    params?: GetQueryTournamentParams,
+    params: GetQueryTournamentParams,
     options?: {
         query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getQueryTournament>>, TError, TData>>;
         request?: SecondParameter<typeof customInstance>;

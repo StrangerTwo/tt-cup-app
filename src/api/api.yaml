@@ -568,7 +568,7 @@ paths:
       parameters:
       - name: place
         in: query
-        required: false
+        required: true
         schema: {type: string}
       - name: date
         in: query

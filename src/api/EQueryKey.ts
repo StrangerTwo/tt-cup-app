@@ -5,5 +5,6 @@ export enum EQueryKey {
     getPlaceRecommendations = "getPlaceRecommendations",
     getPlaces = "getPlaces",
     getTournamentsToday = "getTournamentsToday",
+    getTournaments = "getTournaments",
     getTopMatches = "getTopMatches",
 }

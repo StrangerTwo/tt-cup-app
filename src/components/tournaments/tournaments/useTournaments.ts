@@ -35,7 +35,7 @@ export const useTournaments = (
         }),
         dataFn: (x) => x.results,
         totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
-        queryKey: [EQueryKey.getTournamentsToday, filter, sort],
+        queryKey: [EQueryKey.getTournaments, filter, sort],
         onfulfilled: (res) => {
             res.results.forEach(({ place, tournament, matches, bets }) => {
                 if (place) client.setQueryData(getGetPlaceQueryKey(place.uid), (x: Place | undefined) => place);

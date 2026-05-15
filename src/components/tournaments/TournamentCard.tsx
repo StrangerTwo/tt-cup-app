@@ -27,20 +27,21 @@ type Props =
       };
 
 export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Props) => {
-    const { data } = useTournament(tournamentId);
+    const { data, refetch: refetchTournament } = useTournament(tournamentId);
     const place = _place ?? data?.place;
-    const { isFetching, refetch } = useQueryTournament(
-        { date: new Date().toISOString().slice(0, 10), place: place?.uid },
+    const { isFetching, refetch: refetchPlace } = useQueryTournament(
+        { date: new Date().toISOString().slice(0, 10), place: place!.uid },
         false,
     );
     const [doRefetch, setDoRefetch] = useState(false);
 
     const triggerRefetch = useCallback(() => {
         if (doRefetch) {
-            refetch();
+            if (tournamentId) refetchTournament();
+            else refetchPlace();
             setDoRefetch(false);
         }
-    }, [doRefetch, refetch]);
+    }, [doRefetch, refetchPlace, refetchTournament, tournamentId]);
 
     useEffect(() => {
         window.addEventListener("focus", triggerRefetch);

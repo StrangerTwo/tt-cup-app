@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
     getGetBetQueryKey,
@@ -8,7 +8,8 @@ import {
     getGetTournamentQueryKey,
     getQueryTournament,
 } from "../../api/api";
-import { Bet, GetQueryTournamentParams, Place, Player, TournamentFull } from "../../api/model";
+import { EQueryKey } from "../../api/EQueryKey";
+import { Bet, GetQueryTournamentParams, Place, Player, TournamentFull, TournamentsToday } from "../../api/model";
 
 export const useQueryTournament = (params: GetQueryTournamentParams, enabled = true) => {
     const client = useQueryClient();
@@ -43,6 +44,23 @@ export const useQueryTournament = (params: GetQueryTournamentParams, enabled = t
                         (p: Player | null | undefined): Player => player,
                     );
                 });
+                // is today
+                if (params.date === new Date().toISOString().slice(0, 10)) {
+                    client.setQueriesData(
+                        { queryKey: [EQueryKey.getTournamentsToday] },
+                        (x?: InfiniteData<TournamentsToday>) => {
+                            x?.pages.forEach((page) => {
+                                page.results.forEach((result) => {
+                                    if (result.place.uid === params.place) {
+                                        result.tournament = res.tournament;
+                                    }
+                                });
+                            });
+                            return x;
+                        },
+                    );
+                }
+
                 return res;
             }),
     });

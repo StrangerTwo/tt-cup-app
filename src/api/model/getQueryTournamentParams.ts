@@ -7,7 +7,7 @@
  */
 
 export type GetQueryTournamentParams = {
-    place?: string;
+    place: string;
     date?: string;
     players?: boolean;
 };
