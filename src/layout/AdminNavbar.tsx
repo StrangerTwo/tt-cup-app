@@ -1,6 +1,7 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import { FC } from "react";
 
+import { NavCrawlIconButton } from "../components/crawl/NavCrawlIconButton";
 import { SidebarIcon } from "../components/icons";
 import ColorThemeSwitcher from "../components/lib/ColorThemeSwitcher";
 import NavUserIcon from "../components/lib/NavUserIcon";
@@ -39,6 +40,7 @@ const AdminNavbar: FC<Props> = ({ onHeightChange, onSidebarToggle }) => {
             }
             endChildren={
                 <>
+                    <NavCrawlIconButton />
                     <ColorThemeSwitcher />
                     <NavUserIcon auth={auth} menuItems={[]} />
                 </>
