@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import { MatchFilterType } from "../../../api/model";
 import { Input } from "../../form/Input";
@@ -22,13 +22,13 @@ export const filterLabels: {
 
 export const MatchFilter = ({ type }: Props) => {
     const { textColor } = useColorLayer(1);
-    const form = useForm<TopMatchesFilterType>();
+    const form = useFormContext<TopMatchesFilterType>();
 
     return (
         <div className="flex flex-col gap-2">
-            <Toggle form={form} name={`filters.${type}.enabled`} label={filterLabels[type]} className={textColor} />
+            <Toggle form={form} name={`${type}.enabled`} label={filterLabels[type]} className={textColor} />
             {(type === "BIL" || type === "ELO" || type === "RANK") && (
-                <Input form={form} name={`filters.${type}.value`} placeholder="více než" />
+                <Input form={form} name={`${type}.value`} placeholder="více než" />
             )}
         </div>
     );

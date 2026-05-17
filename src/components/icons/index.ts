@@ -24,6 +24,7 @@ export * from "./ProductsIcon";
 export * from "./QueueListIcon";
 export * from "./RefreshIcon";
 export * from "./SearchIcon";
+export * from "./ServerIcon";
 export * from "./SettingsIcon";
 export * from "./SidebarIcon";
 export * from "./StarIcon";

@@ -12,3 +12,12 @@ export function transformEmptyToUndefined<T extends AnySchema>(
 
     return value;
 }
+
+export function transformNaNToUndefined<T extends AnySchema>(
+    this: T,
+    value: unknown,
+    _originalValue: unknown,
+    _schema: T,
+): unknown {
+    return Number.isNaN(value) ? undefined : (value as number);
+}

@@ -83,6 +83,7 @@ export default defineConfig([
             ],
 
             // --- Custom tweaks ---
+            "unicorn/no-thenable": "off",
             "@typescript-eslint/no-empty-object-type": "off",
             "@typescript-eslint/no-extra-non-null-assertion": "off",
             "@typescript-eslint/no-non-null-asserted-optional-chain": "off",

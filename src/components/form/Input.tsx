@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
-import { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { FieldErrors, FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { isDefined } from "../../lib/utils";
+import { getNested } from "./getNested";
 
 export interface InputProps<T extends FieldValues> {
     label?: string;
@@ -44,7 +45,7 @@ export const Input = <T extends FieldValues>({
     onChange,
     form,
 }: InputProps<T>) => {
-    const error = form.formState.errors[name];
+    const error = getNested<FieldErrors<T>, { message: string }>(form.formState.errors, name);
 
     return (
         <div className={twMerge(className)}>

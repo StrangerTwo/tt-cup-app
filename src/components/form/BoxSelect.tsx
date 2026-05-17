@@ -1,9 +1,10 @@
 import { MouseEventHandler, ReactNode } from "react";
-import { FieldValues, Path } from "react-hook-form";
+import { FieldErrors, FieldValues, Path } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { isDefined } from "../../lib/utils";
 import { Card } from "../ui/Card";
+import { getNested } from "./getNested";
 
 export interface BoxSelectProps<T, F extends FieldValues> {
     label?: string;
@@ -44,7 +45,7 @@ export const BoxSelect = <T, F extends FieldValues>({
     layerStep = 1,
 }: BoxSelectProps<T, F>) => {
     const { formState, watch, setValue } = form;
-    const error = formState.errors[name];
+    const error = getNested<FieldErrors<F>, { message: string }>(formState.errors, name);
     const value = watch(name);
 
     const select = (o: BoxSelectProps<T, F>["options"][number]): MouseEventHandler<HTMLDivElement> => {

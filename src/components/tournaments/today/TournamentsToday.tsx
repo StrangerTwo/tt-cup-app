@@ -45,7 +45,7 @@ export const TournamentsToday = () => {
                                 key={place.uid}
                                 tournamentId={tournament?._id}
                                 place={place}
-                                date={new Date().toISOString().slice(0, 10)}
+                                date={tournament?.date ?? new Date().toISOString().slice(0, 10)}
                             />
                         ))}
                     </div>

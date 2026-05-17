@@ -1,8 +1,9 @@
-import { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { FieldErrors, FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { isDefined } from "../../lib/utils";
 import { useColorLayer } from "../ui/layout";
+import { getNested } from "./getNested";
 
 export type ToggleProps<T extends FieldValues> = {
     label?: string;
@@ -43,7 +44,8 @@ export const Toggle = <T extends FieldValues>({
     onChange,
     form,
 }: ToggleProps<T>) => {
-    const error = form?.formState.errors[name];
+    const error = getNested<FieldErrors<T> | undefined, { message: string }>(form?.formState.errors, name);
+
     const { bgColor: disabledBgColor } = useColorLayer(0);
     const { bgColor } = useColorLayer(1);
 

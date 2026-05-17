@@ -1,15 +1,19 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useCallback, useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
+import { getGetMatchFiltersQueryKey, setMatchFilters } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
 import { MatchFilterType } from "../../../api/model";
-import { RefreshIcon } from "../../icons";
+import { resolveErrorMessage } from "../../../lib/toastError";
+import { RefreshIcon, ServerIcon } from "../../icons";
+import { SubmitButton } from "../../lib/SubmitButton";
 import { Accordion } from "../../ui/Accordion";
 import { MatchFilter } from "../filters/MatchFilter";
-import { topMatchesFilterSchema, TopMatchesFilterType } from "./topMatchesFilterSchema";
+import { toMatchFilters, topMatchesFilterSchema, TopMatchesFilterType } from "./topMatchesFilterSchema";
 
 interface Props {
     filters: TopMatchesFilterType;
@@ -24,44 +28,72 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
         defaultValues: filters,
         resolver: yupResolver(topMatchesFilterSchema),
     });
-    const { control, handleSubmit } = form;
+    const { handleSubmit, formState, watch } = form;
+    const { dirtyFields } = formState;
 
-    const onSubmit = (filter: TopMatchesFilterType) => {
-        setFilters(filter);
-    };
+    const onSubmit = useCallback(
+        (filter: TopMatchesFilterType) => {
+            console.info("submitted", filter);
+            setFilters(filter);
+        },
+        [setFilters],
+    );
 
-    const values = useWatch({ name: ["filters.*.enabled"], control });
-    const isFirstRender = useRef(true);
     useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
-        console.info("xd");
-        handleSubmit(onSubmit)();
-    }, [...values]);
+        const x = watch((e) => {
+            handleSubmit(onSubmit, console.info)();
+        });
+        return () => x.unsubscribe();
+    }, [handleSubmit, onSubmit, watch]);
+
+    const saveAsDefault = (filter: TopMatchesFilterType) => {
+        console.info("saved as default");
+        const filters = toMatchFilters(filter);
+        toast.promise(
+            setMatchFilters({
+                filters,
+            }).then((b) => {
+                client.setQueryData(getGetMatchFiltersQueryKey(), () => filters);
+                form.reset(form.getValues());
+            }),
+            {
+                loading: "Ukládám...",
+                success: "Uloženo",
+                error: resolveErrorMessage,
+            },
+        );
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Accordion
-                title={
-                    <div className="flex items-center gap-2 md:gap-4">
-                        <button
-                            type="submit"
-                            onClick={() => client.invalidateQueries({ queryKey: [EQueryKey.getTopMatches] })}
-                            className="rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            <RefreshIcon className={twMerge(isFetching && "animate-spin")} />
-                            <span className="sr-only">Search</span>
-                        </button>
+            <FormProvider {...form}>
+                <Accordion
+                    title={
+                        <div className="flex items-center gap-2 md:gap-4">
+                            <button
+                                type="submit"
+                                onClick={() => client.invalidateQueries({ queryKey: [EQueryKey.getTopMatches] })}
+                                className="rounded-lg border border-blue-700 bg-blue-700 p-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <RefreshIcon className={twMerge(isFetching && "animate-spin")} />
+                                <span className="sr-only">Search</span>
+                            </button>
+                        </div>
+                    }
+                    isOpen>
+                    <div className="flex flex-col gap-2 md:gap-4">
+                        {Object.values(MatchFilterType).map((type) => (
+                            <MatchFilter key={type} type={type} />
+                        ))}
+                        <SubmitButton
+                            className="flex size-10 items-center justify-center p-0"
+                            disabled={Object.keys(dirtyFields).length === 0}
+                            type="button"
+                            onClick={handleSubmit(saveAsDefault)}>
+                            <ServerIcon />
+                        </SubmitButton>
                     </div>
-                }
-                isOpen>
-                <div className="flex flex-col gap-2 md:gap-4">
-                    {Object.values(MatchFilterType).map((type) => (
-                        <MatchFilter type={type} />
-                    ))}
-                </div>
-            </Accordion>
+                </Accordion>
+            </FormProvider>
         </form>
     );
 };
