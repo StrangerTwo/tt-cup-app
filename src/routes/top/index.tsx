@@ -4,13 +4,16 @@ import { useGetMatchFilters, useGetTopMatches } from "../../api/api";
 import { EQueryKey } from "../../api/EQueryKey";
 import { Match } from "../../api/model";
 import { SortMode } from "../../components/icons/SortIcon";
+import { Skeleton } from "../../components/lib/Skeleton";
 import { useUrlSyncedTableState } from "../../components/lib/useUrlSyncedTableState";
+import { MatchRow } from "../../components/match/MatchRow";
 import { TopMatchesFilter } from "../../components/match/top/TopMatchesFilter";
 import {
     fromMatchFilters,
     topMatchesFilterDefaultValues,
     TopMatchesFilterType,
 } from "../../components/match/top/topMatchesFilterSchema";
+import { Card } from "../../components/ui/Card";
 import { usePaginatedQuery } from "../../lib/usePaginatedQuery";
 
 export const Route = createFileRoute("/top/")({
@@ -53,6 +56,19 @@ function RouteComponent() {
     });
 
     return (
-        <>{defaultFilters && <TopMatchesFilter filters={filters} isFetching={isFetching} setFilters={setFilters} />}</>
+        <>
+            {defaultFilters && <TopMatchesFilter filters={filters} isFetching={isFetching} setFilters={setFilters} />}
+            {data ? (
+                <div className="mt-2 flex flex-col gap-2 md:mt-4 md:gap-4">
+                    {data.map((match) => (
+                        <Card key={match._id} className="p-0 md:p-1">
+                            <MatchRow.FC match={match} />
+                        </Card>
+                    ))}
+                </div>
+            ) : (
+                <Skeleton.Card />
+            )}
+        </>
     );
 }

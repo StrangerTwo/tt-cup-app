@@ -78,8 +78,7 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
                                 <span className="sr-only">Search</span>
                             </button>
                         </div>
-                    }
-                    isOpen>
+                    }>
                     <div className="flex flex-col gap-2 md:gap-4">
                         {Object.values(MatchFilterType).map((type) => (
                             <MatchFilter key={type} type={type} />
