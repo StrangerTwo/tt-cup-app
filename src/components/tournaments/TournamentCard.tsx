@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 
 import { Place, Tournament } from "../../api/model";
-import { renderCzIsoDate, renderFullDateShort, renderHoursShort } from "../../lib/date";
+import { renderCzIsoDate, renderHoursShort, renderTournamentDate } from "../../lib/date";
 import { isDefined } from "../../lib/utils";
 import { LinkIcon } from "../icons";
 import { Skeleton } from "../lib/Skeleton";
@@ -67,7 +67,7 @@ export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Pro
                                 <div>
                                     <h2 className="flex items-center gap-2 text-lg">
                                         <span>
-                                            {place.name} | {isDefined(date) && renderFullDateShort(date)}
+                                            {place.name} | {isDefined(date) && renderTournamentDate(date)}
                                         </span>
 
                                         {matches && (
