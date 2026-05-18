@@ -66,12 +66,12 @@ export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Pro
                             <div className="flex flex-col">
                                 <div>
                                     <h2 className="flex items-center gap-2 text-lg">
-                                        <span>
+                                        <span className="whitespace-nowrap">
                                             {place.name} | {isDefined(date) && renderTournamentDate(date)}
                                         </span>
 
                                         {matches && (
-                                            <span className="text-sm font-semibold">
+                                            <span className="whitespace-nowrap text-sm font-semibold">
                                                 {matches.at(0) && renderHoursShort(matches.at(0)!.time)} -{" "}
                                                 {matches.at(-1) && renderHoursShort(matches.at(-1)!.time)}
                                             </span>

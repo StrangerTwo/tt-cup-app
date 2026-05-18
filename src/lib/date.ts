@@ -1,9 +1,12 @@
 import { format, isValid, parseISO } from "date-fns";
+import { cs } from "date-fns/locale";
+
+import { capitalizeFirstLetter } from "./capitalizeFirstLetter";
 
 const czIsoDateFormat = "dd.MM.yyyy";
 const fullDateFormat = "d. M. yyyy";
 const fullDateShortFormat = "d. M. yy";
-const dateShortFormat = "E d. M.";
+const dateShortFormat = "iiiii d. M.";
 const fullDateWithHoursShortFormat = "d. M. yyyy HH:mm";
 const fullDateShortWithHoursShortFormat = "d. M. yy HH:mm";
 const dateShortWithHoursShortFormat = "d. M. HH:mm";
@@ -26,7 +29,8 @@ export const renderCzIsoDate = (dateInput: Date | string): string => {
 
 export const renderTournamentDate = (dateInput: Date | string): string => {
     const date = parseDateInput(dateInput);
-    if (date.getFullYear() === new Date().getFullYear()) return format(date, dateShortFormat);
+    if (date.getFullYear() === new Date().getFullYear())
+        return capitalizeFirstLetter(format(date, dateShortFormat, { locale: cs }));
     return format(date, fullDateShortFormat);
 };
 
