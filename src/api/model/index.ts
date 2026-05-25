@@ -71,6 +71,8 @@ export * from "./setTopMatchConfigRequest";
 export * from "./starPlayerFilter";
 export * from "./status";
 export * from "./summary";
+export * from "./topMatch";
+export * from "./topMatches";
 export * from "./tournament";
 export * from "./tournamentFull";
 export * from "./tournaments";

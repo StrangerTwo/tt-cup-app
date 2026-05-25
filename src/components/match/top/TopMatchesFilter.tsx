@@ -33,7 +33,6 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
 
     const onSubmit = useCallback(
         (filter: TopMatchesFilterType) => {
-            console.info("submitted", filter);
             setFilters(filter);
         },
         [setFilters],

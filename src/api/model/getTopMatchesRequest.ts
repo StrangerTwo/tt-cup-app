@@ -10,5 +10,6 @@ import type { PageInfoRequest } from "./pageInfoRequest";
 
 export interface GetTopMatchesRequest {
     filters: Array<MatchFilter>;
+    done?: boolean;
     pageInfo: PageInfoRequest;
 }

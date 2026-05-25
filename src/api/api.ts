@@ -72,6 +72,7 @@ import type {
     SetTopMatchConfigRequest,
     Status,
     Summary,
+    TopMatches,
     TournamentFull,
     Tournaments,
     TournamentsToday,
@@ -959,7 +960,7 @@ export const getTopMatches = (
     options?: SecondParameter<typeof customInstance>,
     signal?: AbortSignal,
 ) => {
-    return customInstance<PaginatedQueryResultMatch>(
+    return customInstance<TopMatches>(
         {
             url: `/match/top`,
             method: "POST",

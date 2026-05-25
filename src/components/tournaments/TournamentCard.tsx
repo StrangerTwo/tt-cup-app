@@ -107,7 +107,7 @@ export const TournamentCard = ({ tournamentId, place: _place, date: _date }: Pro
                 heading={TournamentRow.Heading}
                 data={isFetching ? [] : (matches ?? [])}
                 isPending={isFetching}>
-                {(m, i) => tournamentId && <TournamentRow.FC match={m} tournamentId={tournamentId} i={i} />}
+                {(m, i) => <TournamentRow.FC match={m} />}
             </Table>
         </Card>
     );

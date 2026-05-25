@@ -222,7 +222,7 @@ paths:
           description: OK
           content:
             '*/*':
-              schema: {$ref: '#/components/schemas/PaginatedQueryResult_Match'}
+              schema: {$ref: '#/components/schemas/TopMatches'}
       operationId: getTopMatches
   /match/top/config:
     get:
@@ -884,8 +884,56 @@ components:
         filters:
           type: array
           items: {$ref: '#/components/schemas/MatchFilter'}
+        done: {type: boolean}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [filters, pageInfo]
+    TopMatch:
+      type: object
+      properties:
+        match: {$ref: '#/components/schemas/Match'}
+        bet: {$ref: '#/components/schemas/Bet'}
+      required: [match]
+    Player:
+      type: object
+      properties:
+        uid: {type: string}
+        name: {type: string}
+        ranking: {type: integer, format: int32}
+        elo: {type: integer, format: int32}
+        favourite: {type: boolean}
+        location: {$ref: '#/components/schemas/Location'}
+        note: {type: string}
+        stisId: {type: string}
+        recrawl: {type: boolean}
+      required: [uid]
+    Summary:
+      type: object
+      properties:
+        playerUid: {type: string}
+        rivalUid: {type: string}
+        matchesWon: {type: integer, format: int32}
+        matchesLost: {type: integer, format: int32}
+        longestWinStreak: {type: integer, format: int32}
+        longestLoseStreak: {type: integer, format: int32}
+        currentWinStreak: {type: integer, format: int32}
+        currentLoseStreak: {type: integer, format: int32}
+        winRate: {type: number, format: double}
+      required: [playerUid, matchesWon, matchesLost, longestWinStreak, longestLoseStreak,
+        currentWinStreak, currentLoseStreak]
+    TopMatches:
+      type: object
+      properties:
+        results:
+          type: array
+          items: {$ref: '#/components/schemas/TopMatch'}
+        pageInfo: {$ref: '#/components/schemas/PageInfo'}
+        players:
+          type: array
+          items: {$ref: '#/components/schemas/Player'}
+        summaries:
+          type: array
+          items: {$ref: '#/components/schemas/Summary'}
+      required: [results, pageInfo, players, summaries]
     SetTopMatchConfigRequest:
       type: object
       properties:
@@ -938,33 +986,6 @@ components:
           items: {type: string}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [pageInfo]
-    Player:
-      type: object
-      properties:
-        uid: {type: string}
-        name: {type: string}
-        ranking: {type: integer, format: int32}
-        elo: {type: integer, format: int32}
-        favourite: {type: boolean}
-        location: {$ref: '#/components/schemas/Location'}
-        note: {type: string}
-        stisId: {type: string}
-        recrawl: {type: boolean}
-      required: [uid]
-    Summary:
-      type: object
-      properties:
-        playerUid: {type: string}
-        rivalUid: {type: string}
-        matchesWon: {type: integer, format: int32}
-        matchesLost: {type: integer, format: int32}
-        longestWinStreak: {type: integer, format: int32}
-        longestLoseStreak: {type: integer, format: int32}
-        currentWinStreak: {type: integer, format: int32}
-        currentLoseStreak: {type: integer, format: int32}
-        winRate: {type: number, format: double}
-      required: [playerUid, matchesWon, matchesLost, longestWinStreak, longestLoseStreak,
-        currentWinStreak, currentLoseStreak]
     PlayerSummary:
       type: object
       properties:

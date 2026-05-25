@@ -3,7 +3,7 @@ import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useGetPlayer, useGetSummaryForRivalry } from "../../../api/api";
-import { Match, Tournament } from "../../../api/model";
+import { Match } from "../../../api/model";
 import { renderHoursShort } from "../../../lib/date";
 import { renderNameShort } from "../../../lib/name";
 import { BetOnMatchButton } from "../../bet/BetOnMatchButton";
@@ -16,8 +16,6 @@ import { useColorLayer } from "../../ui/layout";
 
 interface TournamentRowProps {
     match: Match;
-    tournamentId: Tournament["_id"];
-    i: number;
 }
 
 export const TournamentRow: {
@@ -33,7 +31,7 @@ export const TournamentRow: {
         { label: "Utk", className: "text-center" },
         { label: "AI" },
     ],
-    FC: ({ match, tournamentId, i }) => {
+    FC: ({ match }) => {
         const navigate = useNavigate();
         const { textHighlightColor } = useColorLayer();
         const { data: playerA } = useGetPlayer(match.playerUids[0]);
