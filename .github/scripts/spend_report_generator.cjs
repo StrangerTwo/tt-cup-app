@@ -39,18 +39,8 @@ function formatDateTime(value) {
     return new Date(value).toLocaleString("cs");
 }
 
-function getGroupKey(issue) {
-    if (!issue) {
-        return "No issue";
-    }
-
-    const issuePrefix = `${issue.repository}#${issue.number}`;
-
-    if (issue.title) {
-        return `${issuePrefix} - ${issue.title}`;
-    }
-
-    return issuePrefix;
+function isCountedCommit(commit) {
+    return commit.authorName !== "github-actions[bot]";
 }
 
 function getIssueGroupId(issue) {
@@ -62,17 +52,19 @@ function getIssueGroupId(issue) {
 }
 
 function parseCommit(rawCommit) {
-    const firstSeparatorIndex = rawCommit.indexOf("\x1f");
-    const secondSeparatorIndex = rawCommit.indexOf("\x1f", firstSeparatorIndex + 1);
+    const parts = rawCommit.split("\x1f");
 
-    if (firstSeparatorIndex === -1 || secondSeparatorIndex === -1) {
+    if (parts.length < 4) {
         return null;
     }
 
+    const [hash, date, authorName, ...bodyParts] = parts;
+
     return {
-        hash: rawCommit.slice(0, firstSeparatorIndex),
-        date: rawCommit.slice(firstSeparatorIndex + 1, secondSeparatorIndex),
-        body: rawCommit.slice(secondSeparatorIndex + 1),
+        hash,
+        date,
+        authorName,
+        body: bodyParts.join("\x1f"),
     };
 }
 
@@ -149,7 +141,7 @@ function getWorkedOnRange(entries) {
 }
 
 function collectSpendStats() {
-    const gitLog = execSync("git log --format=%H%x1f%cI%x1f%B%x1e", {
+    const gitLog = execSync("git log --format=%H%x1f%cI%x1f%an%x1f%B%x1e", {
         encoding: "utf8",
         maxBuffer: 1024 * 1024 * 50,
     });
@@ -160,6 +152,8 @@ function collectSpendStats() {
         .filter(Boolean)
         .map(parseCommit)
         .filter(Boolean);
+
+    const totalCommitCount = commits.filter(isCountedCommit).length;
 
     let totalMinutes = 0;
     let matchCount = 0;
@@ -226,6 +220,7 @@ function collectSpendStats() {
 
     return {
         totalMinutes,
+        totalCommitCount,
         matchCount,
         entries,
         groups,
@@ -269,11 +264,9 @@ function createMarkdownReport(stats) {
     lines.push("");
     lines.push("| Metric | Value |");
     lines.push("| --- | ---: |");
-    lines.push(`| Total time | **${formatMinutes(stats.totalMinutes)}** |`);
-    lines.push(`| Total minutes | ${stats.totalMinutes} |`);
-    lines.push(`| Spend entries | ${stats.matchCount} |`);
-    lines.push(`| Issues with tracked time | ${stats.groups.size} |`);
-    lines.push("");
+    lines.push(`| Total count | **${formatMinutes(stats.totalMinutes)}** |`);
+    lines.push(`| Spend entries / Total commits | ${stats.matchCount} / ${stats.totalCommitCount} (${(stats.matchCount * 100 / stats.totalCommitCount).toFixed(2)}%) |`);
+    lines.push(`| Issues with tracked time | ${stats.groups.size} |`); lines.push("");
     lines.push("## Chart by issue");
     lines.push("");
     lines.push("| Issue | Time | Worked on | Chart |");
