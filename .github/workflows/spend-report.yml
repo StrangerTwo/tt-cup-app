@@ -1,0 +1,35 @@
+name: Generate spend report
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-spend-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate spend report
+        run: node .github/scripts/spend_report_generator.cjs
+
+      - name: Commit updated spend report
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: update spend report"
+          file_pattern: README.md
