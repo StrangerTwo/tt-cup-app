@@ -1,21 +1,21 @@
-import { FC, ReactNode, useContext } from "react";
+import { FC, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { MainLayoutCtx } from "../../../layout/MainLayoutContext";
+import { Divider } from "../Divider";
 import { ColorLayerContext, useColorLayer } from "./ColorLayer";
 
 interface Props {
     className?: string;
     sidebarOpen: boolean;
     children?: ReactNode;
+    footer?: ReactNode;
     navbarHeight?: number;
     absolute?: boolean;
 }
 
-const Sidebar: FC<Props> = ({ className, sidebarOpen, children, absolute, navbarHeight = 0 }) => {
+const Sidebar: FC<Props> = ({ className, sidebarOpen, children, footer, absolute, navbarHeight = 0 }) => {
     const { layer, bgColor, textColor } = useColorLayer();
     const { borderColor } = useColorLayer(2);
-    const { sidebarExpanded } = useContext(MainLayoutCtx);
 
     return (
         <ColorLayerContext.Provider value={{ layer }}>
@@ -30,17 +30,24 @@ const Sidebar: FC<Props> = ({ className, sidebarOpen, children, absolute, navbar
                     !absolute && "md:static md:-translate-x-full",
                     sidebarOpen && "translate-x-full",
                     !absolute && sidebarOpen && " md:translate-x-0",
-                    sidebarExpanded ? "w-64" : "w-20",
                     className,
                 )}>
                 <nav
-                    className="sticky flex grow flex-col overflow-y-auto px-1.5 py-2 md:px-3 md:py-4"
+                    className="sticky flex grow flex-col"
                     style={{
                         top: navbarHeight,
                         maxHeight: `calc(100vh - ${navbarHeight}px)`,
                         minHeight: `calc(100vh - ${navbarHeight}px)`,
                     }}>
-                    {children}
+                    <ColorLayerContext.Provider value={{ layer }}>
+                        <div className="grow overflow-y-auto px-3 py-4">{children}</div>
+                        {footer && (
+                            <div className="px-3 pb-4">
+                                <Divider className="mb-4" />
+                                {footer}
+                            </div>
+                        )}
+                    </ColorLayerContext.Provider>
                 </nav>
             </aside>
         </ColorLayerContext.Provider>

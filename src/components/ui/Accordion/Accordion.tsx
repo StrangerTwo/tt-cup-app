@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 import { ArrowIcon } from "../../icons";
 import { Card } from "../Card";
+import { Divider } from "../Divider";
 import { IconButton } from "../IconButton";
 import { useColorLayer } from "../layout";
 import { AccordionContent } from "./AccordionContent";
@@ -24,12 +25,13 @@ export const Accordion: FC<Props> = ({
     title,
     sneakPeak,
     size,
-    layerStep,
+    layerStep = 1,
 }) => {
     const [isOpen, setOpen] = useState(initialIsOpen);
     const [fullSkeakPeak, setFullSneakPeak] = useState(200);
     const sneakPeekRef = useRef<HTMLDivElement | null>(null);
-    const { bgColor, borderColor } = useColorLayer(layerStep);
+    const { bgColor } = useColorLayer(layerStep);
+    const { bgColor: contentBgColor } = useColorLayer(layerStep - 1);
 
     useEffect(() => {
         setOpen(initialIsOpen);
@@ -47,13 +49,11 @@ export const Accordion: FC<Props> = ({
                 className={twMerge(
                     "flex items-center justify-between transition-[margin]",
                     size === "sm" ? "px-2 pt-2" : "p-4 pb-0",
-                    isOpen && "mb-4",
-                    isOpen && size === "sm" && "mb-2",
                 )}>
                 {title}
                 <div className="flex items-center gap-2">
                     <div
-                        className="flex overflow-hidden transition-[max-width]"
+                        className="flex gap-2 overflow-hidden transition-[max-width]"
                         style={{ maxWidth: isOpen ? 0 : fullSkeakPeak }}
                         ref={sneakPeekRef}>
                         {sneakPeak}
@@ -63,19 +63,15 @@ export const Accordion: FC<Props> = ({
                     </IconButton>
                 </div>
             </div>
-            <hr
+            <div
                 className={twMerge(
-                    borderColor,
-                    "h-0 transition-[opacity,border-width] duration-100",
-                    !isOpen && "border-0 opacity-0 duration-150",
-                )}
-            />
-            <AccordionContent
-                isOpen={isOpen}
-                className={twMerge(
-                    !isOpen && bgColor,
-                    isOpen ? (size === "sm" ? "px-3 py-2" : "p-4") : size === "sm" ? "pt-2" : "pt-4",
+                    "transition-[padding,background-color] duration-300",
+                    isOpen ? contentBgColor : bgColor,
+                    isOpen && "pb-2",
                 )}>
+                <Divider isOpen={isOpen} className="mt-2" />
+            </div>
+            <AccordionContent isOpen={isOpen} size={size}>
                 {children}
             </AccordionContent>
         </Card>

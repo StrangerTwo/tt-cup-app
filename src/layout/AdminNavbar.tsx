@@ -2,10 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { FC } from "react";
 
 import { NavCrawlIconButton } from "../components/crawl/NavCrawlIconButton";
-import { SidebarIcon } from "../components/icons";
-import ColorThemeSwitcher from "../components/lib/ColorThemeSwitcher";
 import NavUserIcon from "../components/lib/NavUserIcon";
-import { IconButton } from "../components/ui/IconButton";
 import { Navbar } from "../components/ui/layout/Navbar";
 import { auth } from "../firebase/firebase";
 
@@ -27,11 +24,6 @@ const AdminNavbar: FC<Props> = ({ onHeightChange, onSidebarToggle }) => {
             onHeightChange={onHeightChange}
             startChildren={
                 <>
-                    {onSidebarToggle && (
-                        <IconButton onClick={onSidebarToggle} className="shrink-0 xl:hidden">
-                            <SidebarIcon />
-                        </IconButton>
-                    )}
                     <Link to="/" className="flex items-center" onClick={logoClick}>
                         <img src="/vite.svg" className="h-8" alt="Bet tips Logo" />
                         <h1 className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">TT Cup</h1>
@@ -41,10 +33,10 @@ const AdminNavbar: FC<Props> = ({ onHeightChange, onSidebarToggle }) => {
             endChildren={
                 <>
                     <NavCrawlIconButton />
-                    <ColorThemeSwitcher />
                     <NavUserIcon auth={auth} menuItems={[]} />
                 </>
-            }></Navbar>
+            }
+        />
     );
 };
 

@@ -1,16 +1,20 @@
 import { FC, ReactNode, useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { SidebarIcon } from "../../icons";
+import ColorThemeSwitcher from "../../lib/ColorThemeSwitcher";
+import { IconButton } from "../IconButton";
 import { ColorLayerContext, useColorLayer } from "./ColorLayer";
 
 interface Props {
     onHeightChange?: (height: number) => void;
+    onSidebarToggle?: () => void;
     startChildren?: ReactNode;
     endChildren?: ReactNode;
     children?: ReactNode;
 }
 
-export const Navbar: FC<Props> = ({ onHeightChange, startChildren, children, endChildren }) => {
+export const Navbar: FC<Props> = ({ onHeightChange, onSidebarToggle, startChildren, children, endChildren }) => {
     const { layer, bgColor, textColor } = useColorLayer();
     const { borderColor } = useColorLayer(2);
 
@@ -40,9 +44,20 @@ export const Navbar: FC<Props> = ({ onHeightChange, startChildren, children, end
                     textColor,
                 )}>
                 <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-1.5 md:p-4 2xl:max-w-screen-2xl">
-                    <div className="flex w-32 justify-start gap-2 md:w-48">{startChildren}</div>
+                    <div className="flex w-32 justify-start gap-2 md:w-48">
+                        {onSidebarToggle && (
+                            <IconButton onClick={onSidebarToggle} className="shrink-0 xl:hidden">
+                                <SidebarIcon />
+                            </IconButton>
+                        )}
+
+                        {startChildren}
+                    </div>
                     {children}
-                    <div className="flex w-32 justify-end gap-2 md:order-2 md:w-48">{endChildren}</div>
+                    <div className="flex w-32 justify-end gap-2 md:order-2 md:w-48">
+                        <ColorThemeSwitcher />
+                        {endChildren}
+                    </div>
                 </div>
             </nav>
         </ColorLayerContext.Provider>

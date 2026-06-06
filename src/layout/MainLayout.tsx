@@ -70,7 +70,7 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                         )}
                         style={{ paddingTop: navbarHeight }}>
                         {hasSidebar && (
-                            <Sidebar sidebarOpen={sidebarOpen} navbarHeight={navbarHeight} className="font-medium">
+                            <Sidebar sidebarOpen={sidebarOpen} navbarHeight={navbarHeight} className="w-64 font-medium">
                                 <div className={"flex flex-col space-y-2"}>
                                     <SidebarItem route="/player" closeSidebar={closeSidebar} text="Hráči">
                                         <UsersIcon />
@@ -92,7 +92,7 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                         )}
                         <main
                             className={twMerge(
-                                "h-full grow border-slate-200 p-1.5 text-gray-700 dark:text-gray-400 md:p-4",
+                                "size-full grow p-1.5 md:p-4",
                                 textColor,
                                 bgColor,
                                 hasSidebar && "ms-0 transition-[margin] duration-300",
