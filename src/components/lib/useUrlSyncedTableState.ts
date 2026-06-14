@@ -157,18 +157,21 @@ const defaultParseFilters = <TFilters extends object>(raw: unknown, defaults: TF
     }
 
     const rawRecord = raw as Record<string, unknown>;
-    const knownKeys = Object.keys(defaults) as Array<keyof TFilters>;
 
-    // When defaults has no keys (e.g. `{} as T`), accept all raw params — the caller
-    // has no known key set to filter against, so we preserve backward-compatible behaviour.
-    if (knownKeys.length === 0) {
-        return { ...rawRecord } as TFilters;
-    }
+    return { ...rawRecord } as TFilters;
+    // WTF?
+    // const knownKeys = Object.keys(defaults) as Array<keyof TFilters>;
 
-    return knownKeys.reduce<TFilters>(
-        (acc, key) => (Object.hasOwn(rawRecord, key as string) ? { ...acc, [key]: rawRecord[key as string] } : acc),
-        { ...defaults },
-    );
+    // // When defaults has no keys (e.g. `{} as T`), accept all raw params — the caller
+    // // has no known key set to filter against, so we preserve backward-compatible behaviour.
+    // if (knownKeys.length === 0) {
+    //     return { ...rawRecord } as TFilters;
+    // }
+
+    // return knownKeys.reduce<TFilters>(
+    //     (acc, key) => (Object.hasOwn(rawRecord, key as string) ? { ...acc, [key]: rawRecord[key as string] } : acc),
+    //     { ...defaults },
+    // );
 };
 
 export const useUrlSyncedTableState = <TFilters extends object, T>({

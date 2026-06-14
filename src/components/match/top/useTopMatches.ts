@@ -23,7 +23,7 @@ export const useTopMatches = (filter?: TopMatchesFilterType, sort?: Array<Sort<T
         paramFn: (pageInfo) => ({
             data: {
                 filters: toMatchFilters(filter!),
-                done: false,
+                done: filter?.done,
                 pageInfo: {
                     ...pageInfo,
                     sort: sort ? sortingForRequest(sort) : undefined,

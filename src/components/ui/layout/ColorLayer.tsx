@@ -33,7 +33,18 @@ export const useColorLayer = (layerStep = 1) => {
     const layer = useContext(ColorLayerContext).layer + layerStep;
     const index = Math.min(bgColors.length - 1, Math.max(0, layer));
 
-    if (index !== layer) console.warn("We are out of ColorLayers!!!", "Layer:", layer, "Index:", index);
+    if (index !== layer) {
+        console.warn("We are out of ColorLayers!!!", "Layer:", layer, "Index:", index);
+        return {
+            layer,
+            bgColor: "bg-red-500",
+            hoverBgColor: "bg-red-500",
+            borderColor: "bg-red-500",
+            textColor: "bg-red-500",
+            textHighlightColor: "bg-red-500",
+            hoverTextHighlightColor: "bg-red-500",
+        };
+    }
     return {
         layer,
         bgColor: bgColors[index],

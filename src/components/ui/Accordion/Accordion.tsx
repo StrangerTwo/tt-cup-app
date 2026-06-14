@@ -48,7 +48,7 @@ export const Accordion: FC<Props> = ({
             <div
                 className={twMerge(
                     "flex items-center justify-between transition-[margin]",
-                    size === "sm" ? "px-2 pt-2" : "p-4 pb-0",
+                    size === "sm" ? "px-2 pt-2" : "px-4 pb-0 pt-3",
                 )}>
                 {title}
                 <div className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export const Accordion: FC<Props> = ({
                     isOpen ? contentBgColor : bgColor,
                     isOpen && "pb-2",
                 )}>
-                <Divider isOpen={isOpen} className="mt-2" />
+                <Divider isOpen={isOpen} className="mt-3" />
             </div>
             <AccordionContent isOpen={isOpen} size={size}>
                 {children}

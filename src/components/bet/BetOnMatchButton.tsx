@@ -13,7 +13,6 @@ import { IconButton } from "../ui/IconButton";
 interface Props {
     matchId: Match["_id"];
     className?: string;
-    layerStep?: number;
 }
 
 const betNode = (type: BetType): ReactNode => {
@@ -29,7 +28,7 @@ const betNode = (type: BetType): ReactNode => {
 
 const betTypes = [BetType.NO_BET, BetType.WIN_1, BetType.WIN_2];
 
-export const BetOnMatchButton = ({ matchId, className, layerStep }: Props) => {
+export const BetOnMatchButton = ({ matchId, className }: Props) => {
     const client = useQueryClient();
     const { data: bet, isFetching } = useGetBet(matchId);
     const { mutateAsync } = useSetBet();
@@ -60,7 +59,7 @@ export const BetOnMatchButton = ({ matchId, className, layerStep }: Props) => {
             )}>
             <IconButton
                 className={twMerge("group size-6", className)}
-                layerStep={layerStep}
+                layerStep={1}
                 onClick={(e) => {
                     e.stopPropagation();
                     toggleBet();

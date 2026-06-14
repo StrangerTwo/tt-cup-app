@@ -21,6 +21,8 @@ const numberValueMatchFilterSchema = yup.object({
 });
 
 export const topMatchesFilterSchema = yup.object({
+    done: yup.boolean().default(false),
+
     [MatchFilterType.STAR_PLAYER]: simpleMatchFilterSchema,
     [MatchFilterType.ELO_DIFFERENCE]: numberValueMatchFilterSchema,
     [MatchFilterType.RANK_DIFFERENCE]: numberValueMatchFilterSchema,
@@ -35,7 +37,7 @@ export const topMatchesFilterDefaultValues = Object.fromEntries(
 ) as TopMatchesFilterType;
 
 const toMatchFilter = <T extends MatchFilterType>(type: T, data: TopMatchesFilterType): Array<MatchFilter> => {
-    if (!data[type].enabled) return [];
+    if (!data[type]?.enabled) return [];
 
     switch (type) {
         case MatchFilterType.STAR_PLAYER:
@@ -64,5 +66,5 @@ export const fromMatchFilters = (data: Array<MatchFilter>): TopMatchesFilterType
                 ...rest,
             },
         };
-    }, {} as TopMatchesFilterType);
+    }, topMatchesFilterDefaultValues);
 };

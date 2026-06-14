@@ -40,7 +40,7 @@ const Sidebar: FC<Props> = ({ className, sidebarOpen, children, footer, absolute
                         minHeight: `calc(100vh - ${navbarHeight}px)`,
                     }}>
                     <ColorLayerContext.Provider value={{ layer }}>
-                        <div className="grow overflow-y-auto px-3 py-4">{children}</div>
+                        <div className="grow overflow-y-auto px-1.5 py-2 md:px-3 md:py-4">{children}</div>
                         {footer && (
                             <div className="px-3 pb-4">
                                 <Divider className="mb-4" />

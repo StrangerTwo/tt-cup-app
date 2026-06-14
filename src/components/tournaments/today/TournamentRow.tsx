@@ -41,7 +41,7 @@ export const TournamentRow: {
         return (
             <>
                 <TableCell>
-                    <BetOnMatchButton matchId={match._id} layerStep={2} />
+                    <BetOnMatchButton matchId={match._id} />
                 </TableCell>
                 <TableCell className="text-center">{renderHoursShort(match.time)}</TableCell>
                 <TableCell

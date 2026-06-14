@@ -9,6 +9,7 @@ import { getGetMatchFiltersQueryKey, setMatchFilters } from "../../../api/api";
 import { EQueryKey } from "../../../api/EQueryKey";
 import { MatchFilterType } from "../../../api/model";
 import { resolveErrorMessage } from "../../../lib/toastError";
+import { Toggle } from "../../form/Toggle";
 import { RefreshIcon, ServerIcon } from "../../icons";
 import { SubmitButton } from "../../lib/SubmitButton";
 import { Accordion } from "../../ui/Accordion";
@@ -29,7 +30,8 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
         resolver: yupResolver(topMatchesFilterSchema),
     });
     const { handleSubmit, formState, watch } = form;
-    const { dirtyFields } = formState;
+    const { dirtyFields: _dirtyFields } = formState;
+    const { done, ...dirtyFields } = _dirtyFields;
 
     const onSubmit = useCallback(
         (filter: TopMatchesFilterType) => {
@@ -40,7 +42,7 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
 
     useEffect(() => {
         const x = watch((e) => {
-            handleSubmit(onSubmit, console.info)();
+            handleSubmit(onSubmit)();
         });
         return () => x.unsubscribe();
     }, [handleSubmit, onSubmit, watch]);
@@ -67,6 +69,7 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
         <form onSubmit={handleSubmit(onSubmit)}>
             <FormProvider {...form}>
                 <Accordion
+                    isOpen
                     title={
                         <div className="flex items-center gap-2 md:gap-4">
                             <button
@@ -76,6 +79,7 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
                                 <RefreshIcon className={twMerge(isFetching && "animate-spin")} />
                                 <span className="sr-only">Search</span>
                             </button>
+                            <Toggle form={form} name="done" label="Dokončené" />
                         </div>
                     }>
                     <div className="flex flex-col gap-2 md:gap-4">

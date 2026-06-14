@@ -21,12 +21,12 @@ export const TopMatches = ({ defaultFilters }: Props) => {
         defaultSorting: [
             {
                 key: "match.time",
-                mode: SortMode.DESC,
+                mode: SortMode.ASC,
             },
         ],
         defaultFilters: fromMatchFilters(defaultFilters),
     });
-    const { data: matches, isFetching, fetchNextPage } = useTopMatches(filters, sort);
+    const { data: matches, isFetching, fetchNextPage, failureReason } = useTopMatches(filters, sort);
 
     return (
         <Card className="w-0 min-w-full overflow-x-auto overflow-y-hidden p-0 md:p-0">

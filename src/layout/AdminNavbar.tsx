@@ -22,6 +22,7 @@ const AdminNavbar: FC<Props> = ({ onHeightChange, onSidebarToggle }) => {
     return (
         <Navbar
             onHeightChange={onHeightChange}
+            onSidebarToggle={onSidebarToggle}
             startChildren={
                 <>
                     <Link to="/" className="flex items-center" onClick={logoClick}>

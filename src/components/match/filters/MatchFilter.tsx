@@ -25,7 +25,7 @@ export const MatchFilter = ({ type }: Props) => {
     const form = useFormContext<TopMatchesFilterType>();
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
             <Toggle form={form} name={`${type}.enabled`} label={filterLabels[type]} className={textColor} />
             {(type === "BIL" || type === "ELO" || type === "RANK") && (
                 <Input form={form} name={`${type}.value`} placeholder="více než" />
