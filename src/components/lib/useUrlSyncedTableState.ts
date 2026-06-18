@@ -158,6 +158,8 @@ const defaultParseFilters = <TFilters extends object>(raw: unknown, defaults: TF
 
     const rawRecord = raw as Record<string, unknown>;
 
+    if (Object.keys(rawRecord).length === 0) return { ...defaults };
+
     return { ...rawRecord } as TFilters;
     // WTF?
     // const knownKeys = Object.keys(defaults) as Array<keyof TFilters>;

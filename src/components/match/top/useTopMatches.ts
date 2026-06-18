@@ -17,12 +17,13 @@ import { toMatchFilters, TopMatchesFilterType } from "./topMatchesFilterSchema";
 export const useTopMatches = (filter?: TopMatchesFilterType, sort?: Array<Sort<TopMatch>>) => {
     const client = useQueryClient();
 
+    const filters = filter ? toMatchFilters(filter) : undefined;
     const { mutateAsync } = useGetTopMatches();
     return usePaginatedQuery({
         mutateAsync,
         paramFn: (pageInfo) => ({
             data: {
-                filters: toMatchFilters(filter!),
+                filters: filters!,
                 done: filter?.done,
                 pageInfo: {
                     ...pageInfo,
@@ -32,7 +33,7 @@ export const useTopMatches = (filter?: TopMatchesFilterType, sort?: Array<Sort<T
         }),
         dataFn: (x) => x.results,
         totalPagesFn: ({ pageInfo }) => pageInfo.totalPages,
-        queryKey: [EQueryKey.getTopMatches, filter, sort],
+        queryKey: [EQueryKey.getTopMatches, filters, filter?.done, sort],
         onfulfilled: (res) => {
             res.results.forEach(({ match, bet }) => {
                 client.setQueryData(

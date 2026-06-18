@@ -13,7 +13,7 @@ import { Toggle } from "../../form/Toggle";
 import { RefreshIcon, ServerIcon } from "../../icons";
 import { SubmitButton } from "../../lib/SubmitButton";
 import { Accordion } from "../../ui/Accordion";
-import { MatchFilter } from "../filters/MatchFilter";
+import { MatchFilterField } from "../filters/MatchFilterField";
 import { toMatchFilters, topMatchesFilterSchema, TopMatchesFilterType } from "./topMatchesFilterSchema";
 
 interface Props {
@@ -84,7 +84,7 @@ export const TopMatchesFilter = ({ filters, setFilters, isFetching }: Props) => 
                     }>
                     <div className="flex flex-col gap-2 md:gap-4">
                         {Object.values(MatchFilterType).map((type) => (
-                            <MatchFilter key={type} type={type} />
+                            <MatchFilterField key={type} type={type} />
                         ))}
                         <SubmitButton
                             className="flex size-10 items-center justify-center p-0"

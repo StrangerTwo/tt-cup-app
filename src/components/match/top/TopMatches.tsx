@@ -1,8 +1,6 @@
-import { useNavigate } from "@tanstack/react-router";
-
 import { MatchFilter, TopMatch } from "../../../api/model";
 import { SortMode } from "../../icons/SortIcon";
-import Table, { Sort } from "../../lib/Table";
+import Table from "../../lib/Table";
 import { useUrlSyncedTableState } from "../../lib/useUrlSyncedTableState";
 import { Card } from "../../ui/Card";
 import { TopMatchesFilter } from "./TopMatchesFilter";
@@ -15,17 +13,19 @@ interface Props {
 }
 
 export const TopMatches = ({ defaultFilters }: Props) => {
-    const navigate = useNavigate();
-    const { sort, setSort, filters, setFilters } = useUrlSyncedTableState<TopMatchesFilterType, TopMatch>({
+    const { filters, setFilters } = useUrlSyncedTableState<TopMatchesFilterType, TopMatch>({
         tableId: "tournaments",
-        defaultSorting: [
-            {
-                key: "match.time",
-                mode: SortMode.ASC,
-            },
-        ],
-        defaultFilters: fromMatchFilters(defaultFilters),
+        defaultFilters: {
+            ...fromMatchFilters(defaultFilters),
+            done: false,
+        },
     });
+    const sort = [
+        {
+            key: "match.time" as const,
+            mode: filters.done ? SortMode.DESC : SortMode.ASC,
+        },
+    ];
     const { data: matches, isFetching, fetchNextPage, failureReason } = useTopMatches(filters, sort);
 
     return (
@@ -41,16 +41,6 @@ export const TopMatches = ({ defaultFilters }: Props) => {
                 heading={TopMatchRow.Heading}
                 data={matches ?? []}
                 keyFn={({ match }) => match._id}
-                sort={sort?.[0]}
-                onSort={Object.fromEntries(
-                    (["match.time"] as Array<Sort<TopMatch>["key"]>).map((x) => [
-                        x,
-                        (mode: SortMode | null) => setSort(mode ? [{ key: x, mode }] : undefined),
-                    ]),
-                )}
-                onRowClick={({ match }) =>
-                    navigate({ to: "/tournament/$tournamentId", params: { tournamentId: match.tournamentId } })
-                }
                 onLoadMore={fetchNextPage}
                 isPending={isFetching}>
                 {(m, i) => <TopMatchRow.FC topMatch={m} />}

@@ -1,10 +1,10 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useGetPlayer, useGetSummaryForRivalry } from "../../../api/api";
 import { Match } from "../../../api/model";
-import { renderHoursShort } from "../../../lib/date";
+import { renderDateShortWithHoursShort } from "../../../lib/date";
 import { renderNameShort } from "../../../lib/name";
 import { BetOnMatchButton } from "../../bet/BetOnMatchButton";
 import { Score } from "../../lib/Score";
@@ -32,7 +32,6 @@ export const TournamentRow: {
         { label: "AI" },
     ],
     FC: ({ match }) => {
-        const navigate = useNavigate();
         const { textHighlightColor } = useColorLayer();
         const { data: playerA } = useGetPlayer(match.playerUids[0]);
         const { data: playerB } = useGetPlayer(match.playerUids[1]);
@@ -43,17 +42,18 @@ export const TournamentRow: {
                 <TableCell>
                     <BetOnMatchButton matchId={match._id} />
                 </TableCell>
-                <TableCell className="text-center">{renderHoursShort(match.time)}</TableCell>
-                <TableCell
-                    className={twMerge("cursor-pointer text-center font-medium", textHighlightColor)}
-                    onClick={() =>
-                        navigate({
-                            to: "/player/$playerUid/vs/$rivalUid",
-                            params: { playerUid: match.playerUids[0], rivalUid: match.playerUids[1] },
-                        })
-                    }>
-                    {renderNameShort(playerA?.name) ?? match.playerUids[0]} -{" "}
-                    {renderNameShort(playerB?.name) ?? match.playerUids[1]}
+                <TableCell className="text-center">
+                    <Link to="/tournament/$tournamentId" params={{ tournamentId: match.tournamentId }}>
+                        {renderDateShortWithHoursShort(match.time)}
+                    </Link>
+                </TableCell>
+                <TableCell className={twMerge("text-center font-medium", textHighlightColor)}>
+                    <Link
+                        to="/player/$playerUid/vs/$rivalUid"
+                        params={{ playerUid: match.playerUids[0], rivalUid: match.playerUids[1] }}>
+                        {renderNameShort(playerA?.name) ?? match.playerUids[0]} -{" "}
+                        {renderNameShort(playerB?.name) ?? match.playerUids[1]}
+                    </Link>
                 </TableCell>
                 <TableCell className="text-center">
                     <Score

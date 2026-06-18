@@ -20,7 +20,7 @@ export const filterLabels: {
     [MatchFilterType.LAST_MATCH_STRONG_LOST]: "Poslední utkání porážka lepšího hráče",
 };
 
-export const MatchFilter = ({ type }: Props) => {
+export const MatchFilterField = ({ type }: Props) => {
     const { textColor } = useColorLayer(1);
     const form = useFormContext<TopMatchesFilterType>();
 
