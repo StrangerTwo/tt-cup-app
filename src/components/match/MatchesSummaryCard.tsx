@@ -23,7 +23,6 @@ type Props = {
 
 export const MatchesSummaryCard = ({ playerUid, rivalUid, className }: Props) => {
     const isRivalry = isDefined(rivalUid);
-    console.log(isRivalry, playerUid, rivalUid);
 
     const { data: playerSummary } = useGetSummaryForPlayer(playerUid, { query: { enabled: !isRivalry } });
     const { data: rivalrySummary } = useGetSummaryForRivalry(playerUid, rivalUid!, { query: { enabled: isRivalry } });

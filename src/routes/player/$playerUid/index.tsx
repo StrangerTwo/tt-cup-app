@@ -7,6 +7,7 @@ import { MatchesSummaryCard } from "../../../components/match/MatchesSummaryCard
 import { MatchHistory } from "../../../components/match/MatchHistory";
 import { PlayerDataCard } from "../../../components/player/PlayerDataCard";
 import { PlayerRivals } from "../../../components/player/rivals/PlayerRivals";
+import { TournamentBehaviorCard } from "../../../components/tournaments/behaviour/TournamentBehaviourCard";
 
 export const Route = createFileRoute("/player/$playerUid/")({
     component: RouteComponent,
@@ -41,6 +42,9 @@ function RouteComponent() {
             <PlayerDataCard player={player} />
 
             <MatchesSummaryCard playerUid={player.uid} className="mt-2 md:mt-4" />
+
+            <TournamentBehaviorCard playerUid={player.uid} className="mt-2 md:mt-4" />
+
             <Tabs
                 tabs={[
                     {

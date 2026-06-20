@@ -32,9 +32,14 @@ export const topMatchesFilterSchema = yup.object({
 
 export type TopMatchesFilterType = yup.InferType<typeof topMatchesFilterSchema>;
 
-export const topMatchesFilterDefaultValues = Object.fromEntries(
-    Object.values(MatchFilterType).map((type) => [type, {}]),
-) as TopMatchesFilterType;
+export const topMatchesFilterDefaultValues: TopMatchesFilterType = {
+    done: false,
+    "*": {},
+    ELO: { value: 150 },
+    RANK: { value: 100 },
+    BIL: { value: 4 },
+    L_WON: {},
+};
 
 const toMatchFilter = <T extends MatchFilterType>(type: T, data: TopMatchesFilterType): Array<MatchFilter> => {
     if (!data[type]?.enabled) return [];
