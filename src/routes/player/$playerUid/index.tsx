@@ -7,7 +7,7 @@ import { MatchesSummaryCard } from "../../../components/match/MatchesSummaryCard
 import { MatchHistory } from "../../../components/match/MatchHistory";
 import { PlayerDataCard } from "../../../components/player/PlayerDataCard";
 import { PlayerRivals } from "../../../components/player/rivals/PlayerRivals";
-import { TournamentBehaviorCard } from "../../../components/tournaments/behaviour/TournamentBehaviourCard";
+import { TournamentBehaviorCard } from "../../../components/tournaments/behaviour/TournamentBehaviorCard";
 
 export const Route = createFileRoute("/player/$playerUid/")({
     component: RouteComponent,

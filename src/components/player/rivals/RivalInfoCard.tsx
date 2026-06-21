@@ -36,7 +36,7 @@ export const RivalInfoCard = ({ playerUid, className }: Props) => {
                         {player.elo}
                     </a>
                 </RenderItem>
-                <RenderItem title={"Poznámka:"} className="col-span-full">
+                <RenderItem title={"Poznámka:"} className="col-span-full whitespace-pre-line">
                     {player.note}
                 </RenderItem>
             </dl>

@@ -39,7 +39,7 @@ export const PlayerDataCard = ({ player }: Props) => {
                             {player.stisId}
                         </a>
                     </RenderItem>
-                    <RenderItem title={"Poznámka:"} className="col-span-full" column>
+                    <RenderItem title={"Poznámka:"} className="col-span-full whitespace-pre-line" column>
                         {player.note}
                     </RenderItem>
                 </dl>
