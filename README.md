@@ -2,14 +2,14 @@
 
 > This file is generated from Git commit messages containing `/spend ...` entries.
 
-Generated at: **20. 6. 2026 15:27:02**
+Generated at: **21. 6. 2026 19:47:43**
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
-| Total count | **55h** |
-| Spend entries / Total commits | 52 / 91 (57.14%) |
+| Total count | **55h15m** |
+| Spend entries / Total commits | 53 / 93 (56.99%) |
 | Issues with tracked time | 27 |
 
 ## Chart by issue
@@ -36,10 +36,10 @@ Generated at: **20. 6. 2026 15:27:02**
 | [#8](https://github.com/StrangerTwo/tt-cup-app/issues/8) - edit player | **1h** | 19. 4. 2026 | `████░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#2](https://github.com/StrangerTwo/tt-cup-app/issues/2) - fix buttons not working on mobile | **1h** | 17. 4. 2026 | `████░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#18](https://github.com/StrangerTwo/tt-cup-app/issues/18) - textace lokace | **45m** | 19. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
+| [#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player tournament behavior | **35m** | 20. 6. 2026 - 21. 6. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#45](https://github.com/StrangerTwo/tt-cup-app/issues/45) - tournament day | **30m** | 18. 5. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#38](https://github.com/StrangerTwo/tt-cup-app/issues/38) - create player fix | **30m** | 8. 5. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#28](https://github.com/StrangerTwo/tt-cup-app/issues/28) - unauth | **30m** | 28. 4. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#29](https://github.com/StrangerTwo/tt-cup-app/issues/29) - tables design | **30m** | 23. 4. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
-| [#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player tournament behavior | **20m** | 20. 6. 2026 | `█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#32](https://github.com/StrangerTwo/tt-cup-app/issues/32) - player note | **15m** | 24. 4. 2026 | `█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#3](https://github.com/StrangerTwo/tt-cup-app/issues/3) - table columns size | **10m** | 17. 4. 2026 | `█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
