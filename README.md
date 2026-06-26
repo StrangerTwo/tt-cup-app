@@ -2,14 +2,14 @@
 
 > This file is generated from Git commit messages containing `/spend ...` entries.
 
-Generated at: **21. 6. 2026 19:47:43**
+Generated at: **26. 6. 2026 14:35:26**
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
-| Total count | **55h15m** |
-| Spend entries / Total commits | 53 / 93 (56.99%) |
+| Total count | **56h** |
+| Spend entries / Total commits | 54 / 95 (56.84%) |
 | Issues with tracked time | 27 |
 
 ## Chart by issue
@@ -31,12 +31,12 @@ Generated at: **21. 6. 2026 19:47:43**
 | [#17](https://github.com/StrangerTwo/tt-cup-app/issues/17) - table stuck | **1h30m** | 19. 4. 2026 | `██████░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#15](https://github.com/StrangerTwo/tt-cup-app/issues/15) - tournament detail | **1h30m** | 19. 4. 2026 | `██████░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#1](https://github.com/StrangerTwo/tt-cup-app/issues/1) - make smaller | **1h30m** | 17. 4. 2026 | `██████░░░░░░░░░░░░░░░░░░░░░░░░` |
+| [#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player tournament behavior | **1h20m** | 20. 6. 2026 - 26. 6. 2026 | `██████░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#43](https://github.com/StrangerTwo/tt-cup-app/issues/43) - crawl button on all pages | **1h** | 15. 5. 2026 | `████░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#13](https://github.com/StrangerTwo/tt-cup-app/issues/13) - tournaments | **1h** | 23. 4. 2026 | `████░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#8](https://github.com/StrangerTwo/tt-cup-app/issues/8) - edit player | **1h** | 19. 4. 2026 | `████░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#2](https://github.com/StrangerTwo/tt-cup-app/issues/2) - fix buttons not working on mobile | **1h** | 17. 4. 2026 | `████░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#18](https://github.com/StrangerTwo/tt-cup-app/issues/18) - textace lokace | **45m** | 19. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
-| [#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player tournament behavior | **35m** | 20. 6. 2026 - 21. 6. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#45](https://github.com/StrangerTwo/tt-cup-app/issues/45) - tournament day | **30m** | 18. 5. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#38](https://github.com/StrangerTwo/tt-cup-app/issues/38) - create player fix | **30m** | 8. 5. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [#28](https://github.com/StrangerTwo/tt-cup-app/issues/28) - unauth | **30m** | 28. 4. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
