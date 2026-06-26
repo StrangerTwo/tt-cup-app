@@ -24,6 +24,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type { ErrorType } from "./api-instance";
 import { customInstance } from "./api-instance";
 import type {
+    Behavior,
     Bet,
     BetSummary,
     CaptureDto,
@@ -32,6 +33,7 @@ import type {
     EditPlace404,
     EditPlayer,
     EditPlayer404,
+    GetBehaviorForPlayer404,
     GetBet404,
     GetBetsRequest,
     GetBetsSummaryParams,
@@ -1911,6 +1913,120 @@ export const useEditPlayer = <TError = ErrorType<string | EditPlayer404>, TConte
 
     return useMutation(mutationOptions, queryClient);
 };
+
+export const getBehaviorForPlayer = (
+    playerUid: string,
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+) => {
+    return customInstance<Behavior>(
+        { url: `/player/${encodeURIComponent(String(playerUid))}/behavior`, method: "GET", signal },
+        options,
+    );
+};
+
+export const getGetBehaviorForPlayerQueryKey = (playerUid?: string) => {
+    return [`/player/${playerUid}/behavior`] as const;
+};
+
+export const getGetBehaviorForPlayerQueryOptions = <
+    TData = Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+    TError = ErrorType<string | GetBehaviorForPlayer404>,
+>(
+    playerUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBehaviorForPlayer>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetBehaviorForPlayerQueryKey(playerUid);
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBehaviorForPlayer>>> = ({ signal }) =>
+        getBehaviorForPlayer(playerUid, requestOptions, signal);
+
+    return { queryKey, queryFn, enabled: !!playerUid, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetBehaviorForPlayerQueryResult = NonNullable<Awaited<ReturnType<typeof getBehaviorForPlayer>>>;
+export type GetBehaviorForPlayerQueryError = ErrorType<string | GetBehaviorForPlayer404>;
+
+export function useGetBehaviorForPlayer<
+    TData = Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+    TError = ErrorType<string | GetBehaviorForPlayer404>,
+>(
+    playerUid: string,
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBehaviorForPlayer>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+                    TError,
+                    Awaited<ReturnType<typeof getBehaviorForPlayer>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetBehaviorForPlayer<
+    TData = Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+    TError = ErrorType<string | GetBehaviorForPlayer404>,
+>(
+    playerUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBehaviorForPlayer>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+                    TError,
+                    Awaited<ReturnType<typeof getBehaviorForPlayer>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetBehaviorForPlayer<
+    TData = Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+    TError = ErrorType<string | GetBehaviorForPlayer404>,
+>(
+    playerUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBehaviorForPlayer>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetBehaviorForPlayer<
+    TData = Awaited<ReturnType<typeof getBehaviorForPlayer>>,
+    TError = ErrorType<string | GetBehaviorForPlayer404>,
+>(
+    playerUid: string,
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getBehaviorForPlayer>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetBehaviorForPlayerQueryOptions(playerUid, options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
 
 export const setPlayerFavourite = (
     playerUid: string,

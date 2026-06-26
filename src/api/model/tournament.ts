@@ -11,5 +11,6 @@ export interface Tournament {
     date: string;
     place: string;
     done?: boolean;
+    playersUids?: Array<string>;
     _id: ObjectId;
 }

@@ -456,6 +456,31 @@ paths:
             '*/*':
               schema: {$ref: '#/components/schemas/Status'}
       operationId: editPlayer
+  /player/{playerUid}/behavior:
+    get:
+      description: ''
+      parameters:
+      - name: playerUid
+        in: path
+        required: true
+        schema: {type: string}
+      responses:
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema: {type: string}
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema: {type: object}
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema: {$ref: '#/components/schemas/Behavior'}
+      operationId: getBehaviorForPlayer
   /player/{playerUid}/favourite:
     patch:
       description: ''
@@ -887,12 +912,6 @@ components:
         done: {type: boolean}
         pageInfo: {$ref: '#/components/schemas/PageInfoRequest'}
       required: [filters, pageInfo]
-    TopMatch:
-      type: object
-      properties:
-        match: {$ref: '#/components/schemas/Match'}
-        bet: {$ref: '#/components/schemas/Bet'}
-      required: [match]
     Player:
       type: object
       properties:
@@ -920,6 +939,16 @@ components:
         winRate: {type: number, format: double}
       required: [playerUid, matchesWon, matchesLost, longestWinStreak, longestLoseStreak,
         currentWinStreak, currentLoseStreak]
+    TopMatch:
+      type: object
+      properties:
+        match: {$ref: '#/components/schemas/Match'}
+        bet: {$ref: '#/components/schemas/Bet'}
+        players:
+          type: array
+          items: {$ref: '#/components/schemas/Player'}
+        summary: {$ref: '#/components/schemas/Summary'}
+      required: [match]
     TopMatches:
       type: object
       properties:
@@ -1006,6 +1035,30 @@ components:
         location: {$ref: '#/components/schemas/Location'}
         note: {type: string}
         stisId: {type: string}
+    PlayerBehaviorItem:
+      type: object
+      properties:
+        winRate: {type: number, format: double}
+        wins: {type: integer, format: int32}
+        losses: {type: integer, format: int32}
+      required: [wins, losses]
+    PlayerBehavior:
+      type: object
+      properties:
+        type: {$ref: '#/components/schemas/PlayerBehaviorType'}
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/PlayerBehaviorItem'}
+      required: [type, items]
+    Behavior:
+      type: object
+      properties:
+        playerUid: {type: string}
+        behaviors:
+          type: array
+          items: {$ref: '#/components/schemas/PlayerBehavior'}
+        _id: {$ref: '#/components/schemas/ObjectId'}
+      required: [playerUid, behaviors, _id, _id]
     GetPlayerRivalsRequest:
       type: object
       properties:
@@ -1051,6 +1104,9 @@ components:
         date: {type: string, format: date}
         place: {type: string}
         done: {type: boolean}
+        playersUids:
+          type: array
+          items: {type: string}
         _id: {$ref: '#/components/schemas/ObjectId'}
       required: [date, place, _id, _id]
     TournamentFull:
@@ -1141,6 +1197,10 @@ components:
       type: string
       enum: ['*', ELO, RANK, BIL, L_WON]
       x-enumNames: [STAR_PLAYER, ELO_DIFFERENCE, RANK_DIFFERENCE, BILANCE, LAST_MATCH_STRONG_LOST]
+    PlayerBehaviorType:
+      type: string
+      enum: ['0', '1', '2', '3']
+      x-enumNames: [ZERO_WINS, ONE_WINS, TWO_WINS, THREE_WINS]
     BilanceFilter:
       type: object
       properties:

@@ -7,8 +7,12 @@
  */
 import type { Bet } from "./bet";
 import type { Match } from "./match";
+import type { Player } from "./player";
+import type { Summary } from "./summary";
 
 export interface TopMatch {
     match: Match;
     bet?: Bet;
+    players?: Array<Player>;
+    summary?: Summary;
 }

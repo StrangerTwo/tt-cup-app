@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from "./behavior";
 export * from "./bet";
 export * from "./betFull";
 export * from "./betSummary";
@@ -19,6 +20,7 @@ export * from "./editPlace404";
 export * from "./editPlayer";
 export * from "./editPlayer404";
 export * from "./eloDifferenceFilter";
+export * from "./getBehaviorForPlayer404";
 export * from "./getBet404";
 export * from "./getBetsRequest";
 export * from "./getBetsSummaryParams";
@@ -61,6 +63,9 @@ export * from "./paginatedQueryResultPlayerSummary";
 export * from "./paginatedQueryResultRivalMatchesSummary";
 export * from "./place";
 export * from "./player";
+export * from "./playerBehavior";
+export * from "./playerBehaviorItem";
+export * from "./playerBehaviorType";
 export * from "./playerSummary";
 export * from "./rankDifferenceFilter";
 export * from "./rivalMatchesSummary";
