@@ -18,9 +18,9 @@ function RouteComponent() {
     const [filters, setFilters] = useState<Array<(tip: XgTip) => boolean>>([]);
 
     const groups = useMemo(() => {
-        if (!tips) return undefined;
-
         const res = {} as { [_: string]: Array<XgTip> };
+        if (!tips) return res;
+
         tips.forEach((tip) => {
             if (filters.some((filter) => !filter(tip))) return;
 
