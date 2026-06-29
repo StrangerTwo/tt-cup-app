@@ -2,7 +2,7 @@ import { FC, MouseEventHandler, ReactNode, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import UnAuthTemplate from "../auth/UnAuthTemplate";
-import { FatArrowIcon, SettingsIcon, TableIcon, UsersIcon } from "../components/icons";
+import { FatArrowIcon, FileIcon, NewsIcon, SettingsIcon, TableIcon, UsersIcon } from "../components/icons";
 import { ColorLayerContext, useColorLayer } from "../components/ui/layout";
 import Sidebar from "../components/ui/layout/Sidebar";
 import { AuthProvider } from "../firebase/AuthProvider";
@@ -19,6 +19,7 @@ interface Props {
 
 const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false }) => {
     const { layer, bgColor, textColor } = useColorLayer(0);
+    const { borderColor } = useColorLayer();
 
     const [navbarHeight, setNavbarHeight] = useState(hasNavbar ? 72 : 0);
     const [sidebarOpen, setSidebarOpen] = useState(hasSidebar && window.innerWidth > 768);
@@ -86,6 +87,14 @@ const MainLayout: FC<Props> = ({ children, hasSidebar = false, hasNavbar = false
                                     </SidebarItem>
                                     <SidebarItem route="/update" closeSidebar={closeSidebar} text="Nastavení">
                                         <SettingsIcon />
+                                    </SidebarItem>
+                                </div>
+                                <div className={twMerge(borderColor, "mt-4 space-y-2 border-t pt-4")}>
+                                    <SidebarItem route={"/xg/tips"} closeSidebar={closeSidebar} text="Fotbal">
+                                        <NewsIcon />
+                                    </SidebarItem>
+                                    <SidebarItem route={"/xg/tickets"} closeSidebar={closeSidebar} text="Tickety">
+                                        <FileIcon />
                                     </SidebarItem>
                                 </div>
                             </Sidebar>

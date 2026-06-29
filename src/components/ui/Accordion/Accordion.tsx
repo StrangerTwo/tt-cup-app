@@ -69,7 +69,7 @@ export const Accordion: FC<Props> = ({
                     isOpen ? contentBgColor : bgColor,
                     isOpen && "pb-2",
                 )}>
-                <Divider isOpen={isOpen} className="mt-3" />
+                <Divider isOpen={isOpen} className={twMerge(size === "sm" ? "mt-2" : "mt-3")} />
             </div>
             <AccordionContent isOpen={isOpen} size={size}>
                 {children}

@@ -15,6 +15,8 @@ import { Route as TournamentIndexRouteImport } from './routes/tournament/index'
 import { Route as TopIndexRouteImport } from './routes/top/index'
 import { Route as PlayerIndexRouteImport } from './routes/player/index'
 import { Route as ArchiveIndexRouteImport } from './routes/archive/index'
+import { Route as XgTipsRouteImport } from './routes/xg/tips'
+import { Route as XgTicketsRouteImport } from './routes/xg/tickets'
 import { Route as UpdatePlacesRouteImport } from './routes/update/places'
 import { Route as UpdateCrawlRouteImport } from './routes/update/crawl'
 import { Route as TournamentTournamentIdRouteImport } from './routes/tournament/$tournamentId'
@@ -50,6 +52,16 @@ const PlayerIndexRoute = PlayerIndexRouteImport.update({
 const ArchiveIndexRoute = ArchiveIndexRouteImport.update({
   id: '/archive/',
   path: '/archive/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const XgTipsRoute = XgTipsRouteImport.update({
+  id: '/xg/tips',
+  path: '/xg/tips',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const XgTicketsRoute = XgTicketsRouteImport.update({
+  id: '/xg/tickets',
+  path: '/xg/tickets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UpdatePlacesRoute = UpdatePlacesRouteImport.update({
@@ -90,6 +102,8 @@ export interface FileRoutesByFullPath {
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
   '/update/crawl': typeof UpdateCrawlRoute
   '/update/places': typeof UpdatePlacesRoute
+  '/xg/tickets': typeof XgTicketsRoute
+  '/xg/tips': typeof XgTipsRoute
   '/archive': typeof ArchiveIndexRoute
   '/player': typeof PlayerIndexRoute
   '/top': typeof TopIndexRoute
@@ -104,6 +118,8 @@ export interface FileRoutesByTo {
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
   '/update/crawl': typeof UpdateCrawlRoute
   '/update/places': typeof UpdatePlacesRoute
+  '/xg/tickets': typeof XgTicketsRoute
+  '/xg/tips': typeof XgTipsRoute
   '/archive': typeof ArchiveIndexRoute
   '/player': typeof PlayerIndexRoute
   '/top': typeof TopIndexRoute
@@ -119,6 +135,8 @@ export interface FileRoutesById {
   '/tournament/$tournamentId': typeof TournamentTournamentIdRoute
   '/update/crawl': typeof UpdateCrawlRoute
   '/update/places': typeof UpdatePlacesRoute
+  '/xg/tickets': typeof XgTicketsRoute
+  '/xg/tips': typeof XgTipsRoute
   '/archive/': typeof ArchiveIndexRoute
   '/player/': typeof PlayerIndexRoute
   '/top/': typeof TopIndexRoute
@@ -135,6 +153,8 @@ export interface FileRouteTypes {
     | '/tournament/$tournamentId'
     | '/update/crawl'
     | '/update/places'
+    | '/xg/tickets'
+    | '/xg/tips'
     | '/archive'
     | '/player'
     | '/top'
@@ -149,6 +169,8 @@ export interface FileRouteTypes {
     | '/tournament/$tournamentId'
     | '/update/crawl'
     | '/update/places'
+    | '/xg/tickets'
+    | '/xg/tips'
     | '/archive'
     | '/player'
     | '/top'
@@ -163,6 +185,8 @@ export interface FileRouteTypes {
     | '/tournament/$tournamentId'
     | '/update/crawl'
     | '/update/places'
+    | '/xg/tickets'
+    | '/xg/tips'
     | '/archive/'
     | '/player/'
     | '/top/'
@@ -178,6 +202,8 @@ export interface RootRouteChildren {
   TournamentTournamentIdRoute: typeof TournamentTournamentIdRoute
   UpdateCrawlRoute: typeof UpdateCrawlRoute
   UpdatePlacesRoute: typeof UpdatePlacesRoute
+  XgTicketsRoute: typeof XgTicketsRoute
+  XgTipsRoute: typeof XgTipsRoute
   ArchiveIndexRoute: typeof ArchiveIndexRoute
   PlayerIndexRoute: typeof PlayerIndexRoute
   TopIndexRoute: typeof TopIndexRoute
@@ -231,6 +257,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArchiveIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/xg/tips': {
+      id: '/xg/tips'
+      path: '/xg/tips'
+      fullPath: '/xg/tips'
+      preLoaderRoute: typeof XgTipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/xg/tickets': {
+      id: '/xg/tickets'
+      path: '/xg/tickets'
+      fullPath: '/xg/tickets'
+      preLoaderRoute: typeof XgTicketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/update/places': {
       id: '/update/places'
       path: '/update/places'
@@ -282,6 +322,8 @@ const rootRouteChildren: RootRouteChildren = {
   TournamentTournamentIdRoute: TournamentTournamentIdRoute,
   UpdateCrawlRoute: UpdateCrawlRoute,
   UpdatePlacesRoute: UpdatePlacesRoute,
+  XgTicketsRoute: XgTicketsRoute,
+  XgTipsRoute: XgTipsRoute,
   ArchiveIndexRoute: ArchiveIndexRoute,
   PlayerIndexRoute: PlayerIndexRoute,
   TopIndexRoute: TopIndexRoute,

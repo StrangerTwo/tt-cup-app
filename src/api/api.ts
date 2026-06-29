@@ -33,6 +33,7 @@ import type {
     EditPlace404,
     EditPlayer,
     EditPlayer404,
+    FavouriteTip,
     GetBehaviorForPlayer404,
     GetBet404,
     GetBetsRequest,
@@ -78,7 +79,9 @@ import type {
     TournamentFull,
     Tournaments,
     TournamentsToday,
+    UpdateFavouriteTip,
     User,
+    XgTip,
 } from "./model";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
@@ -2940,6 +2943,294 @@ export function useGetUser<TData = Awaited<ReturnType<typeof getUser>>, TError =
 
     return query;
 }
+
+export const getTips = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<Array<XgTip>>({ url: `/xg/tips`, method: "GET", signal }, options);
+};
+
+export const getGetTipsQueryKey = () => {
+    return [`/xg/tips`] as const;
+};
+
+export const getGetTipsQueryOptions = <
+    TData = Awaited<ReturnType<typeof getTips>>,
+    TError = ErrorType<unknown>,
+>(options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTips>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+}) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetTipsQueryKey();
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTips>>> = ({ signal }) => getTips(requestOptions, signal);
+
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getTips>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetTipsQueryResult = NonNullable<Awaited<ReturnType<typeof getTips>>>;
+export type GetTipsQueryError = ErrorType<unknown>;
+
+export function useGetTips<TData = Awaited<ReturnType<typeof getTips>>, TError = ErrorType<unknown>>(
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTips>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTips>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTips>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTips<TData = Awaited<ReturnType<typeof getTips>>, TError = ErrorType<unknown>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTips>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getTips>>,
+                    TError,
+                    Awaited<ReturnType<typeof getTips>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetTips<TData = Awaited<ReturnType<typeof getTips>>, TError = ErrorType<unknown>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTips>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetTips<TData = Awaited<ReturnType<typeof getTips>>, TError = ErrorType<unknown>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTips>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetTipsQueryOptions(options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
+export const favouriteTip = (
+    tipId: string,
+    updateFavouriteTip: UpdateFavouriteTip,
+    options?: SecondParameter<typeof customInstance>,
+) => {
+    return customInstance<Status>(
+        {
+            url: `/xg/tips/favourite/${encodeURIComponent(String(tipId))}`,
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            data: updateFavouriteTip,
+        },
+        options,
+    );
+};
+
+export const getFavouriteTipMutationOptions = <TError = ErrorType<string>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+        Awaited<ReturnType<typeof favouriteTip>>,
+        TError,
+        { tipId: string; data: UpdateFavouriteTip },
+        TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+    Awaited<ReturnType<typeof favouriteTip>>,
+    TError,
+    { tipId: string; data: UpdateFavouriteTip },
+    TContext
+> => {
+    const mutationKey = ["favouriteTip"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<
+        Awaited<ReturnType<typeof favouriteTip>>,
+        { tipId: string; data: UpdateFavouriteTip }
+    > = (props) => {
+        const { tipId, data } = props ?? {};
+
+        return favouriteTip(tipId, data, requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type FavouriteTipMutationResult = NonNullable<Awaited<ReturnType<typeof favouriteTip>>>;
+export type FavouriteTipMutationBody = UpdateFavouriteTip;
+export type FavouriteTipMutationError = ErrorType<string>;
+
+export const useFavouriteTip = <TError = ErrorType<string>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<
+            Awaited<ReturnType<typeof favouriteTip>>,
+            TError,
+            { tipId: string; data: UpdateFavouriteTip },
+            TContext
+        >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<
+    Awaited<ReturnType<typeof favouriteTip>>,
+    TError,
+    { tipId: string; data: UpdateFavouriteTip },
+    TContext
+> => {
+    const mutationOptions = getFavouriteTipMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
+
+export const getFavouriteTips = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<Array<FavouriteTip>>({ url: `/xg/tips/favourites`, method: "GET", signal }, options);
+};
+
+export const getGetFavouriteTipsQueryKey = () => {
+    return [`/xg/tips/favourites`] as const;
+};
+
+export const getGetFavouriteTipsQueryOptions = <
+    TData = Awaited<ReturnType<typeof getFavouriteTips>>,
+    TError = ErrorType<string>,
+>(options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFavouriteTips>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+}) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
+
+    const queryKey = queryOptions?.queryKey ?? getGetFavouriteTipsQueryKey();
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFavouriteTips>>> = ({ signal }) =>
+        getFavouriteTips(requestOptions, signal);
+
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+        Awaited<ReturnType<typeof getFavouriteTips>>,
+        TError,
+        TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetFavouriteTipsQueryResult = NonNullable<Awaited<ReturnType<typeof getFavouriteTips>>>;
+export type GetFavouriteTipsQueryError = ErrorType<string>;
+
+export function useGetFavouriteTips<TData = Awaited<ReturnType<typeof getFavouriteTips>>, TError = ErrorType<string>>(
+    options: {
+        query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFavouriteTips>>, TError, TData>> &
+            Pick<
+                DefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getFavouriteTips>>,
+                    TError,
+                    Awaited<ReturnType<typeof getFavouriteTips>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFavouriteTips<TData = Awaited<ReturnType<typeof getFavouriteTips>>, TError = ErrorType<string>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFavouriteTips>>, TError, TData>> &
+            Pick<
+                UndefinedInitialDataOptions<
+                    Awaited<ReturnType<typeof getFavouriteTips>>,
+                    TError,
+                    Awaited<ReturnType<typeof getFavouriteTips>>
+                >,
+                "initialData"
+            >;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFavouriteTips<TData = Awaited<ReturnType<typeof getFavouriteTips>>, TError = ErrorType<string>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFavouriteTips>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetFavouriteTips<TData = Awaited<ReturnType<typeof getFavouriteTips>>, TError = ErrorType<string>>(
+    options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFavouriteTips>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+    const queryOptions = getGetFavouriteTipsQueryOptions(options);
+
+    const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+        queryKey: DataTag<QueryKey, TData, TError>;
+    };
+
+    query.queryKey = queryOptions.queryKey;
+
+    return query;
+}
+
+export const refreshTips = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+    return customInstance<Status>({ url: `/xg/tips/refresh`, method: "POST", signal }, options);
+};
+
+export const getRefreshTipsMutationOptions = <TError = ErrorType<string>, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<Awaited<ReturnType<typeof refreshTips>>, TError, void, TContext>;
+    request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof refreshTips>>, TError, void, TContext> => {
+    const mutationKey = ["refreshTips"];
+    const { mutation: mutationOptions, request: requestOptions } = options
+        ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+            ? options
+            : { ...options, mutation: { ...options.mutation, mutationKey } }
+        : { mutation: { mutationKey }, request: undefined };
+
+    const mutationFn: MutationFunction<Awaited<ReturnType<typeof refreshTips>>, void> = () => {
+        return refreshTips(requestOptions);
+    };
+
+    return { mutationFn, ...mutationOptions };
+};
+
+export type RefreshTipsMutationResult = NonNullable<Awaited<ReturnType<typeof refreshTips>>>;
+
+export type RefreshTipsMutationError = ErrorType<string>;
+
+export const useRefreshTips = <TError = ErrorType<string>, TContext = unknown>(
+    options?: {
+        mutation?: UseMutationOptions<Awaited<ReturnType<typeof refreshTips>>, TError, void, TContext>;
+        request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof refreshTips>>, TError, void, TContext> => {
+    const mutationOptions = getRefreshTipsMutationOptions(options);
+
+    return useMutation(mutationOptions, queryClient);
+};
 
 export const get = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
     return customInstance<string>({ url: `/...}`, method: "GET", signal }, options);
